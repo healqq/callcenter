@@ -113,6 +113,32 @@ function exportToJSON(className){
 function importFromJSON(stringJSON)
 {
 	var objectJSON = JSON.parse(stringJSON);
-	var divArray = 
+	//var divArray = 
 	
+};
+function getObjectSpecs(type)
+var objectScpecs;
+switch (type) {
+		"description":	objectSpecs = {class:undefined};break;
+		"header":		objectSpecs = {class:undefined};break;
+		"input":		objectSpecs = {class:undefined};break;
+		default:
+		return undefinded;
+		}
+		return objectSpecs;
+		
+}
+function showError(errString){
+	var errDiv = $('.error');
+	errDiv.toggleClass("active");
+	$('<p>'+errString+'</p>').appendTo(errDiv);
+	
+}
+//Функция для отчистки строки ошибок
+function clearErrors(){
+		$('.error').empty();
+}
+//удаление элемента
+function removeElement(element){
+		element.remove();
 }
