@@ -25,7 +25,7 @@ function fabric ( type,  options) {
 		case "h3":
 			elementContent = '<h3>' + elementInnerData + '</h3>'; break;
 		case "text area":
-			elementContent = '<textarea>' + elementInnerData + '</textarea>'; break;
+			elementContent = '<textarea placeholder="'+options.content+'"></textarea>'; break;
 		//options.content should be filled and type = array
 		case "radio":
 			if ( ! $.isArray(options.content) || (options.name == undefined) ){
@@ -35,14 +35,15 @@ function fabric ( type,  options) {
 			//elementInnerData = "";
 			for (var i=0; i < options.content.length; i++ ){
 				elementContent  += '<p><input type="radio" name ='+ options.name 
-					+' value = ' + options.name + '>'+options.content[i] + '</p>';
+					+' value = ' + options.content[i] + '>'+options.content[i] + '</p>';
 			}
 			//elementContent = '<input type="radio">' + elementInnerData + '</input>'; 
 			break;
 		case "checkbox":
 			break;
 			
-		
+		case "text":
+			elementContent = '<p><input type="text" placeholder="'+options.content+'"></p>';break;
 			
 		 default:
 			return undefined;
@@ -91,14 +92,36 @@ function exportToJSON(className){
 	
 	var divSelection = $(className).children();
 	var objectJSON = {first:divSelection.first().children("h3").text(), blocks:undefined};
+	var divArray = [];
+	
+	
+	var radioName = undefined;
 	divSelection.each(function(){
 		var pSelection;
-		var objectDiv;
+		var radio = undefined;
+		var input = undefined;
 		var name, header, description, inputType, inputValues;
+		id 				= $(this).attr("id");
 		header 			= $(this).children("h3").text();
 		pSelection 		= $(this).children("p");
 		description 	= pSelection.first().text();
-		objectDiv = {header:header, description:description};
+		inputSelection 	= $(this).find(':input');
+		if (inputSelection.type == "text") {
+			input = "";
+		}
+		else{
+			if (inputSelection.type == "radio"){
+				radio = [];
+				inputSelection.each(function(){
+						radio.push($(this).text());
+				});
+			}
+		}
+		
+		//if ( ! ($(this).find(':input[type=radio]',).size() == 0) ){
+			
+		//}
+		objectDiv = {header:header, description:description,id:id,radio:radio,radioName:'radio'+id,input:input};
 		divArray.push(objectDiv);
 	});
 	//for (var i = 0; i < divSelection.length; i++ ){
@@ -107,21 +130,32 @@ function exportToJSON(className){
 	//	decription 		= pSelection.first().text();
 	//	inputType 		= p_selection.next().text;
 	
-	objectJSON.divArray = divArray; 
+	objectJSON.blocks = divArray; 
 	return JSON.stringify(objectJSON);
 }
-function importFromJSON(stringJSON)
+function importFromJSON(stringJSON, container)
 {
 	var objectJSON = JSON.parse(stringJSON);
+	var newElement;
+	var container = $(container);
+	for (var i = 0; i < objectJSON.blocks.length; i++){
+		createNewDivElement("show", objectJSON.blocks[i]).appendTo(container);
+		
+	}
+	
 	//var divArray = 
 	
 };
-function getObjectSpecs(type)
+
+//описание классов и параметров для элементов
+function getObjectSpecs(type,content,name){
 var objectScpecs;
 switch (type) {
-		"description":	objectSpecs = {class:undefined};break;
-		"header":		objectSpecs = {class:undefined};break;
-		"input":		objectSpecs = {class:undefined};break;
+		case "description":	objectSpecs = {class:undefined,content:content};break;
+		case "header":		objectSpecs = {class:undefined,content:content};break;
+		case "text area":	objectSpecs = {class:undefined,content:content,id:name};break;
+		case "radio":		objectSpecs = {class:undefined,content:content,name:name};break;
+		case "div":			objectSpecs = {class:undefined,id:name,content:undefined};break;
 		default:
 		return undefinded;
 		}
@@ -141,4 +175,58 @@ function clearErrors(){
 //удаление элемента
 function removeElement(element){
 		element.remove();
+}
+//создает новый блок 
+function createNewDivElement(type, contents){
+	if (type == "show"){
+		newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id));
+		newHeader 		= fabric("h3", 			getObjectSpecs("header",contents.header)); 
+		newParagraph 	= fabric("p",  			getObjectSpecs("description",contents.description)); 
+		
+		
+		
+		newHeader.appendTo( newElement );
+		newHeader.click( onHeaderClick );
+		
+		newParagraph.appendTo( newElement );
+		
+		if ( !(contents.input == undefined) ){
+			newInput		= fabric("text area",  	getObjectSpecs("text area",contents.input)); 
+			newInput.appendTo( newElement );
+			newInput.change(onTextChanged);
+		}
+		
+		if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
+			newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
+			newRadio.appendTo( newElement );
+		}
+	}
+	else{
+			newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id) );
+			newHeader 		= fabric("text", 		getObjectSpecs("text area", contents.header) );
+			newParagraph    = fabric("text area", 	getObjectSpecs("text area", contents.description) );
+			newInput    	= fabric("radio"	, 	getObjectSpecs("radio", contents.radio,contents.radioName) );
+			newInputRadio   = fabric("text"	    , 	getObjectSpecs("text area", "введите варианты перечисления","radioOptions") );
+			
+			newHeader.appendTo( newElement );
+			newParagraph.appendTo( newElement );
+			newInput.appendTo ( newElement );
+			newInputRadio.appendTo ( newElement );
+			newInputRadio.hide();	
+			
+	}
+	return newElement;
+}
+
+function createNewTempElement(){
+	var contents = {
+		id: undefined,
+		header:"Введите заголовок блока",
+		description:"И его описание",
+		radio: ["text","radio"],
+		radioName: "inputType",
+		input: "Im just some text"
+		};
+	newElement = createNewDivElement(undefined,contents);
+	newElement.appendTo( $('#temp_divs') );
 }
