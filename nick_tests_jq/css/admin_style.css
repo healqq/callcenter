@@ -1,0 +1,116 @@
+		body {
+	font-family: Calibri; /* Семейство шрифтов */
+	font-size: 11pt; /* Размер основного шрифта в пунктах  */
+	background-image: url(images/Fon.jpg);
+	background-color: #f0f0f0; /* Цвет фона веб-страницы */
+	color: #333; /* Цвет основного текста */
+	margin: 0 auto;
+	padding: 0;
+	width: 570px;  
+}
+		.error {
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url(images/error.png);
+	position: relative;
+	display: none;
+}
+	
+		.AktiveError {
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url(images/error.png);
+	position: relative;
+	display: block;
+}
+	
+		.warning {
+	color: #9F6000;
+	background-color: #FEEFB3;
+	background-image: url(images/warning.png);
+}
+
+		.warning, .error {
+	border: 1px solid;
+	margin: 10px 0px;
+	padding:15px 10px 15px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+
+
+
+		.test {
+			width: 80%;
+			position: relative;
+}
+		.delete_div{
+				position: absolute;
+				top: 5px;
+				right: 5px;
+				
+}
+		.button {
+			width: 30px;
+			height: 30px;
+			position: relative;
+			color: Black;
+			border-bottom: 1px solid black; /* Параметры линии внизу */
+			border-left: 1px solid black; /* Линия слева от текста */
+			border-right: 1px solid black; /* Линия справа от текста */
+			border-top: 1px solid black; /* Линия сверху от текста */
+			background-color: #E8E8E8; /* Цвет фона кнопки */
+			padding-left: 10px; /* Расстояние между линией и текстом */
+			margin-left: 10px; /* Расстояние от левого края до линии */
+			padding-bottom: 2px; 
+			margin-bottom: 2px; 
+			padding-right: 10px; 
+			margin-right: 10px;
+			border-bottom-right-radius: 5px 5px;
+			border-bottom-left-radius: 5px 5px;
+			border-top-right-radius: 5px 5px;
+			border-top-left-radius: 5px 5px; 
+			padding-top: 2px; 
+			margin-top: 2px; 
+}
+		.control{
+			width: 100%;
+			height: 100px;
+			position: relative;
+}
+		.text{
+			color: Black;
+			position: relative;
+}
+		
+		.input{
+		font-family: Calibri; /* Семейство шрифтов */
+		font-size: 11pt; 
+		border-bottom: 1px solid black; /* Параметры линии внизу */
+		border-left: 1px solid black; /* Линия слева от текста */
+		border-right: 1px solid black; /* Линия справа от текста */
+		border-top: 1px solid black; /* Линия сверху от текста */
+		
+}
+		
+		.select{
+		font-family: Calibri; /* Семейство шрифтов */
+		font-size: 11pt; 
+		border-bottom: 1px solid black; /* Параметры линии внизу */
+		border-left: 1px solid black; /* Линия слева от текста */
+		border-right: 1px solid black; /* Линия справа от текста */
+		border-top: 1px solid black; /* Линия сверху от текста */
+		
+}
+		
+		.textarea{
+		font-family: Calibri; /* Семейство шрифтов */
+		font-size: 11pt;
+		width: 70%;
+		resize: none;	
+		border-bottom: 1px solid black; /* Параметры линии внизу */
+		border-left: 1px solid black; /* Линия слева от текста */
+		border-right: 1px solid black; /* Линия справа от текста */
+		border-top: 1px solid black; /* Линия сверху от текста */
+		
+}
