@@ -33,8 +33,8 @@ $(document).ready(function(){
 	
 	//---------------------------------------------------------------
 	
-	stringJSON = exportToJSON(".accordion");
-	alert(stringJSON);
+	//stringJSON = exportToJSON(".accordion");
+	//alert(stringJSON);
 	$('input[name=' + 'inputType' + ']','#temp_divs').change(function()	{
 		if ($(this).val() == "radio"){
 			$("#radioOptions", '#temp_divs').show();
@@ -48,42 +48,33 @@ $(document).ready(function(){
 	//$(".accordion p:not(:first)").hide();
 	$("#test_id").change(onTextChanged);
 	$(".accordion h3").click(onHeaderClick);
-	$("#add_div").click(function(){
-		var name = $('#newElementName').val();
-		if (name == ""){
-			showError("Имя блока должно быть заполнено!");
-			return;
-		}
-		var thisDiv = $("#temp_divs").children().first();
-		var input = undefined;
-		var radio = undefined;
-		if ( $('input[name=' + 'inputType' + ']:checked','#temp_divs').val() == "text" ){
-				input = "";
-		}
-		else{
-			radio = $("#radioOptions", '#temp_divs').children('input[type=text]').val().split(',');
-		}
-		
-				
-		var contents ={
-			id: name,
-			header:thisDiv.children('p').children(':input[type=text]').val(),
-			description:thisDiv.children('textarea').val(),
-			radio: radio,
-			radioName: "radio"+name,
-			input: input
-		};
-		thisDiv.remove();
-		newDiv = createNewDivElement("show",contents);
-		newDiv.appendTo( $("#container") );
-		createNewTempElement();
-		
-		
-		
-	});
+	$("#add_div").click(addElement);
+	
 	$("#import").click(function(){
+		stringJSON = exportToJSON(".accordion");
+		alert(stringJSON);
 		importFromJSON(stringJSON,"#imported");
 		
+	});
+	$(".edit").click(function(){
+		var position;
+		var parentBlock = $(this).parent('div');
+	//	var previousBlock = parentBlock.prevAll('div:first');
+		//if (previousBlock.length == 0){
+			//	position = 0;
+		//}
+		//else{
+		position = parentBlock.index();
+		objectDiv = createObjectFromDiv(parentBlock);
+		objectDiv.position = position;
+		removeElement(parentBlock);
+		$('#newElementName').val(objectDiv.id);
+		objectDiv.id = undefined;
+		objectDiv.radio = ["text","radio"];
+		objectDiv.radioName = "inputType";
+		createNewTempElement(objectDiv);
+		//}
+		//alert(position);
 	});
 });
 </script>
@@ -150,14 +141,17 @@ body {
 		<h3 class="">Question One Sample Text</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
 		<input  style="display: none;" type ="text" id="test_id"></input>
+		<input type="button" class="edit">edit</button>
 	</div>
 	<div class ="accordion_item"id="test2">
 		<h3 class="">This is Question Two</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
+		<input type="button" class="edit">edit</button>
 	</div>
 	<div class ="accordion_item"id="test3">
 		<h3 class="">Another Questio here</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
+		<input type="button" class="edit">edit</button>
 	</div>
 	<div class ="accordion_item"id="test4">
 		<h3 class="">Sample heading</h3>
@@ -170,5 +164,6 @@ body {
 </div>
 
 <input type="button" id="import">build from json</input>
+
 
 </body></html>

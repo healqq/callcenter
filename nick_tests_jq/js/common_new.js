@@ -1,3 +1,8 @@
+//функция создает элемент в зависимости от полученного типа
+/*
+	type: div, p, h3, radio, text;
+*/
+
 function fabric ( type,  options) {
 	//var mainElement = $(container);
 	var newElement;
@@ -27,6 +32,7 @@ function fabric ( type,  options) {
 		case "text area":
 			elementContent = '<textarea placeholder="'+options.content+'"></textarea>'; break;
 		//options.content should be filled and type = array
+		//
 		case "radio":
 			if ( ! $.isArray(options.content) || (options.name == undefined) ){
 				//alert(typeof(options.content));
@@ -62,6 +68,7 @@ function fabric ( type,  options) {
 	//newElement.appendTo(mainElement);
 	return newElement;
 }
+
 //сворачивание/разворачивание при клике на заголовок
 function onHeaderClick(){
 	var that = $(this);
@@ -86,52 +93,58 @@ function onTextChanged() {
 		new_div_block.children("h3:first").trigger("click");
 	}
 }
+//формирует структуру json по текущей структуре
+/* {
+		first: - первый див
+		blocks: массив объектов contents для каждого блока.
+
+*/
 function exportToJSON(className){
 	var divArray = [];
 	
 	
 	var divSelection = $(className).children();
 	var objectJSON = {first:divSelection.first().children("h3").text(), blocks:undefined};
-	var divArray = [];
+	
+	var objectDiv;
 	
 	
 	var radioName = undefined;
 	divSelection.each(function(){
-		var pSelection;
-		var radio = undefined;
-		var input = undefined;
-		var name, header, description, inputType, inputValues;
-		id 				= $(this).attr("id");
-		header 			= $(this).children("h3").text();
-		pSelection 		= $(this).children("p");
-		description 	= pSelection.first().text();
-		inputSelection 	= $(this).find(':input');
-		if (inputSelection.type == "text") {
-			input = "";
-		}
-		else{
-			if (inputSelection.type == "radio"){
-				radio = [];
-				inputSelection.each(function(){
-						radio.push($(this).text());
-				});
-			}
-		}
+		 divArray.push(createObjectFromDiv(this));
 		
-		//if ( ! ($(this).find(':input[type=radio]',).size() == 0) ){
-			
-		//}
-		objectDiv = {header:header, description:description,id:id,radio:radio,radioName:'radio'+id,input:input};
-		divArray.push(objectDiv);
 	});
-	//for (var i = 0; i < divSelection.length; i++ ){
-	//	header 			= divSelection[i].children("h3").text();
-	//	pSelection 	= divSelection[i].children("p");
-	//	decription 		= pSelection.first().text();
-	//	inputType 		= p_selection.next().text;
-	
 	objectJSON.blocks = divArray; 
 	return JSON.stringify(objectJSON);
+}
+function createObjectFromDiv(element){
+	var pSelection;
+	var radio = undefined;
+	var input = undefined;
+	var name, header, description, inputType, inputValues;
+	id 				= $(element).attr("id");
+	header 			= $(element).children("h3").text();
+	pSelection 		= $(element).children("p");
+	description 	= pSelection.first().text();
+	inputSelection 	= $(element).find(':input');
+	if (inputSelection.first().attr('type') == "textarea") {
+		input = "Введите ответ:";
+	}
+	else{
+		if (inputSelection.first().attr('type') == "radio"){
+			radio = [];
+			inputSelection.each(function(){
+					radio.push($(this).val());
+			});
+		}
+	}
+	
+	//if ( ! ($(this).find(':input[type=radio]',).size() == 0) ){
+			
+	//}
+	objectDiv = {header:header, description:description,id:id,radio:radio,radioName:'radio'+id,input:input};
+	return objectDiv;	
+	
 }
 function importFromJSON(stringJSON, container)
 {
@@ -177,6 +190,9 @@ function removeElement(element){
 		element.remove();
 }
 //создает новый блок 
+//contents - объект, содержащий необходимые поля
+//параметр type = show для создания блока для отображения
+//если show не указано - то создается блок для редактирования
 function createNewDivElement(type, contents){
 	if (type == "show"){
 		newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id));
@@ -207,26 +223,88 @@ function createNewDivElement(type, contents){
 			newParagraph    = fabric("text area", 	getObjectSpecs("text area", contents.description) );
 			newInput    	= fabric("radio"	, 	getObjectSpecs("radio", contents.radio,contents.radioName) );
 			newInputRadio   = fabric("text"	    , 	getObjectSpecs("text area", "введите варианты перечисления","radioOptions") );
+			newPosition   	= fabric("text"	    , 	getObjectSpecs("text area", undefined ,"position" ) );
 			
 			newHeader.appendTo( newElement );
 			newParagraph.appendTo( newElement );
 			newInput.appendTo ( newElement );
 			newInputRadio.appendTo ( newElement );
 			newInputRadio.hide();	
+			newPosition.children(':input').val(contents.position);
+			newPosition.appendTo( newElement );
+			newPosition.hide();
 			
 	}
 	return newElement;
 }
-
-function createNewTempElement(){
-	var contents = {
-		id: undefined,
-		header:"Введите заголовок блока",
-		description:"И его описание",
-		radio: ["text","radio"],
-		radioName: "inputType",
-		input: "Im just some text"
-		};
+//создает элемент временный 
+function createNewTempElement(contents){
+	if (contents == undefined){
+		var contents = {
+			id: undefined,
+			header:"Введите заголовок блока",
+			description:"И его описание",
+			radio: ["text","radio"],
+			radioName: "inputType",
+			input: "Im just some text"
+			};
+		}
+	$('#temp_divs').empty();
 	newElement = createNewDivElement(undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
+}
+//добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
+function addElement(){
+	clearErrors();
+	
+	var name = $('#newElementName').val();
+	if (name == ""){
+		showError("Имя блока должно быть заполнено!");
+		return;
+	}
+	var thisDiv = $("#temp_divs").children().first();
+	var input = undefined;
+	var radio = undefined;
+	//var position = undefined;
+	var position = thisDiv.children('#position').children(':input').val();
+	var inputType = $('input[name=' + 'inputType' + ']:checked','#temp_divs');
+	if (inputType.length == 0) {
+		showError("Не выбран тип ввода информации");
+		return;
+	}
+	
+	if ( inputType.val() == "text" ){
+			input = "";
+	}
+	else{
+		radio = $("#radioOptions", '#temp_divs').children('input[type=text]').val().split(',');
+		if ( radio.length < 2 ){
+			showError("Для переключателя нужно указать как минимум два значения!");
+			return;
+		}
+	}
+		
+				
+	var contents ={
+		id: name,
+		header:thisDiv.children('p').children(':input[type=text]').val(),
+		description:thisDiv.children('textarea').val(),
+		radio: radio,
+		radioName: "radio"+name,
+		input: input
+	};
+	thisDiv.remove();
+	newDiv = createNewDivElement("show",contents);
+	if (position === "") {
+		newDiv.appendTo( $("#container") );
+	}
+	else{
+		if (position == 0) {
+			newDiv.pretend( $("#container") );
+		}
+		else{
+			newDiv.insertAfter($("#container").children(':nth-child('+position+')') );
+		}
+	}
+	createNewTempElement();
 }
