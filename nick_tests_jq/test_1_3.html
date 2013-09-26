@@ -3,7 +3,7 @@
 <title>jQuery. Accordion 1</title>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript" src="js/common_new.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -11,28 +11,78 @@ $(document).ready(function(){
 	var newElement;
 	var newHeader;
 	var newParahraph;
-	var Name = "just_a_name";
-	newElement 		= fabric("div", {class: "accordion_item", id: "div_"+Name});
-	newHeader 		= fabric("h3", {id: "h3"+Name, content:"very new quession"}); 
-	newParahraph 	= fabric("p",  {id: "p"+Name, content:"blah-blah-blah"}); 
-	newInput		= fabric("text area",  {id: "textarea"+Name, content:"blah-blah-blah"}); 
+	var stringJSON;
+	//
+//	newElement 		= fabric("div", 		{class: "accordion_item", id: "div_"+Name});
+//	newHeader 		= fabric("h3", 			{id: "h3"+Name, content:"very new quession"}); 
+//	newParahraph 	= fabric("p",  			{id: "p"+Name, content:"blah-blah-blah"}); 
+//	newInput		= fabric("text area",  	{id: "textarea"+Name, content:"blah-blah-blah"}); 
+//	newRadio		= fabric("radio",  		{content:["blah-blah-blah","blah-blah"],name: Name}); 
 	//добавляем элемент во временный контейнер
-	newElement.appendTo( $('#temp_divs') );
+	createNewTempElement();
 	
-	newHeader.appendTo( newElement );
-	newHeader.click( onHeaderClick );
+//	newHeader.appendTo( newElement );
+//	newHeader.click( onHeaderClick );
 	
-	newParahraph.appendTo( newElement );
+//	newParahraph.appendTo( newElement );
 	
-	newInput.appendTo( newElement );
-	newInput.change(onTextChanged);
+//	newInput.appendTo( newElement );
+//	newInput.change(onTextChanged);
 	
+//	newRadio.appendTo( newElement );
+	
+	//---------------------------------------------------------------
+	
+	stringJSON = exportToJSON(".accordion");
+	alert(stringJSON);
+	$('input[name=' + 'inputType' + ']','#temp_divs').change(function()	{
+		if ($(this).val() == "radio"){
+			$("#radioOptions", '#temp_divs').show();
+			
+		}
+		else{
+			$("#radioOptions", '#temp_divs').hide();
+		}
+	});
 	//$(".accordion h3:first").addClass("active");
 	//$(".accordion p:not(:first)").hide();
 	$("#test_id").change(onTextChanged);
 	$(".accordion h3").click(onHeaderClick);
 	$("#add_div").click(function(){
-		$("#div_"+Name).appendTo( $(".accordion") );
+		var name = $('#newElementName').val();
+		if (name == ""){
+			showError("Имя блока должно быть заполнено!");
+			return;
+		}
+		var thisDiv = $("#temp_divs").children().first();
+		var input = undefined;
+		var radio = undefined;
+		if ( $('input[name=' + 'inputType' + ']:checked','#temp_divs').val() == "text" ){
+				input = "";
+		}
+		else{
+			radio = $("#radioOptions", '#temp_divs').children('input[type=text]').val().split(',');
+		}
+		
+				
+		var contents ={
+			id: name,
+			header:thisDiv.children('p').children(':input[type=text]').val(),
+			description:thisDiv.children('textarea').val(),
+			radio: radio,
+			radioName: "radio"+name,
+			input: input
+		};
+		thisDiv.remove();
+		newDiv = createNewDivElement("show",contents);
+		newDiv.appendTo( $("#container") );
+		createNewTempElement();
+		
+		
+		
+	});
+	$("#import").click(function(){
+		importFromJSON(stringJSON,"#imported");
 		
 	});
 });
@@ -85,33 +135,40 @@ body {
 </head>
 
 <body>
+<div class="error"></div>
 <input type="button" id="add_div">add div</input>
+
+<input class="input" id="newElementName" type="text" placeholder="Element name"></input>
 <div id="temp_divs">
 </div>
-<div class="accordion">
-	<div class ="accordion_item">
+<div id="imported" class= "accordion">
+</div>
+</br>
+
+<div class="accordion" id = "container">
+	<div class ="accordion_item" id="test1">
 		<h3 class="">Question One Sample Text</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
 		<input  style="display: none;" type ="text" id="test_id"></input>
 	</div>
-	<div class ="accordion_item">
+	<div class ="accordion_item"id="test2">
 		<h3 class="">This is Question Two</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
 	</div>
-	<div class ="accordion_item">
+	<div class ="accordion_item"id="test3">
 		<h3 class="">Another Questio here</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
 	</div>
-	<div class ="accordion_item">
+	<div class ="accordion_item"id="test4">
 		<h3 class="">Sample heading</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
 	</div>
-	<div class ="accordion_item">
+	<div class ="accordion_item"id="test5">
 		<h3 class="">Sample Question Heading</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
 	</div>
 </div>
 
-
+<input type="button" id="import">build from json</input>
 
 </body></html>

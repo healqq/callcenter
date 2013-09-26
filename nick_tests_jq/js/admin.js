@@ -45,7 +45,9 @@ function appendElement(element, newElement){
 //добавить в строку ошибок новую строку
 function showError(errString){
 	var errDiv = $('.error');
+	errDiv.toggleClass("active");
 	$('<p>'+errString+'</p>').appendTo(errDiv);
+	
 }
 //Функция для отчистки строки ошибок
 function clearErrors(){
