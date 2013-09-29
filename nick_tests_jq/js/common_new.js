@@ -395,12 +395,22 @@ function onBranchClick(){
 		
 	
 }
-//список для radio
+//список для radio в созаднии элемента
 function createRadioOptionsList( optionsList ){
 	newRadioOptions = fabric("div"	    , 	getObjectSpecs("div", undefined ,"radioOptions" ) );
-	newOption1 		= fabric("text"	    , 	getObjectSpecs("text area", undefined  ) );
-	newOption2 		= fabric("text"	    , 	getObjectSpecs("text area", undefined  ) );
-	newOption1.appendTo(newRadioOptions);
-	newOption2.appendTo(newRadioOptions);
+	if (optionsList == undefined ){
+		// для нового элемента
+		newOption1 		= fabric("text"	    , 	getObjectSpecs("text area", undefined  ) );
+		newOption2 		= fabric("text"	    , 	getObjectSpecs("text area", undefined  ) );
+		newOption1.appendTo(newRadioOptions);
+		newOption2.appendTo(newRadioOptions);
+	}
+	else{
+		//для edit'а текущего
+		for (var i = 0; i < optionsList.length; i++ ){
+			newOption = fabric("text edit"	    , 	getObjectSpecs("text area", optionsList[i]  ) );
+			newOption.appendTo(newRadioOptions);
+		}
+	}
 	return newRadioOptions;
 }
