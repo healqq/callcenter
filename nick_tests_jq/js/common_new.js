@@ -48,6 +48,7 @@ function fabric ( type,  options) {
 			//elementContent = '<input type="radio">' + elementInnerData + '</input>'; 
 			break;
 		case "checkbox":
+			elementContent = '<p><input type="checkbox">'+options.content+'</p>';
 			break;
 			
 		case "text":
@@ -131,7 +132,7 @@ function createObjectFromDiv(element){
 	header 			= $(element).children("h3").text();
 	pSelection 		= $(element).children("p");
 	description 	= pSelection.first().text();
-	inputSelection 	= $(element).find(':input');
+	inputSelection 	= $(element).find(':input[type=radio]');
 	if (inputSelection.first().attr('type') == "textarea") {
 		input = "Введите ответ:";
 	}
@@ -169,12 +170,14 @@ function importFromJSON(stringJSON, container)
 function getObjectSpecs(type,content,name){
 var objectScpecs;
 switch (type) {
-		case "description":	objectSpecs = {class:undefined,content:content};break;
-		case "header":		objectSpecs = {class:undefined,content:content};break;
-		case "text area":	objectSpecs = {class:undefined,content:content,id:name};break;
-		case "radio":		objectSpecs = {class:undefined,content:content,name:name};break;
-		case "div":			objectSpecs = {class:undefined,id:name,content:undefined};break;
-		case "editbutton":	objectSpecs = {class:"editbutton",content:content};break;
+		case "description":		objectSpecs = {class:undefined,content:content};break;
+		case "header":			objectSpecs = {class:undefined,content:content};break;
+		case "text area":		objectSpecs = {class:undefined,content:content,id:name};break;
+		case "radioInputTypes":	objectSpecs = {class:undefined,content:["text","radio"],name:"inputType"};break;
+		case "radio":			objectSpecs = {class:undefined,content:content,name:name};break;
+		case "div":				objectSpecs = {class:undefined,id:name,content:undefined};break;
+		case "editbutton":		objectSpecs = {class:"editbutton",content:content};break;
+		case "checkboxBranch":		objectSpecs = {class:undefined,content:"Ветвление",id:"branch"};break;
 		default:
 		return undefined;
 		}
@@ -233,8 +236,8 @@ function createNewDivElement(type, contents){
 			newElement 		= fabric("div", 			getObjectSpecs("div",undefined,contents.id) );
 			newHeader 		= fabric("text edit", 		getObjectSpecs("text area", contents.header) );
 			newParagraph    = fabric("text area edit", 	getObjectSpecs("text area", contents.description) );
-			newInput    	= fabric("radio"	, 		getObjectSpecs("radio", contents.radio,contents.radioName) );
-			newInputRadio   = fabric("text"	    , 		getObjectSpecs("text area", "введите варианты перечисления","radioOptions") );
+			newInput    	= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
+			newInputRadio   = fabric("text edit", 		getObjectSpecs("text area", contents.radio, "radioOptions") );
 			newPosition   	= fabric("text edit", 		getObjectSpecs("text area", contents.position ,"position" ) );
 			newHeader.appendTo( newElement );
 			//newHeader.children(':input').val(contents.header);
@@ -252,9 +255,11 @@ function createNewDivElement(type, contents){
 			newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id) );
 			newHeader 		= fabric("text", 		getObjectSpecs("text area", contents.header) );
 			newParagraph    = fabric("text area", 	getObjectSpecs("text area", contents.description) );
-			newInput    	= fabric("radio"	, 	getObjectSpecs("radio", contents.radio,contents.radioName) );
+			newInput    	= fabric("radio"	, 	getObjectSpecs("radioInputTypes") );
 			newInputRadio   = fabric("text"	    , 	getObjectSpecs("text area", "введите варианты перечисления","radioOptions") );
+			//newInputRadio   = createRadioOptionsList();
 			newPosition   	= fabric("text"	    , 	getObjectSpecs("text area", undefined ,"position" ) );
+			newIsSwitch   	= fabric("checkbox" , 	getObjectSpecs("checkboxBranch") );
 			
 			newHeader.appendTo( newElement );
 			newParagraph.appendTo( newElement );
@@ -264,6 +269,8 @@ function createNewDivElement(type, contents){
 			newPosition.children(':input').val(contents.position);
 			newPosition.appendTo( newElement );
 			newPosition.hide();
+			newIsSwitch.appendTo( newElement );
+			newIsSwitch.children(':input').click(onBranchClick);
 			
 	}
 	return newElement;
@@ -276,8 +283,8 @@ function createNewTempElement(contents){
 			id: undefined,
 			header:"Введите заголовок блока",
 			description:"И его описание",
-			radio: ["text","radio"],
-			radioName: "inputType",
+			radio: undefined,
+			radioName: undefined,
 			input: "Im just some text"
 			};
 		edit = false;
@@ -285,15 +292,15 @@ function createNewTempElement(contents){
 	$('#temp_divs').empty();
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
-	$('input[name=' + 'inputType' + ']','#temp_divs').change(function()	{
-		if ($(this).val() == "radio"){
-			$("#radioOptions", '#temp_divs').show();
-			
-		}
-		else{
-			$("#radioOptions", '#temp_divs').hide();
-		}
-	});
+		$('input[name=' + 'inputType' + ']','#temp_divs').change(function()	{
+			if ($(this).val() == "radio"){
+				$("#radioOptions", '#temp_divs').show();
+				
+			}
+			else{
+				$("#radioOptions", '#temp_divs').hide();
+			}
+		});
 }
 //добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
 function addElement(){
@@ -350,8 +357,7 @@ function addElement(){
 	}
 	createNewTempElement(); //обнуляем значения у temp_div
 }
-function onEditClick()
-{
+function onEditClick(){
 var position;
 	var parentBlock = $(this).parent().parent('div');
 	//	var previousBlock = parentBlock.prevAll('div:first');
@@ -369,7 +375,32 @@ var position;
 	//removeElement(parentBlock);
 	$('#newElementName').val(objectDiv.id);
 	objectDiv.id = undefined;
-	objectDiv.radio = ["text","radio"];
-	objectDiv.radioName = "inputType";
+	//objectDiv.radio = ["text","radio"];
+	//objectDiv.radioName = "inputType";
 	createNewTempElement(objectDiv);
+}
+//если есть ветвление - то тип по дефолту радио
+function onBranchClick(){
+	if ($(this).is(':checked') ) {
+		$(':input[name=inputType][value=radio]').attr('checked',"checked");
+		$("#radioOptions", '#temp_divs').show();
+		$(':input[name=inputType]').parent().hide();
+	}
+	else{
+		//$(':input[name=inputType][value=radio]').attr('checked',"checked");
+		//$("#radioOptions", '#temp_divs').hide();
+		//$(':input[name=inputType][value=radio]').attr('checked',undefined)
+		$(':input[name=inputType]').parent().show();
+	}
+		
+	
+}
+//список для radio
+function createRadioOptionsList( optionsList ){
+	newRadioOptions = fabric("div"	    , 	getObjectSpecs("div", undefined ,"radioOptions" ) );
+	newOption1 		= fabric("text"	    , 	getObjectSpecs("text area", undefined  ) );
+	newOption2 		= fabric("text"	    , 	getObjectSpecs("text area", undefined  ) );
+	newOption1.appendTo(newRadioOptions);
+	newOption2.appendTo(newRadioOptions);
+	return newRadioOptions;
 }
