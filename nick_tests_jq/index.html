@@ -8,11 +8,48 @@
 	<script src="js/admin.js" type="text/javascript"></script>
 	<script src="js/common_new.js" type="text/javascript"></script>
  	<script type="text/javascript">
-	$( document ).ready(function (){
-	//	className 				= "test";
-	//	elementName 			= 'testelem';
-	//	elementDescription 		= 'blah-blah-blah';
+	$(document).ready(function(){
+//creating new div block with header(h3) description (p) and input 
+	var newElement;
+	var newHeader;
+	var newParahraph;
+	var stringJSON;
+	//
+//	newElement 		= fabric("div", 		{class: "accordion_item", id: "div_"+Name});
+//	newHeader 		= fabric("h3", 			{id: "h3"+Name, content:"very new quession"}); 
+//	newParahraph 	= fabric("p",  			{id: "p"+Name, content:"blah-blah-blah"}); 
+//	newInput		= fabric("text area",  	{id: "textarea"+Name, content:"blah-blah-blah"}); 
+//	newRadio		= fabric("radio",  		{content:["blah-blah-blah","blah-blah"],name: Name}); 
+	//добавляем элемент во временный контейнер
+	createNewTempElement();
+	
+//	newHeader.appendTo( newElement );
+//	newHeader.click( onHeaderClick );
+	
+//	newParahraph.appendTo( newElement );
+	
+//	newInput.appendTo( newElement );
+//	newInput.change(onTextChanged);
+	
+//	newRadio.appendTo( newElement );
+	
+	//---------------------------------------------------------------
+	
+	//stringJSON = exportToJSON(".accordion");
+	//alert(stringJSON);
+	
+	//$(".accordion h3:first").addClass("active");
+	//$(".accordion p:not(:first)").hide();
+	$("#test_id").change(onTextChanged);
+	$(".accordion h3").click(onHeaderClick);
+	$("#add_div").click(addElement);
+	
+	$("#import").click(function(){
+		stringJSON = exportToJSON(".accordion");
+		alert(stringJSON);
+		importFromJSON(stringJSON,"#imported");
 		
+<<<<<<< HEAD
 		//$('body').append("<div class="+className+">hello</div>");
 	//	appendElement('body',{className: className,elementName: elementName, elementDescription:elementDescription});
 	//	addInputToElement(elementName,'text');
@@ -57,10 +94,57 @@
         alert('err'+data.state);
             //alert(req.responseText + " " + status);
         } 
+=======
+	});
+	$(".edit").click(onEditClick);
+		
+		//}
+		//alert(position);
+	
+>>>>>>> origin/Nick
 });
 	
 	</script>
+<style type="text/css">
 
+.accordion {
+	background: #f7f7f7;
+	width: 480px;
+	border-bottom: solid 1px #c4c4c4;
+	border-left: solid 1px #c4c4c4;
+	border-right: solid 1px #c4c4c4;
+}
+.accordion h3 {
+	background: #e9e7e7 url(images/arrow-square.gif) no-repeat right -51px;
+	padding: 7px 15px;
+	margin: 0;
+	font: bold 120%/100% Arial, Helvetica, sans-serif;
+	border: solid 1px #c4c4c4;
+	border-bottom: none;
+	cursor: pointer;
+}
+.accordion h3:hover {
+	background-color: #e3e2e2;
+}
+.accordion h3.active {
+	background-position: right 5px;
+}
+.accordion p {
+	
+	margin: 0;
+	padding:  10px 15px 20px;
+	
+}
+.accordion textarea {
+	
+	bottom: 10px;
+	left 10px;
+	margin: 10;
+	
+	
+}
+
+</style>
 </head>
 
 <body>
@@ -71,20 +155,43 @@
 
 <div class = "tableRight">
 	<div class="error"></div>
-		<p class = "control">
-			<a href="#" class="button">add div</a>
-			<input class="input" id="newElementName" type="text" placeholder="Element name">
-			<select class ="select" id="newElementType">
-				<option>text</option>
-				<option>checkbox</option>
-				<option>radio</option>
-				<option>date</option>
-			</select>
-			
-		</p>
-	<!-- <div class="container">
-	</div> -->
+		<input type="button" id="add_div">add div</input>
+
+<input class="input" id="newElementName" type="text" placeholder="Element name"></input>
+<div id="temp_divs">
+</div>
+<div id="imported" class= "accordion">
+</div>
+</br>
+
+<div class="accordion" id = "container">
+	<div class ="accordion_item" id="test1">
+		<h3 class="">Question One Sample Text</h3>
+		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
+		<input  style="display: none;" type ="text" id="test_id"></input>
+		<p style="display: none;><input type="button" class="edit" >edit</button></p>
 	</div>
+	<div class ="accordion_item"id="test2">
+		<h3 class="">This is Question Two</h3>
+		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
+		<p><input type="button" class="edit">edit</button></p>
+	</div>
+	<div class ="accordion_item"id="test3">
+		<h3 class="">Another Questio here</h3>
+		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
+		<p style="display: none;><input type="button" class="edit">edit</button></p>
+	</div>
+	<div class ="accordion_item"id="test4">
+		<h3 class="">Sample heading</h3>
+		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
+	</div>
+	<div class ="accordion_item"id="test5">
+		<h3 class="">Sample Question Heading</h3>
+		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
+	</div>
+</div>
+</div>
+<input type="button" id="import">build from json</input>
 </body>
 
 </html>
