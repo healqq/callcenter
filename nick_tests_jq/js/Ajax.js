@@ -14,8 +14,9 @@
 
  var xmlDocument = [create xml document];
  $.ajax({
+   type: "GET",
    url: "page.php",
-   processData: false,
+   processData: true,
    data: xmlDocument,
    success: handleResponse
  });
@@ -35,4 +36,46 @@
       }
    }
 ).responseText;
+
+
+// function getStr(form)
+// {
+	// var tmp = [], el;
+	// for(i=0; el = form.elements[i]; i++)
+		// if( el.type == "hidden" && el.value != "" ) tmp.push(el.name + '=' + el.value);
+	
+// }
+
+
+
+
+       function OtpravkaXML() {
+            $("#btnCallWebService").click(function (event) {
+                var wsUrl = "http://www.cbr.ru/dailyinfowebserv/dailyinfo.asmx?WSDL";
+                var soapRequest ='<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">   <soap:Body> <getQuote xmlns:impl="http://abc.com/services/soap/server1.php">  <symbol>' + $("#txtName").val() + '</symbol>   </getQuote> </soap:Body></soap:Envelope>';
+                               alert(soapRequest)
+                $.ajax({
+                    type: "POST",
+                    url: wsUrl,
+                    contentType: "text/xml",
+                    dataType: "xml",
+                    data: soapRequest,
+                    success: processSuccess,
+                    error: processError
+                });
+
+            });
+        });
+
+        function processSuccess(data, status, req) { alert('success');
+            if (status == "success")
+                $("#response").text($(req.responseXML).find("Result").text());
+
+                alert(req.responseXML);
+        }
+
+        function processError(data, status, req) {
+        alert('err'+data.state);
+            //alert(req.responseText + " " + status);
+        } 
 
