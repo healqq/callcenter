@@ -16,7 +16,7 @@ function fabric ( type,  options) {
 	//проверяем, что нет элемента с таким id
 	newElementId =  options.id;
 	if ( !(newElementId == undefined) ) {
-		if ( !($('#+options.id').size() == 0 ) ){
+		if ( !($('#'+options.id).size() == 0 ) ){
 			return;
 		}
 	}
