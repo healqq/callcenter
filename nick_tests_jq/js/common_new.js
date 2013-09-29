@@ -31,6 +31,8 @@ function fabric ( type,  options) {
 			elementContent = '<h3>' + elementInnerData + '</h3>'; break;
 		case "text area":
 			elementContent = '<textarea placeholder="'+options.content+'"></textarea>'; break;
+		case "text area edit":
+			elementContent = '<textarea>'+options.content+'</textarea>'; break;	
 		//options.content should be filled and type = array
 		//
 		case "radio":
@@ -50,6 +52,8 @@ function fabric ( type,  options) {
 			
 		case "text":
 			elementContent = '<p><input type="text" placeholder="'+options.content+'"></p>';break;
+		case "text edit":
+			elementContent = '<p><input type="text" value ="'+options.content+'"></p>';break;
 		case "button":
 			elementContent = '<p><input type="button">'+options.content+'</input></p>';break;
 		 default:
@@ -226,20 +230,20 @@ function createNewDivElement(type, contents){
 	break;
 	//заполняем поля значениями, которые были
 	case "edit":
-			newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id) );
-			newHeader 		= fabric("text", 		getObjectSpecs("text area", contents.header) );
-			newParagraph    = fabric("text area", 	getObjectSpecs("text area", contents.description) );
-			newInput    	= fabric("radio"	, 	getObjectSpecs("radio", contents.radio,contents.radioName) );
-			newInputRadio   = fabric("text"	    , 	getObjectSpecs("text area", "введите варианты перечисления","radioOptions") );
-			newPosition   	= fabric("text"	    , 	getObjectSpecs("text area", undefined ,"position" ) );
+			newElement 		= fabric("div", 			getObjectSpecs("div",undefined,contents.id) );
+			newHeader 		= fabric("text edit", 		getObjectSpecs("text area", contents.header) );
+			newParagraph    = fabric("text area edit", 	getObjectSpecs("text area", contents.description) );
+			newInput    	= fabric("radio"	, 		getObjectSpecs("radio", contents.radio,contents.radioName) );
+			newInputRadio   = fabric("text"	    , 		getObjectSpecs("text area", "введите варианты перечисления","radioOptions") );
+			newPosition   	= fabric("text edit", 		getObjectSpecs("text area", contents.position ,"position" ) );
 			newHeader.appendTo( newElement );
-			newHeader.children(':input').val(contents.header);
+			//newHeader.children(':input').val(contents.header);
 			newParagraph.appendTo( newElement );
-			newParagraph.val(contents.description);
+			//newParagraph.val(contents.description);
 			newInput.appendTo ( newElement );
 			newInputRadio.appendTo ( newElement );
 			newInputRadio.hide();	
-			newPosition.children(':input').val(contents.position);
+			//newPosition.children(':input').val(contents.position);
 			newPosition.appendTo( newElement );
 			newPosition.hide();
 	break;
@@ -349,7 +353,7 @@ function addElement(){
 function onEditClick()
 {
 var position;
-	var parentBlock = $(this).parent('div');
+	var parentBlock = $(this).parent().parent('div');
 	//	var previousBlock = parentBlock.prevAll('div:first');
 		//if (previousBlock.length == 0){
 			//	position = 0;
@@ -358,7 +362,11 @@ var position;
 	position = parentBlock.index();
 	objectDiv = createObjectFromDiv(parentBlock);
 	objectDiv.position = position;
-	removeElement(parentBlock);
+	parentBlock.animate({opacity: 'hide',height:0+'px'},{duration:'slow',easing: 'swing',complete:function(){
+		removeElement(parentBlock);
+		}
+	});
+	//removeElement(parentBlock);
 	$('#newElementName').val(objectDiv.id);
 	objectDiv.id = undefined;
 	objectDiv.radio = ["text","radio"];
