@@ -395,16 +395,7 @@ function addElement(){
 			inputTypeVal = "text";
 	}
 	else{
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
-=======
->>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
-=======
->>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
 		inputTypeVal = "radio";
 		radio = [];
 		radioOptionsList = $(':input[type=text]','.radioOption').not('.branchId');
@@ -422,16 +413,6 @@ function addElement(){
 		radioOptionsFilled.each(function(){
 			radio.push($(this).val());
 		});
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-=======
->>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
-=======
->>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
-=======
->>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
 	}
 		
 
