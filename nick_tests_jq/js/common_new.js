@@ -396,7 +396,6 @@ function addElement(){
 	}
 	else{
 
-
 		inputTypeVal = "radio";
 		radio = [];
 		radioOptionsList = $(':input[type=text]','.radioOption').not('.branchId');
@@ -415,7 +414,9 @@ function addElement(){
 			radio.push($(this).val());
 		});
 
-	}	
+	}
+		
+
 				
 	var contents ={
 		id: name,
