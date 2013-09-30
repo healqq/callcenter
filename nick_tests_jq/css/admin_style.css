@@ -56,7 +56,7 @@
 			display: none;
 }
 	
-		.AktiveError {
+		.active {
 			color: #D8000C;
 			background-color: #FFBABA;
 			background-image: url(images/error.png);
