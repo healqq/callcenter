@@ -396,7 +396,10 @@ function addElement(){
 	}
 	else{
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
 =======
 >>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
 		inputTypeVal = "radio";
@@ -417,7 +420,10 @@ function addElement(){
 			radio.push($(this).val());
 		});
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+>>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
 =======
 >>>>>>> 38556239eca5b0f5e580c79f71c672d9b8911660
 	}
