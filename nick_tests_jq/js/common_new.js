@@ -17,6 +17,7 @@ function fabric ( type,  options) {
 	newElementId =  options.id;
 	if ( !(newElementId == undefined) ) {
 		if ( !($('#'+options.id).size() == 0 ) ){
+			showError("id " + options.id + "already exists.");
 			return;
 		}
 	}

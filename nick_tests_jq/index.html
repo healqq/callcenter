@@ -49,59 +49,15 @@
 		alert(stringJSON);
 		importFromJSON(stringJSON,"#imported");
 		
-<<<<<<< HEAD
-		//$('body').append("<div class="+className+">hello</div>");
-	//	appendElement('body',{className: className,elementName: elementName, elementDescription:elementDescription});
-	//	addInputToElement(elementName,'text');
-	//	$('button').click(function(){
-	//	appendElement('body', 'test');
-	//		});
-	//	});
-			
-	$('.button').click(function(){
-		className 				= "test";
-		elementName 			= $('#newElementName').val();
-		elementType 			= $('#newElementType').val();
-		appendElement('.container',{className: className,elementName: elementName, elementType: elementType} );
-		})
-	
-	
-	
-	
-            $("#btnCallWebService").click(function (event) {
-                var wsUrl = "http://192.168.4.61/83callcenter/ws/callcenterexchange?wsdl";
-                var soapRequest ='<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:ctoc="www.1ctocallcenter.com"> <soap:Header/> <soap:Body> <ctoc:SendScriptStructure/> </soap:Body></soap:Envelope>';
-                               alert(soapRequest)
-                $.ajax({
-                    type: "POST",
-                    url: wsUrl,
-                    contentType: "text/xml",
-                    dataType: "xml",
-                    data: soapRequest,
-                    success: processSuccess,
-                    error: processError
-                });
 
-            });
-         function processSuccess(data, status, req) { alert('success');
-            if (status == "success")
-                $("#response").text($(req.responseXML).find("Result").text());
 
-                alert(req.responseXML);
-        }
-
-        function processError(data, status, req) {
-        alert('err'+data.state);
-            //alert(req.responseText + " " + status);
-        } 
-=======
 	});
 	$(".edit").click(onEditClick);
 		
 		//}
 		//alert(position);
 	
->>>>>>> origin/Nick
+
 });
 	
 	</script>
@@ -165,30 +121,7 @@
 </br>
 
 <div class="accordion" id = "container">
-	<div class ="accordion_item" id="test1">
-		<h3 class="">Question One Sample Text</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-		<input  style="display: none;" type ="text" id="test_id"></input>
-		<p style="display: none;><input type="button" class="edit" >edit</button></p>
-	</div>
-	<div class ="accordion_item"id="test2">
-		<h3 class="">This is Question Two</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-		<p><input type="button" class="edit">edit</button></p>
-	</div>
-	<div class ="accordion_item"id="test3">
-		<h3 class="">Another Questio here</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-		<p style="display: none;><input type="button" class="edit">edit</button></p>
-	</div>
-	<div class ="accordion_item"id="test4">
-		<h3 class="">Sample heading</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-	</div>
-	<div class ="accordion_item"id="test5">
-		<h3 class="">Sample Question Heading</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-	</div>
+	
 </div>
 </div>
 <input type="button" id="import">build from json</input>
