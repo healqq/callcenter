@@ -45,7 +45,7 @@
 	$("#add_div").click(addElement);
 	
 	$("#import").click(function(){
-		stringJSON = exportToJSON(".accordion");
+		stringJSON = exportToJSON("#container");
 		alert(stringJSON);
 		importFromJSON(stringJSON,"#imported");
 		
@@ -56,7 +56,9 @@
 		//}
 		//alert(position);
 	
-
+	$("#transfer_to_temp").click(function(){
+		$('#container').children('div').each(moveDiv);
+	});
 });
 	
 	</script>
@@ -112,6 +114,7 @@
 <div class = "tableRight">
 	<div class="error"></div>
 		<input type="button" id="add_div" value="add_div"></input>
+		<input type="button" id="transfer_to_temp" value="to temp"></input>
 
 <input class="input" id="newElementName" type="text" placeholder="Element name"></input>
 <div id="temp_divs">
@@ -119,8 +122,8 @@
 <div id="imported" class= "accordion">
 </div>
 </br>
-
-<div class="accordion" id = "container">
+<div class="accordion" id = "container"></div>
+<div class="accordion" id = "container2" style = "display:none">
 	<div class ="accordion_item" id="test1">
 		<h3 class="">Question One Sample Text</h3>
 		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>

@@ -18,7 +18,8 @@ function fabric ( type,  options) {
 	if ( !(newElementId == undefined) ) {
 		if ( !($('#'+options.id).size() == 0 ) ){
 			showError("Элемент с таким id уже существует!");
-			return;
+			throw new exeption;
+			//return;
 		}
 	}
 	//получаем данные, которые вставим внутрь элемента
@@ -115,11 +116,11 @@ function onTextChanged() {
 		blocks: массив объектов contents для каждого блока.
 
 */
-function exportToJSON(className){
+function exportToJSON(idName){
 	var divArray = [];
 	
 	
-	var divSelection = $(className).children();
+	var divSelection = $(idName).children();
 	var objectJSON = {first:divSelection.first().children("h3").text(), blocks:undefined};
 	
 	var objectDiv;
@@ -174,6 +175,7 @@ function importFromJSON(stringJSON, container)
 	var objectJSON = JSON.parse(stringJSON);
 	var newElement;
 	var container = $(container);
+	$("#container").empty();
 	for (var i = 0; i < objectJSON.blocks.length; i++){
 		createNewDivElement("show", objectJSON.blocks[i]).appendTo(container);
 		
@@ -243,8 +245,12 @@ function createNewDivElement(type, contents){
 		newParagraph.appendTo( newElement );
 		if (contents.inputType == "radio"){
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
-			newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
-			newRadio.appendTo( newElement );
+				newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
+				newRadio.appendTo( newElement );
+				if ( (contents.branches == undefined) || (contents.branches.length < 2 ) ){
+					newRadio.change(hideDivElements);
+				}
+				
 			}
 		}
 		else{
@@ -297,7 +303,7 @@ function createNewDivElement(type, contents){
 			newPosition.hide();
 			newIsSwitch.appendTo( newElement );
 			newIsSwitch.children(':input').click(onBranchClick);
-			if (contents.branches == undefined ){
+			if ( (contents.branches == undefined) || (contents.branches.length < 2 ) ){
 				newIsSwitch.children(":input").prop('checked', false);
 			}
 			else{
@@ -370,6 +376,11 @@ function addElement(){
 		showError("Имя блока должно быть заполнено!");
 		return;
 	}
+	if ( !($('#'+name).size() == 0 ) ){
+		showError("Элемент с таким id уже существует!");
+		return;
+		
+	}
 	var thisDiv = $("#temp_divs").children().first();
 	var input = undefined;
 	var radio = undefined;
@@ -427,17 +438,74 @@ function addElement(){
 		inputType: inputTypeVal,
 		branches: branches
 	};
+	
+	branchesPrevElement = undefined;
+	//это новый элемент
+	if (position === "") {
+		lastDiv = $('#container').children(':last');
+		if (!(lastDiv.length == 0) ) {
+			branchesPrevElement = lastDiv.data("branches");
+			if ( !(branchesPrevElement == undefined) ) {
+				checkedDiv = lastDiv.find(':input[type=radio]:checked');
+					if (checkedDiv.length == 0 ){
+						showError("Для элемента с ветвлением нужно выбрать ветвь!");
+						return;
+					}
+					radioValue = checkedDiv.val();
+					branchesPrevElement[radioValue] = contents.id;
+				}
+			
+			else{
+				branchesPrevElement = [contents.id];
+				
+			}
+			
+		}
+		
+	}
+	
+	//элемент с edita, и он первый
+	else{
+		if (position == 0) {
+			
+			
+		}
+		else{
+			lastDiv = $("#container").children(':nth-child('+position+')');
+			branchesPrevElement = lastDiv.data("branches");
+			
+			if (branchesPrevElement.length > 1) {
+			checkedDiv = lastDiv.find(':input[type=radio]:checked');
+				if (checkedDiv.length == 0 ){
+					showError("Для элемента с ветвлением нужно выбрать ветвь!");
+					return;
+				}
+			
+				radioValue = checkedDiv.val();
+				branchesPrevElement[radioValue] = contents.id;
+				
+			}
+		}
+	}
+	lastDiv.data("branches", branchesPrevElement); 
 	thisDiv.remove();
 	newDiv = createNewDivElement("show",contents);
+	//это новый элемент
 	if (position === "") {
+		
 		newDiv.appendTo( $("#container") );
 	}
+	
+	//элемент с edita, и он первый
 	else{
 		if (position == 0) {
 			newDiv.prependTo( $("#container") );
+			
 		}
 		else{
-			newDiv.insertAfter($("#container").children(':nth-child('+position+')') );
+			lastDiv = $("#container").children(':nth-child('+position+')');
+			newDiv.insertAfter(lastDiv );
+		
 		}
 	}
 	createNewTempElement(); //обнуляем значения у temp_div
@@ -520,16 +588,16 @@ function createRadioOptionsList( optionsList, branchesList ){
 	}
 	else{
 		//для edit'а текущего
-		
+		branches = (branchesList.length > 1) ? true:false;
 		for (var i = 0; i < optionsList.length; i++ ){
 			newOption 				= fabric("text edit", 				getObjectSpecs("radioOptionText edit", optionsList[i]  ) );
 			newOptionRemove  		= fabric("buttoninline",   			getObjectSpecs("removebutton", "remove") );
-			newOptionNextElement	= fabric("textinline edit", 		getObjectSpecs("nextElementText edit",branchesList == undefined? "":branchesList[i] ) );
+			newOptionNextElement	= fabric("textinline edit", 		getObjectSpecs("nextElementText edit",branches? branchesList[i]:"" ) );
 			newOptionRemove.click(removeRadioOptionsListItem);
 			newOptionRemove.insertAfter(newOption.children(":first"));
 			newOptionNextElement.insertAfter(newOption.children('input[type=button]'));
 			newOption.appendTo(newRadioOptions);
-			if ( branchesList == undefined ){
+			if ( !branches ){
 				newOptionNextElement.hide();
 				
 			}
@@ -571,3 +639,39 @@ function removeRadioOptionsListItem(){
 		//element = $(this).parent("p").remove();
 }
 		
+function moveDiv()
+{
+	contents = createObjectFromDiv($(this));
+	removeElement($(this));
+	newDivElement = createNewDivElement("show", contents);
+	newDivElement.appendTo($('#imported'));
+	
+}
+function hideDivElements(){
+	divBlock = $(this).parent('div');
+	branches = divBlock.data("branches");
+	selectedValue = $(this).children(":input[type=radio]").val();
+	currBranch = branches[selectedValue];
+	//selectedValue = $(this).val();
+	nextElements = divBlock.siblings().slice(divBlock.index());
+	nextElements.each(moveDiv);
+	showBranch(currBranch);
+		
+	
+}
+function showBranch(currBranch){
+	if (currBranch == ""){
+		return;
+	}
+	else{
+			divElement = $('#'+currBranch);
+			divElement.appendTo("#container");
+			branches = divElement.data("branches");
+			if ( (branches == undefined) || (branches.length > 1) ) {
+				return;
+			}
+			else{
+				showBranch(branches[0]);
+			}
+	}
+}
