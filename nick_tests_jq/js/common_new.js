@@ -92,22 +92,24 @@ function onHeaderClick(){
 	allDivBlocks.children().not("h3").slideUp("slow");
 		
 	that.addClass("active");
+	
 	allDivBlocks.children('h3').each(function(){
 		$(this).removeClass("active");
 		});
+	div_block.find("textarea").focus();
 }
 //событие при изменении инпута
 //переходит на следующее сообщение, если такое есть.
 //иначе просто сворачивает текущее	
 function onTextChanged() {
-	var div_block = $(this).parent("div");
-	var new_div_block = div_block.next();
-	if (new_div_block.size() == 0 ){
+	var divBlock = $(this).parent("div");
+	var nextDivBlock = divBlock.next();
+	if (nextDivBlock.size() == 0 ){
 		//div_block.
-		div_block.children().not("h3").slideUp("slow");
+		divBlock.children().not("h3").slideUp("slow");
 	}
 	else{
-		new_div_block.children("h3:first").trigger("click");
+		nextDivBlock.children("h3:first").trigger("click");
 	}
 }
 //формирует структуру json по текущей структуре
@@ -116,22 +118,27 @@ function onTextChanged() {
 		blocks: массив объектов contents для каждого блока.
 
 */
-function exportToJSON(idName){
+function exportToJSON(idNames){
 	var divArray = [];
-	
-	
-	var divSelection = $(idName).children();
-	var objectJSON = {first:divSelection.first().children("h3").text(), blocks:undefined};
-	
-	var objectDiv;
-	
-	
-	var radioName = undefined;
-	divSelection.each(function(){
-		 divArray.push(createObjectFromDiv(this));
+	var objectJSON = {first:undefined, blocks:undefined};
+	for (var i=0 ; i < idNames.length; i++){
+		var divSelection = $(idNames[i]).children();
+		if (i == 0) {
+			first = divSelection.first().attr('id');
+		}
 		
-	});
-	objectJSON.blocks = divArray; 
+		//var objectDiv;
+		
+		
+		var radioName = undefined;
+		divSelection.each(function(){
+			 divArray.push(createObjectFromDiv(this));
+			
+		});
+		 
+	}
+	objectJSON.blocks = divArray;
+	objectJSON.first  = first;
 	return JSON.stringify(objectJSON);
 }
 function createObjectFromDiv(element){
@@ -170,20 +177,21 @@ function createObjectFromDiv(element){
 	return objectDiv;	
 	
 }
-function importFromJSON(stringJSON, container)
+function importFromJSON(stringJSON, container, isEdited)
 {
+	isEdited = (isEdited == undefined ? true : isEdited);
 	var objectJSON = JSON.parse(stringJSON);
 	var newElement;
 	var container = $(container);
 	$("#container").empty();
 	for (var i = 0; i < objectJSON.blocks.length; i++){
-		createNewDivElement("show", objectJSON.blocks[i]).appendTo(container);
+		createNewDivElement("show", objectJSON.blocks[i], isEdited).appendTo(container);
 		
 	}
-	
+	return objectJSON.first;
 	//var divArray = 
 	
-};
+}
 
 //описание классов и параметров для элементов
 function getObjectSpecs(type,content,name){
@@ -228,14 +236,15 @@ function removeElement(element){
 //contents - объект, содержащий необходимые поля
 //параметр type = show для создания блока для отображения
 //если show не указано - то создается блок для редактирования
-function createNewDivElement(type, contents){
+function createNewDivElement(type, contents, isEdited){
+	isEdited = (isEdited == undefined ? true : isEdited);
 	switch (type){
 	case "show":
 		newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id));
 		newElement.data("branches", contents.branches);
 		newHeader 		= fabric("h3", 			getObjectSpecs("header",contents.header)); 
 		newParagraph 	= fabric("p",  			getObjectSpecs("description",contents.description)); 
-		newButton 		= fabric("button",  	getObjectSpecs("editbutton"	,"edit"));
+		
 		
 		
 		
@@ -247,7 +256,7 @@ function createNewDivElement(type, contents){
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
 				newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
 				newRadio.appendTo( newElement );
-				if ( (contents.branches == undefined) || (contents.branches.length < 2 ) ){
+				if (!( (contents.branches == undefined) || (contents.branches.length < 2 ) ) ){
 					newRadio.change(hideDivElements);
 				}
 				
@@ -258,13 +267,21 @@ function createNewDivElement(type, contents){
 				newInput		= fabric("text area",  	getObjectSpecs("text area",contents.input)); 
 				newInput.appendTo( newElement );
 				newInput.change(onTextChanged);
+				//по ctrl+enter переход на следующий вопрос
+				newInput.keydown(function(e){
+					if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey){
+						$(this).blur();
+					}
+				});
 			//}
 		}
-		
-		
+		//в режиме конструктора отображается кнопка edit
+		if (isEdited){
+		newButton 		= fabric("button",  	getObjectSpecs("editbutton"	,"edit"));
 		//кнопка редактирования
-		newButton.children(':input').click(onEditClick);
-		newButton.appendTo( newElement);
+			newButton.children(':input').click(onEditClick);
+			newButton.appendTo( newElement);
+		}
 	break;
 	//заполняем поля значениями, которые были
 	case "edit":
@@ -655,23 +672,36 @@ function hideDivElements(){
 	//selectedValue = $(this).val();
 	nextElements = divBlock.siblings().slice(divBlock.index());
 	nextElements.each(moveDiv);
-	showBranch(currBranch);
+	showBranch(currBranch, false);
 		
 	
 }
-function showBranch(currBranch){
+//отображает блок с заданным id
+function showBranch(currBranch,hide){
 	if (currBranch == ""){
 		return;
 	}
 	else{
 			divElement = $('#'+currBranch);
+			divElement.children().hide();
 			divElement.appendTo("#container");
+			
+			divElement.children("h3").slideDown("slow");
+			//divElement.children().not("h3").hide();
+			if (hide){
+				
+				
+			}
+			else{
+				divElement.children("h3").trigger("click");
+				hide = true;
+			}
 			branches = divElement.data("branches");
 			if ( (branches == undefined) || (branches.length > 1) ) {
 				return;
 			}
 			else{
-				showBranch(branches[0]);
+				showBranch(branches[0], hide);
 			}
 	}
 }

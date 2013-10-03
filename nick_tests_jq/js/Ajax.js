@@ -1,15 +1,7 @@
+//сохраняет структуру сценария в 1С
 function saveStructure() {
     
-    var wsUrl = 'ws/ws/callcenterexchange';
-    var soapRequest = combineSoapRequest("SetScriptStructure",[{key:'EncodedData', value: exportToJSON("#container")}]) ;
-    alert(soapRequest);
-    var request = $.ajax({
-                    type: "POST",
-                    url: wsUrl,
-                    contentType: "text/xml",
-                    dataType: "html",
-                    data: soapRequest
-                });
+    request = sendRequest("SetScriptStructure", [{key:'EncodedData', value: exportToJSON(["#container","#imported"])}]);
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );
 		});
@@ -18,18 +10,37 @@ function saveStructure() {
 		});
             
 }
-
-function processSuccess(data, status, req) { 
-	alert('success');
-    if (status == "success")
-		$("#response").text($(req.responseXML).find("Result").text());
-    alert(req.responseXML);
+//загружает структуру сценария из 1С
+function loadStructure() {
+    
+    request = sendRequest("GetScriptStructure");
+	request.done(function( msg ) {
+			$( "#response" ).html( msg );
+			first = importFromJSON( $( "#response" ).text(), "#imported", false);
+			showBranch(first,false);
+		});
+	request.fail(function( jqXHR, textStatus ) {
+		alert( "Request failed: " + textStatus );
+		});
+            
+}
+//отправляет реквест с заданным экшеном и параметрами. возвращает объект request, 
+//для которого нужно определить .done и .fail после вызова функции
+function sendRequest(action, params){
+	var wsUrl = 'ws/ws/callcenterexchange';
+    var soapRequest = combineSoapRequest(action, params) ;
+   // alert(soapRequest);
+    var request = $.ajax({
+                    type: "POST",
+                    url: wsUrl,
+                    contentType: "text/xml",
+                    dataType: "html",
+                    data: soapRequest
+                });
+	
+	return  request;
 }
 
-function processError(data, status, req) {
-    alert('err'+data.state);
-            //alert(req.responseText + " " + status);
-} 
 //формирует soap реквест
 function combineSoapRequest(action, arrayParam){
 	var paramString = '';
@@ -52,7 +63,6 @@ function fillParam(key,value){
 	return '<ctoc:'+key+'>'+value+'</ctoc:'+key+'>';
 }
  
-
 
 
 
