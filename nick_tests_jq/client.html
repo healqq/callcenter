@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Script show</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/admin_style.css" type="text/css">
+	<script src="js/admin.js" type="text/javascript"></script>
+	<script src="js/ajax.js" type="text/javascript"></script>
+	<script src="js/common_new.js" type="text/javascript"></script>
+ 	<script type="text/javascript">
+	$(document).ready(function(){
+
+	$("#btnCallWebService").click(loadStructure);
+});
+	
+	</script>
+<style type="text/css">
+
+.accordion {
+	background: #f7f7f7;
+	width: 480px;
+	border-bottom: solid 1px #c4c4c4;
+	border-left: solid 1px #c4c4c4;
+	border-right: solid 1px #c4c4c4;
+}
+.accordion h3 {
+	background: #e9e7e7 url(images/arrow-square.gif) no-repeat right -51px;
+	padding: 7px 15px;
+	margin: 0;
+	font: bold 120%/100% Arial, Helvetica, sans-serif;
+	border: solid 1px #c4c4c4;
+	border-bottom: none;
+	cursor: pointer;
+}
+.accordion h3:hover {
+	background-color: #e3e2e2;
+}
+.accordion h3.active {
+	background-position: right 5px;
+}
+.accordion p {
+	
+	margin: 0;
+	padding:  10px 15px 20px;
+	
+	
+}
+.accordion textarea {
+	
+	bottom: 10px;
+	left 10px;
+	margin: 10;
+	
+	
+}
+
+</style>
+</head>
+
+<body>
+<div class = "tableLeft">
+<input id="btnCallWebService" value="Call web service" type="button" />
+<p id="response" style="display:none" ></p>
+</div>
+
+<div class = "tableRight">
+	
+
+	<div id="imported" style="display:none" class= "accordion">
+	</div>
+	</br>
+	<div class="accordion" id = "container">
+	</div>
+
+</div>
+
+</body>
+
+</html>

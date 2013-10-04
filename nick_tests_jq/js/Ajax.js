@@ -1,81 +1,68 @@
- // Загружает некоторые данные на сервер и оповещает пользователя по окончанию операции.
- 
- $.ajax({
-   type: "POST",
-   url: "some.php",
-   data: "name=John&location=Boston",
-   success: function(msg){
-     alert( "Data Saved: " + msg );
-   }
- });
- 
- 
- // Отсылает документ XML в качестве данных на сервер. Автоматическое преобразование данных запрещено путем установки опции processData в false.
-
- var xmlDocument = [create xml document];
- $.ajax({
-   type: "GET",
-   url: "page.php",
-   processData: true,
-   data: xmlDocument,
-   success: handleResponse
- });
-
-    Код
-
-// Посылает идентификатор в качестве данных на сервер, сохраняет данные и оповещает пользователя по окончанию операции.
-
- bodyContent = $.ajax({
-      url: "script.php",
-      global: false,
-      type: "POST",
-      data: ({id : this.getAttribute('id')}),
-      dataType: "html",
-      success: function(msg){
-         alert(msg);
-      }
-   }
-).responseText;
-
-
-// function getStr(form)
-// {
-	// var tmp = [], el;
-	// for(i=0; el = form.elements[i]; i++)
-		// if( el.type == "hidden" && el.value != "" ) tmp.push(el.name + '=' + el.value);
-	
-// }
-
-
-
-
-       function OtpravkaXML() {
-            $("#btnCallWebService").click(function (event) {
-                var wsUrl = "http://www.cbr.ru/dailyinfowebserv/dailyinfo.asmx?WSDL";
-                var soapRequest ='<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">   <soap:Body> <getQuote xmlns:impl="http://abc.com/services/soap/server1.php">  <symbol>' + $("#txtName").val() + '</symbol>   </getQuote> </soap:Body></soap:Envelope>';
-                               alert(soapRequest)
-                $.ajax({
+//сохраняет структуру сценария в 1С
+function saveStructure() {
+    
+    request = sendRequest("SetScriptStructure", [{key:'EncodedData', value: exportToJSON(["#container","#imported"])}]);
+	request.done(function( msg ) {
+		$( "#response" ).html( msg );
+		});
+	request.fail(function( jqXHR, textStatus ) {
+		alert( "Request failed: " + textStatus );
+		});
+            
+}
+//загружает структуру сценария из 1С
+function loadStructure() {
+    
+    request = sendRequest("GetScriptStructure");
+	request.done(function( msg ) {
+			$( "#response" ).html( msg );
+			first = importFromJSON( $( "#response" ).text(), "#imported", false);
+			showBranch(first,false);
+		});
+	request.fail(function( jqXHR, textStatus ) {
+		alert( "Request failed: " + textStatus );
+		});
+            
+}
+//отправляет реквест с заданным экшеном и параметрами. возвращает объект request, 
+//для которого нужно определить .done и .fail после вызова функции
+function sendRequest(action, params){
+	var wsUrl = 'ws/ws/callcenterexchange';
+    var soapRequest = combineSoapRequest(action, params) ;
+   // alert(soapRequest);
+    var request = $.ajax({
                     type: "POST",
                     url: wsUrl,
                     contentType: "text/xml",
-                    dataType: "xml",
-                    data: soapRequest,
-                    success: processSuccess,
-                    error: processError
+                    dataType: "html",
+                    data: soapRequest
                 });
+	
+	return  request;
+}
 
-            });
-        });
+//формирует soap реквест
+function combineSoapRequest(action, arrayParam){
+	var paramString = '';
+	if (! (arrayParam == undefined) ){ 
+		for (var i=0; i< arrayParam.length;i++){
+			paramString += fillParam(arrayParam[i].key, arrayParam[i].value);
+		}
+	}
 
-        function processSuccess(data, status, req) { alert('success');
-            if (status == "success")
-                $("#response").text($(req.responseXML).find("Result").text());
+var request =	'<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ctoc="www.1ctocallcenter.com">\
+				<soapenv:Header/>\
+				<soapenv:Body>\
+				<ctoc:' + action + '>' + paramString + '\
+				</ctoc:' + action + '>\
+				</soapenv:Body>\
+				</soapenv:Envelope>';
+	return request;
+}
+function fillParam(key,value){
+	return '<ctoc:'+key+'>'+value+'</ctoc:'+key+'>';
+}
+ 
 
-                alert(req.responseXML);
-        }
 
-        function processError(data, status, req) {
-        alert('err'+data.state);
-            //alert(req.responseText + " " + status);
-        } 
 
