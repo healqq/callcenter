@@ -126,3 +126,18 @@ function redirect(path){
 	
 	}
 }
+
+function logout(){
+	var sessionID = getCookie('PHPSESSID');
+	params = [{key:'Token',value:sessionID}];
+	request = sendRequest("Logout",params);
+	request.done(function (msg){
+			removeCookie('PHPSESSID');
+			redirect("testauth.html");
+		});
+	request.fail(function( jqXHR, textStatus ) {
+		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		});
+		//showBranch(first,false);
+}
+
