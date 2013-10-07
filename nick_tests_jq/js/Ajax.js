@@ -20,7 +20,7 @@ function loadStructure() {
 			showBranch(first,false);
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		alert( "Request failed: " + textStatus );
+		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		});
             
 }
