@@ -17,9 +17,11 @@ function fabric ( type,  options) {
 	newElementId =  options.id;
 	if ( !(newElementId == undefined) ) {
 		if ( !($('#'+options.id).size() == 0 ) ){
+
 			showError("Элемент с таким id уже существует!");
-			throw new exeption;
-			//return;
+			// throw new exeption;
+			return;
+
 		}
 	}
 	//получаем данные, которые вставим внутрь элемента

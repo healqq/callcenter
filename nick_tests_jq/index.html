@@ -53,17 +53,21 @@
 		importFromJSON(stringJSON,"#imported");
 		
 
+
 	});
 	$(".edit").click(onEditClick);
 		
 		//}
 		//alert(position);
 	
+
 	$("#transfer_to_temp").click(function(){
 		$('#container').children('div').each(moveDiv);
 	});
+
 	$("#btnCallWebService").click(saveStructure);
 	$("#logout").click(logout);
+
 });
 	
 	</script>
@@ -128,33 +132,14 @@
 <div id="imported" class= "accordion">
 </div>
 </br>
+
+
+
+	
+
 <div class="accordion" id = "container"></div>
-<div class="accordion" id = "container2" style = "display:none">
-	<div class ="accordion_item" id="test1">
-		<h3 class="">Question One Sample Text</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-		<input  style="display: none;" type ="text" id="test_id"></input>
-		<p style="display: none;><input type="button" class="edit" >edit</button></p>
-	</div>
-	<div class ="accordion_item"id="test2">
-		<h3 class="">This is Question Two</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-		<p><input type="button" class="edit">edit</button></p>
-	</div>
-	<div class ="accordion_item"id="test3">
-		<h3 class="">Another Questio here</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-		<p style="display: none;><input type="button" class="edit">edit</button></p>
-	</div>
-	<div class ="accordion_item"id="test4">
-		<h3 class="">Sample heading</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-	</div>
-	<div class ="accordion_item"id="test5">
-		<h3 class="">Sample Question Heading</h3>
-		<p style="display: none;">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi malesuada, ante at feugiat tincidunt, enim massa gravida metus, commodo lacinia massa diam vel eros. Proin eget urna. Nunc fringilla neque vitae odio. Vivamus vitae ligula.</p>
-	</div>
-</div>
+
+
 </div>
 <input type="button" id="import">build from json</input>
 </body>
