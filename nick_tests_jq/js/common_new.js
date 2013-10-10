@@ -199,18 +199,23 @@ function importFromJSON(stringJSON, container, isEdited)
 function getObjectSpecs(type,content,name){
 var objectScpecs;
 switch (type) {
-		case "description":				objectSpecs = {class:undefined,content:content};break;
-		case "header":					objectSpecs = {class:undefined,content:content};break;
-		case "text area":				objectSpecs = {class:undefined,content:content,id:name};break;
+		case "description":				objectSpecs = {class:"description",content:content};break;
+		case "header":					objectSpecs = {class:"header",content:content};break;
+		case "headerAccordion":			objectSpecs = {class:"accordionheader",content:content};break;
+		case "text area":				objectSpecs = {class:"textarea",content:content,id:name};break;
+		case "accordiontextarea":		objectSpecs = {class:"accordiontextarea",content:content,id:name};break;
+		case "p1": 						objectSpecs = {class:"radioOption"};break;
 		case "radioInputTypes":			objectSpecs = {class:undefined,content:["text","radio"],name:"inputType"};break;
 		case "radio":					objectSpecs = {class:undefined,content:content,name:name};break;
 		case "div":						objectSpecs = {class:undefined,id:name,content:undefined};break;
+		case "divacc":					objectSpecs = {class:"divacc",id:name,content:undefined};break;
+		case "p":						objectSpecs = {class:undefined,id:name,content:undefined};break;
 		case "editbutton":				objectSpecs = {class:"editbutton",content:content};break;
 		case "removebutton":			objectSpecs = {class:"removebutton",content:content};break;
-		case "addbutton":				objectSpecs = {class:"addbutton",content:content};break;
+		case "addbutton":				objectSpecs = {class:"editbutton",content:content};break;
 		case "checkboxBranch":			objectSpecs = {class:undefined,content:"Ветвление",id:"branch"};break;
-		case "radioOptionText": 		objectSpecs = {class:"radioOption",content:"Введите значение",id:undefined};break;
-		case "radioOptionText edit": 	objectSpecs = {class:"radioOption",content:content,id:undefined};break;
+		case "radioOptionText": 		objectSpecs = {class:"radioOptionInput",content:"Введите значение",id:undefined};break;
+		case "radioOptionText edit": 	objectSpecs = {class:"radioOptionInput",content:content,id:undefined};break;
 		case "nextElementText": 		objectSpecs = {class:"branchId",content:"Введите id элемента",id:undefined};break;
 		case "nextElementText edit":	objectSpecs = {class:"branchId",content:content,id:undefined};break;
 		default:
@@ -242,9 +247,9 @@ function createNewDivElement(type, contents, isEdited){
 	isEdited = (isEdited == undefined ? true : isEdited);
 	switch (type){
 	case "show":
-		newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id));
+		newElement 		= fabric("div", 		getObjectSpecs("divacc",undefined,contents.id));
 		newElement.data("branches", contents.branches);
-		newHeader 		= fabric("h3", 			getObjectSpecs("header",contents.header)); 
+		newHeader 		= fabric("h3", 			getObjectSpecs("headerAccordion",contents.header)); 
 		newParagraph 	= fabric("p",  			getObjectSpecs("description",contents.description)); 
 		
 		
@@ -266,7 +271,7 @@ function createNewDivElement(type, contents, isEdited){
 		}
 		else{
 			//if ( !(contents.input == undefined) ){
-				newInput		= fabric("text area",  	getObjectSpecs("text area",contents.input)); 
+				newInput		= fabric("text area",  	getObjectSpecs("accordiontextarea",contents.input)); 
 				newInput.appendTo( newElement );
 				newInput.change(onTextChanged);
 				//по ctrl+enter переход на следующий вопрос
@@ -279,7 +284,9 @@ function createNewDivElement(type, contents, isEdited){
 		}
 		//в режиме конструктора отображается кнопка edit
 		if (isEdited){
-		newButton 		= fabric("button",  	getObjectSpecs("editbutton"	,"edit"));
+		
+
+		newButton 		= fabric("buttoninline",  	getObjectSpecs("editbutton"	,"edit"));
 		//кнопка редактирования
 			newButton.children(':input').click(onEditClick);
 			newButton.appendTo( newElement);
@@ -288,7 +295,7 @@ function createNewDivElement(type, contents, isEdited){
 	//заполняем поля значениями, которые были
 	case "edit":
 			newElement 		= fabric("div", 			getObjectSpecs("div",undefined,contents.id) );
-			newHeader 		= fabric("text edit", 		getObjectSpecs("text area", contents.header) );
+			newHeader 		= fabric("text edit", 		getObjectSpecs("header", contents.header) );
 			newParagraph    = fabric("text area edit", 	getObjectSpecs("text area", contents.description) );
 			newInput    	= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
 			newIsSwitch   	= fabric("checkbox" , 		getObjectSpecs("checkboxBranch") );
@@ -332,7 +339,7 @@ function createNewDivElement(type, contents, isEdited){
 	//создаем новый temp_div
 	default:
 			newElement 		= fabric("div", 		getObjectSpecs("div",undefined,contents.id) );
-			newHeader 		= fabric("text", 		getObjectSpecs("text area", contents.header) );
+			newHeader 		= fabric("textinline", 		getObjectSpecs("header", contents.header) );
 			newParagraph    = fabric("text area", 	getObjectSpecs("text area", contents.description) );
 			newInput    	= fabric("radio"	, 	getObjectSpecs("radioInputTypes") );
 			newIsSwitch   	= fabric("checkbox" , 	getObjectSpecs("checkboxBranch") );
@@ -340,8 +347,9 @@ function createNewDivElement(type, contents, isEdited){
 			newInputRadio   = createRadioOptionsList();
 			newPosition   	= fabric("text"	    , 	getObjectSpecs("text area", undefined ,"position" ) );
 			
-			
-			newHeader.appendTo( newElement );
+			newIn = fabric("p",getObjectSpecs("p"));
+			newHeader.appendTo (newIn);
+			newIn.appendTo( newElement );
 			newParagraph.appendTo( newElement );
 			newInput.appendTo ( newElement );
 			newInputRadio.appendTo ( newElement );
@@ -573,25 +581,33 @@ function onBranchClick(){
 //список для radio в созаднии элемента
 function createRadioOptionsList( optionsList, branchesList ){
 	newRadioOptions 	= fabric("div"	    , 	getObjectSpecs("div", undefined ,"radioOptions" ) );
-	newRadioOptionsAdd 	= fabric("button", getObjectSpecs("addbutton","add") );
+	newRadioOptionsAdd 	= fabric("buttoninline", getObjectSpecs("addbutton","") );
 	newRadioOptionsAdd.click(addRadioOptionsListItem);
 	newRadioOptionsAdd.appendTo(newRadioOptions);
 	if (optionsList == undefined ){
 		// для нового элемента
-		newOption1 				= fabric("text",	 		getObjectSpecs("radioOptionText" ) );
+
+		
+		
+		newOption1 				= fabric("textinline",getObjectSpecs("radioOptionText" ));
+		newIn                   = fabric("p",getObjectSpecs("p1" ) );
+		newIn.appendTo (newRadioOptions);
+		newIn2                   = fabric("p",getObjectSpecs("p1" ) );
+		newIn2.appendTo (newRadioOptions);
 		newOption1NextElement	= fabric("textinline", 		getObjectSpecs("nextElementText" ) );
-		newOption1Remove  		= fabric("buttoninline",	getObjectSpecs("removebutton", "remove") );
-		newOption2 				= fabric("text"	    , 		getObjectSpecs("radioOptionText" ) );
+		newOption1Remove  		= fabric("buttoninline",	getObjectSpecs("removebutton") );
+		newOption2 				= fabric("textinline"	    , 		getObjectSpecs("radioOptionText" ) );
 		newOption2NextElement	= fabric("textinline",		getObjectSpecs("nextElementText" ) );
-		newOption2Remove  		= fabric("buttoninline",	getObjectSpecs("removebutton", "remove") );
+		newOption2Remove  		= fabric("buttoninline",	getObjectSpecs("removebutton") );
 		newOption1Remove.click(removeRadioOptionsListItem);
 		newOption2Remove.click(removeRadioOptionsListItem);
-		newOption1Remove.insertAfter(newOption1.children(":first"));
-		newOption1NextElement.insertAfter(newOption1.children('input[type=button]'));
-		newOption1.appendTo(newRadioOptions);
-		newOption2Remove.insertAfter(newOption2.children(":first"));
-		newOption2NextElement.insertAfter(newOption2.children('input[type=button]'));
-		newOption2.appendTo(newRadioOptions);
+		newOption1.appendTo(newIn);
+		newOption1Remove.appendTo(newIn);
+		newOption1NextElement.appendTo(newIn);
+		// newOption1.appendTo(newRadioOptions);
+		newOption2.appendTo(newIn2);
+		newOption2Remove.appendTo(newIn2);
+		newOption2NextElement.appendTo(newIn2);
 		
 		if ($(":input","#branch").is(":checked") ){
 			newOption1NextElement.show();
@@ -609,13 +625,15 @@ function createRadioOptionsList( optionsList, branchesList ){
 		//для edit'а текущего
 		branches = (branchesList.length > 1) ? true:false;
 		for (var i = 0; i < optionsList.length; i++ ){
-			newOption 				= fabric("text edit", 				getObjectSpecs("radioOptionText edit", optionsList[i]  ) );
-			newOptionRemove  		= fabric("buttoninline",   			getObjectSpecs("removebutton", "remove") );
+			newIn                   = fabric("p",getObjectSpecs("p1" ) );
+			newIn.appendTo (newRadioOptions);
+			newOption 				= fabric("textinline edit", 				getObjectSpecs("radioOptionText edit", optionsList[i]  ) );
+			newOptionRemove  		= fabric("buttoninline",   			getObjectSpecs("removebutton") );
 			newOptionNextElement	= fabric("textinline edit", 		getObjectSpecs("nextElementText edit",branches? branchesList[i]:"" ) );
 			newOptionRemove.click(removeRadioOptionsListItem);
-			newOptionRemove.insertAfter(newOption.children(":first"));
-			newOptionNextElement.insertAfter(newOption.children('input[type=button]'));
-			newOption.appendTo(newRadioOptions);
+			newOption.appendTo(newIn);
+			newOptionRemove.appendTo(newIn);
+			newOptionNextElement.appendTo(newIn);
 			if ( !branches ){
 				newOptionNextElement.hide();
 				
@@ -632,22 +650,25 @@ function createRadioOptionsList( optionsList, branchesList ){
 }
 //добавляет в список ещё одно поле
 function addRadioOptionsListItem(){
-		newOption 				= fabric("text"	    	, 	getObjectSpecs("radioOptionText" ) );
-		newOptionRemove  		= fabric("buttoninline",   getObjectSpecs("removebutton", "remove") );
+		newIn                   = fabric("p",getObjectSpecs("p1" ) );
+		newIn.appendTo (newRadioOptions);
+		newOption 				= fabric("textinline"	    	, 	getObjectSpecs("radioOptionText" ) );
+		newOptionRemove  		= fabric("buttoninline",   getObjectSpecs("removebutton") );
 		newOptionNextElement	= fabric("textinline", 		getObjectSpecs("nextElementText") );
-		newOptionNextElement.insertAfter(newOption1.children('input[type=button]'));
+		// newOptionNextElement.insertAfter(newOption1.children('input[type=button]'));
 		newOptionRemove.click(removeRadioOptionsListItem);
-		newOptionRemove.insertAfter(newOption.children(":first"));
-		newOptionNextElement.insertAfter(newOption.children('input[type=button]'));
-		newOption.hide();
-		newOption.appendTo($("#radioOptions"));
+		newOption.appendTo(newIn);
+		newOptionRemove.appendTo(newIn);
+		newOptionNextElement.appendTo(newIn);
+		newIn.hide();
+		// newOption.appendTo($("#radioOptions"));
 		if ($(":input","#branch").is(':checked') ){
 			newOptionNextElement.show();
 		}
 		else{
 			newOptionNextElement.hide();
 		}
-		newOption.slideToggle("slow");
+		newIn.slideToggle("slow");
 }	
 function removeRadioOptionsListItem(){
 		element = $(this).parent("p");
