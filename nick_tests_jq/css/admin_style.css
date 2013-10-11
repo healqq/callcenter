@@ -338,3 +338,7 @@ padding-left: 0.2%;
 .fieldsList{
 		position:relative;
 }
+.focused{
+	border: 1px solid;
+	border-color : rgba(255,0,0,0.5);
+}
