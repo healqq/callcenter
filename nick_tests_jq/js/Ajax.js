@@ -4,8 +4,10 @@ function saveStructure() {
     request = sendRequest("SetScriptStructure", [{key:'EncodedData', value: exportToJSON(["#container","#imported"])}]);
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );
-		if ( $("#response").find("m\\:return").attr('xsi:nil') == true )
-			redirect("testauth.html");
+			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
+			if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
+				redirect("testauth.html");
+			}
 		});
 	request.fail(function( jqXHR, textStatus ) {
 		alert( "Request failed: " + textStatus );
@@ -17,8 +19,9 @@ function loadStructure() {
     
     request = sendRequest("GetScriptStructure");
 	request.done(function( msg ) {
-			$( "#response" ).html( msg );
-			if ( $.parseJSON($("#response").find("m\\:return").attr('xsi:nil')) == true ){
+		$( "#response" ).html( msg );
+			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
+			if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
 				redirect("testauth.html");
 				return;
 				}

@@ -14,64 +14,17 @@
 	<script src="js/admin.js" type="text/javascript"></script>
 	<script src="js/ajax.js" type="text/javascript"></script>
 	<script src="js/Auth.js" type="text/javascript"></script>
+	<script src="js/datatransfer.js" type="text/javascript"></script>
 	<script src="js/common_new.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	//checkSession();
-//creating new div block with header(h3) description (p) and input 
-	//var newElement;
-	//var newHeader;
-	//var newParahraph;
-	//
-	//
-//	newElement 		= fabric("div", 		{class: "accordion_item", id: "div_"+Name});
-//	newHeader 		= fabric("h3", 			{id: "h3"+Name, content:"very new quession"}); 
-//	newParahraph 	= fabric("p",  			{id: "p"+Name, content:"blah-blah-blah"}); 
-//	newInput		= fabric("text area",  	{id: "textarea"+Name, content:"blah-blah-blah"}); 
-//	newRadio		= fabric("radio",  		{content:["blah-blah-blah","blah-blah"],name: Name}); 
-	//добавляем элемент во временный контейнер
+	checkSession();
 	createNewTempElement();
 	
-//	newHeader.appendTo( newElement );
-//	newHeader.click( onHeaderClick );
-	
-//	newParahraph.appendTo( newElement );
-	
-//	newInput.appendTo( newElement );
-//	newInput.change(onTextChanged);
-	
-//	newRadio.appendTo( newElement );
-	
-	//---------------------------------------------------------------
-	
-	//stringJSON = exportToJSON(".accordion");
-	//alert(stringJSON);
-	
-	//$(".accordion h3:first").addClass("active");
-	//$(".accordion p:not(:first)").hide();
-	$("#test_id").change(onTextChanged);
-	$(".accordion h3").click(onHeaderClick);
+
 	$("#add_div").click(addElement);
-	
-	$("#import").click(function(){
-		stringJSON = exportToJSON("#container");
-		alert(stringJSON);
-		importFromJSON(stringJSON,"#imported");
-		
-
-
-	});
-	$(".edit").click(onEditClick);
-		
-		//}
-		//alert(position);
-	
-
-	$("#transfer_to_temp").click(function(){
-		$('#container').children('div').each(moveDiv);
-	});
-
 	$("#btnCallWebService").click(saveStructure);
+	$("#sendXML").click(sendData);
 
 	$("#logout").click(logout);
 
@@ -84,6 +37,7 @@
 <body>
 <div class = "tableLeft">
 <input id="btnCallWebService" value="Call web service" type="button" />
+<input id="sendXML" value="SendXML" type="button" />
 <input id="logout" value="logout" type="button" />
 <p id="response" ></p>
 </div>
