@@ -113,6 +113,19 @@ function onTextChanged() {
 	else{
 		nextDivBlock.children("h3:first").trigger("click");
 	}
+	focusOnInput(nextDivBlock);
+	
+}
+//sets focus on input
+function focusOnInput(element){
+	textareaSelect = element.find("textarea");
+	if (textareaSelect.length == 0 ){
+		textBlockSelect = element.find("input[type=text]:first").focus();
+			
+	}
+	else{
+		textareaSelect.focus();
+	}
 }
 //формирует структуру json по текущей структуре
 /* {
@@ -305,8 +318,12 @@ function createNewDivElement(type, contents, isEdited){
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
 				newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
 				newRadio.appendTo( newElement );
+				
 				if (!( (contents.branches == undefined) || (contents.branches.length < 2 ) ) ){
 					newRadio.change(hideDivElements);
+				}
+				else{
+					newRadio.change(onTextChanged);
 				}
 			}
 			break;
@@ -964,6 +981,7 @@ function showBranch(currBranch,hide){
 			}
 			else{
 				divElement.children("h3").trigger("click");
+				focusOnInput(divElement);
 				hide = true;
 			}
 			branches = divElement.data("branches");
