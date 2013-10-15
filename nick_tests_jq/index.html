@@ -52,6 +52,9 @@
 	$("#test_id").change(onTextChanged);
 	$(".accordion h3").click(onHeaderClick);
 	$("#add_div").click(addElement);
+	$("#newElementName").focus(function(){
+		showHelp('name');
+		});
 	
 	$("#import").click(function(){
 		stringJSON = exportToJSON("#container");
@@ -86,6 +89,7 @@
 <input id="btnCallWebService" value="Call web service" type="button" />
 <input id="logout" value="logout" type="button" />
 <p id="response" ></p>
+<div id= "help"><p></p></div>
 </div>
 
 <div class = "tableRight">

@@ -253,6 +253,11 @@ function showError(errString, element){
 	var errDiv = $('.error');
 	errDiv.addClass("active");
 	$('<p>'+errString+'</p>').appendTo(errDiv);
+	focusElement(element);
+	
+	
+}
+function focusElement(element){
 	if (! (element == undefined) ){
 		jElement = $(element);
 		if ( jElement.is("div") ){
@@ -262,7 +267,6 @@ function showError(errString, element){
 			jElement.focus();
 		
 	}
-	
 }
 //Функция для отчистки строки ошибок
 function clearErrors(){
@@ -354,6 +358,10 @@ function createNewDivElement(type, contents, isEdited){
 			newInputFields      = createTextInputField(contents.fieldsList||undefined);
 			
 			
+			
+			addHelpTriggers();
+			
+			
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
 			//newHeader.children(':input').val(contents.header);
@@ -419,6 +427,8 @@ function createNewDivElement(type, contents, isEdited){
 			//newInputFieldsCount = fabric("textinline edit",   getObjectSpecs("text area", 1, "inputFieldsCount") );
 			newInputFields      = createTextInputField();
 			
+			
+			addHelpTriggers();
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
 			newParagraph.appendTo( newElement );
@@ -468,22 +478,27 @@ function createNewTempElement(contents){
 			$('#radioInputTypesDiv').removeClass('focused');
 			
 			inputTypeSelector = $('input[name=inputType]:checked');
-			if (inputTypeSelector.val() == "1"){
+			switch (inputTypeSelector.val()) {
+			case "1":
 				$("#radioOptions", '#temp_divs').slideDown("slow");
 				$("#fieldsList", '#temp_divs').slideUp("slow");
+				showHelp("radio");
 				
-			}
-			else{
-				if (inputTypeSelector.val() == "2") {
+				
+			break;
+			case "2":
+				
 					$("#fieldsList", '#temp_divs').slideDown("slow");
 					$("#radioOptions", '#temp_divs').slideUp("slow");
-				}
-				else{
+					showHelp("inputfields");
+			break;
+			case "0":
 				//if (inputTypeSelector.val() == "0"){
 					$("#radioOptions", '#temp_divs').slideUp("slow");
 					$("#fieldsList", '#temp_divs').slideUp("slow");
+					showHelp("textarea");
 				//	}
-				}
+			break;
 			}
 		});
 }
@@ -959,4 +974,64 @@ function showBranch(currBranch,hide){
 				showBranch(branches[0], hide);
 			}
 	}
+}
+//отображение помощи при заполнении редактора
+function showHelp(elemType){
+	helpDivSelection = $('#help');
+	prevType = helpDivSelection.data('type') || undefined;
+	if ( prevType == elemType ) 
+		return;
+	//очищаем блок
+	if ( prevType == undefined ){
+		//helpDivSelection.hide();
+	}
+	paragraphSelection = helpDivSelection.children('p');
+	
+	//paragraphSelection.empty();
+	//paragraphSelection.slide
+	//заполняем в соотв. с типом
+	switch (elemType) {
+	case 'name'		   : paragraphSelection.text('В этом поле указывается имя элемента. \
+									Имя элемента должно начинаться с латинской буквы и состоять \
+									из латинских букв и цифр. Задавайте имена блокам в соответствии \
+									с их содержанием, т.к. при выгрузке будут использоваться эти имена.');
+						
+	break;
+	case 'header'	   : paragraphSelection.text('meh header');
+	break;
+	case 'description' : paragraphSelection.text('meh descr');
+	break;
+	case 'input' : paragraphSelection.text('Если требуется сделать несколько ветвей диалога - установите галочку "Ветвление", \
+											в противном случае выберите тип вводимой информации');
+	break;
+	case 'radio' : paragraphSelection.text('meh radio selection');
+	break;
+	case 'inputfields' : paragraphSelection.text('meh several input fields');
+	break;
+	case 'textarea' : paragraphSelection.text('meh simple text');
+	break;
+	default: 
+	//	helpDivSelection.slideUp(); 
+		
+	break;
+		
+	}
+	helpDivSelection.data('type', elemType);
+	//helpDivSelection.slideDown('slow');
+}
+
+function addHelpTriggers(){
+	newHeader.focus(function(){
+		showHelp('header');
+	});
+	newParagraph.focus(function(){
+		showHelp('description');
+	});
+	newHeader.blur(function(){
+		showHelp();
+	});
+	newParagraph.blur(function(){
+		showHelp('input');
+		
+	});
 }
