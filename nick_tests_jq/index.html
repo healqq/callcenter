@@ -22,7 +22,9 @@
 	createNewTempElement();
 
 
-
+	$("#newElementName").focus(function(){
+		showHelp('name');
+		});
 
 	$("#add_div").click(addElement);
 	$("#btnCallWebService").click(saveStructure);
