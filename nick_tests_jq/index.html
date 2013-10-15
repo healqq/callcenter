@@ -20,52 +20,11 @@
 	$(document).ready(function(){
 	checkSession();
 	createNewTempElement();
-	
-<<<<<<< HEAD
-//	newHeader.appendTo( newElement );
-//	newHeader.click( onHeaderClick );
-	
-//	newParahraph.appendTo( newElement );
-	
-//	newInput.appendTo( newElement );
-//	newInput.change(onTextChanged);
-	
-//	newRadio.appendTo( newElement );
-	
-	//---------------------------------------------------------------
-	
-	//stringJSON = exportToJSON(".accordion");
-	//alert(stringJSON);
-	
-	//$(".accordion h3:first").addClass("active");
-	//$(".accordion p:not(:first)").hide();
-	$("#test_id").change(onTextChanged);
-	$(".accordion h3").click(onHeaderClick);
-	$("#add_div").click(addElement);
+
+
 	$("#newElementName").focus(function(){
 		showHelp('name');
 		});
-	
-	$("#import").click(function(){
-		stringJSON = exportToJSON("#container");
-		alert(stringJSON);
-		importFromJSON(stringJSON,"#imported");
-		
-
-
-	});
-	$(".edit").click(onEditClick);
-		
-		//}
-		//alert(position);
-	
-
-	$("#transfer_to_temp").click(function(){
-		$('#container').children('div').each(moveDiv);
-	});
-=======
->>>>>>> 37da0404a5563e0c5c9257c5e832319d0e598ecb
-
 	$("#add_div").click(addElement);
 	$("#btnCallWebService").click(saveStructure);
 	$("#sendXML").click(sendData);
