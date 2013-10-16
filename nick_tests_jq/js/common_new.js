@@ -426,6 +426,8 @@ function createNewDivElement(type, contents, isEdited){
 			}
 			else{
 				newIsSwitch.children(":input").prop('checked', true);
+				
+				//moveDeleteButtons();
 			}
 	break;
 	//создаем новый temp_div
@@ -490,6 +492,8 @@ function createNewTempElement(contents){
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.hide();
 	newElement.appendTo( $('#temp_divs') );
+	//сдвигаем кнопки в списке
+	moveDeleteButtons();
 	newElement.slideDown("slow");
 		$('input[name=inputType]','#temp_divs').change(function()	{
 			$('#radioInputTypesDiv').removeClass('focused');
@@ -687,6 +691,7 @@ function addElement(){
 		
 		}
 	}
+	
 	createNewTempElement(); //обнуляем значения у temp_div
 	$('#newElementName').val("");
 }
@@ -816,13 +821,19 @@ function createRadioOptionsList( optionsList, branchesList ){
 	}
 	else{
 		//для edit'а текущего
-		branches = ( !(branchesList == undefined) && branchesList.length > 1) ? true:false;
+		branches = ( !(branchesList == undefined) && ( branchesList.length > 1 ) ) ? true:false;
 		for (var i = 0; i < optionsList.length; i++ ){
 			newIn                   = fabric("p",getObjectSpecs("radioOptionP" ) );
 			newIn.appendTo (newRadioOptions);
-			newOption 				= fabric("textinline edit", 				getObjectSpecs("radioOptionText edit", optionsList[i]  ) );
+			newOption 				= fabric("textinline edit", 		getObjectSpecs("radioOptionText edit", optionsList[i]  ) );
 			newOptionRemove  		= fabric("buttoninline",   			getObjectSpecs("removebutton") );
-			newOptionNextElement	= fabric("textinline edit", 		getObjectSpecs("nextElementText edit",branches? branchesList[i]:"" ) );
+			if (branches && !(branchesList[i]=="") ){
+				newOptionNextElement	= fabric("textinline edit", getObjectSpecs("nextElementText edit", branchesList[i])   );
+			}
+			else{
+				newOptionNextElement	= fabric("textinline", getObjectSpecs("nextElementText"  ) );
+			}
+			
 			newOptionRemove.click(removeRadioOptionsListItem);
 			newOption.appendTo(newIn);
 			newOption.change(function(){
@@ -831,21 +842,30 @@ function createRadioOptionsList( optionsList, branchesList ){
 				}
 			
 				});
-			newOptionRemove.appendTo(newIn);
 			newOptionNextElement.appendTo(newIn);
+			newOptionRemove.appendTo(newIn);
 			if ( !branches ){
 				newOptionNextElement.hide();
 				
 			}
 			else{
-				
+				//newOptionRemove.animate({"left": "+=100px"},'fast');
 				newOptionNextElement.show();
+				
 				
 			}
 			
 		}
 	}
 	return newRadioOptions;
+}
+function moveDeleteButtons(){
+	if ( $("#branch").children().prop('checked') == true ){
+		deleteButtonsSelection = $(".removebutton", "#radioOptions");
+		deleteButtonsSelection.each(function(){
+			$(this).animate({"left": "+=100px"},'fast');
+		});
+	}
 }
 //добавляет в список ещё одно поле
 function addRadioOptionsListItem(){
@@ -863,6 +883,7 @@ function addRadioOptionsListItem(){
 		// newOption.appendTo($("#radioOptions"));
 		if ($(":input","#branch").is(':checked') ){
 			newOptionNextElement.show();
+			newOptionRemove.animate({"left": "+=100px"},'fast');
 		}
 		else{
 			newOptionNextElement.hide();
