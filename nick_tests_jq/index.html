@@ -22,12 +22,11 @@
 	createNewTempElement();
 
 
-	$("#newElementName").focus(function(){
-		showHelp('name');
-		});
+	
 
-	$("#add_div").click(addElement);
-	$("#btnCallWebService").click(saveStructure);
+	
+	$("#btnSaveStructure").click(saveStructure);
+	$("#btnLoadStructure").click(loadStructure);
 	$("#sendXML").click(sendData);
 
 	$("#logout").click(logout);
@@ -39,20 +38,24 @@
 </head>
 
 <body>
+<div class = "page_header"></div>
+<div class = "tables">
 <div class = "tableLeft">
-<input id="btnCallWebService" value="Call web service" type="button" />
-<input id="sendXML" value="SendXML" type="button" />
-<input id="logout" value="logout" type="button" />
+<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить структуру" type="button" class = "addbutton"></p>
+<p class = "addbuttonP"><input id="btnLoadStructure" value="ЗагрузитьСтруктуру" type="button" class = "addbutton"></p>
+<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
+<p class = "addbuttonP"><input id="logout" value="Выйти" type="button" class = "addbutton"> </p>
 <p id="response" ></p>
-<div id= "help"><p></p></div>
+<div id= "help" class = "help"><p></p></div>
 </div>
 
 <div class = "tableRight">
 	<div class="error"></div>
-		<input type="button" class="button" id="add_div" value="add_div"></input>
 		
-<input class="input" id="newElementName" type="text" placeholder="Element name"></input>
-<div id="temp_divs" >
+		
+
+<div id="temp_divs" class= "accordion" style="margin-top:10px" >
+
 </div>
 
 <div id="imported" class= "accordion" style = "display:none">
@@ -64,8 +67,10 @@
 	
 
 <div class="accordion" id = "container" ></div>
+</br>
 
 
+</div>
 </div>
 <!-- <input type="button" id="import">build from json</input> -->
 </body>

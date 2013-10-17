@@ -52,8 +52,9 @@ function fabric ( type,  options) {
 			//elementContent = '<input type="radio">' + elementInnerData + '</input>'; 
 			break;
 		case "checkbox":
-			elementContent = '<p><input type="checkbox">'+options.content+'</p>';
-			break;
+			elementContent = '<input type="checkbox" >';break;
+		case "label":
+			elementContent = '<label for="'+options.id+'">'+options.content+'</label>';break;
 			
 		case "text":
 			elementContent = '<p><input type="text" placeholder="'+options.content+'"></p>';break;
@@ -78,7 +79,7 @@ function fabric ( type,  options) {
 		newElement.attr("class", options.class);
 	}
 	
-	if ( !(newElementId == undefined) ) {
+	if ( !(type == "label") && !(newElementId == undefined) )  {
 		newElement.attr("id", options.id);
 	}
 	//newElement.appendTo(mainElement);
@@ -93,10 +94,10 @@ function onHeaderClick(){
 	allDivBlocks = div_block.siblings().not(div_block);
 	allDivBlocks.children().not("h3").slideUp("slow");
 		
-	that.addClass("active");
+	that.toggleClass("active_header");
 	
 	allDivBlocks.children('h3').each(function(){
-		$(this).removeClass("active");
+		$(this).removeClass("active_header");
 		});
 	//div_block.find("textarea").focus();
 }
@@ -165,7 +166,7 @@ function createObjectFromDiv(element){
 	var name, header, description, inputType, inputValues;
 	branchesList = $(element).data("branches");
 	id 				= $(element).attr("id");
-	header 			= $(element).children("h3").text();
+	header 			= $(element).children("h3").children().not(".idSpan").text();
 	pSelection 		= $(element).children("p");
 	description 	= pSelection.first().text();
 	inputSelection 	= $(element).find(':input[type=radio]');
@@ -239,22 +240,26 @@ switch (type) {
 		case "text area":				objectSpecs = {class:"textarea",content:content,id:name};break;
 		case "accordiontextarea":		objectSpecs = {class:"accordiontextarea",content:content,id:name};break;
 		case "radioOptionP": 			objectSpecs = {class:"radioOption"};break;
-		case "radioInputTypes":			objectSpecs = {class:undefined,content:["Многострочный текст","Переключатель","Однострочные поля"],name:"inputType"};break;
+		case "radioInputTypes":			objectSpecs = {class:undefined,content:["Многострочное поле","Выбор из нескольких элементов","Однострочные поля"],name:"inputType"};break;
 		case "radio":					objectSpecs = {class:undefined,content:content,name:name};break;
 		case "div":						objectSpecs = {class:undefined,id:name,content:undefined};break;
 		case "divacc":					objectSpecs = {class:"divacc",id:name,content:undefined};break;
-		case "p":						objectSpecs = {class:undefined,id:name,content:undefined};break;
+		case "p":						objectSpecs = {class:undefined,id:name,content:content};break;
 		case "editbutton":				objectSpecs = {class:"editbutton",content:content};break;
 		//case "removeButtonRadio":		objectSpecs = {class:"removebutton",content:"remove"};break;
-		case "removebutton":			objectSpecs = {class:"removebutton",content:"remove"};break;
-		case "addbutton":				objectSpecs = {class:"editbutton",content:"add"};break;
-		case "checkboxBranch":			objectSpecs = {class:undefined,content:"Ветвление",id:"branch"};break;
+		case "removebutton":			objectSpecs = {class:"removebutton",content:"-"};break;
+		case "addbutton":				objectSpecs = {class:"editbutton",content:"+"};break;
+		case "checkboxBranch":			objectSpecs = {class:'checkBox',content:"Ветвление",id:"branch"};break;
+		case "checkboxBranchLabel":		objectSpecs = {class:'checkBoxLabel',content:"Ветвление",id:"branch"};break;
 		case "radioOptionText": 		objectSpecs = {class:"radioOptionInput",content:"Введите значение",id:undefined};break;
 		case "radioOptionText edit": 	objectSpecs = {class:"radioOptionInput",content:content,id:undefined};break;
-		case "nextElementText": 		objectSpecs = {class:"branchId",content:"Введите id элемента",id:undefined};break;
+		case "nextElementText": 		objectSpecs = {class:"branchId",content:"id элемента",id:undefined};break;
 		case "nextElementText edit":	objectSpecs = {class:"branchId",content:content,id:undefined};break;
 		case "fieldsListText":			objectSpecs = {class:"radioOptionInput",content:"Введите значение",id:undefined};break;
 		case "fieldsListText edit":		objectSpecs = {class:"radioOptionInput",content:content,id:undefined};break;
+		case "elementName":				objectSpecs = {class:undefined,content:content,id:'newElementName'};break;
+		case "addElementButton":		objectSpecs = {class:"addbutton",content:"Добавить элемент",id:'add_div'};break;
+		case "addElementButtonP": 		objectSpecs = {class:"addbuttonP",content:undefined,id:undefined};break;
 		//case "radioInputTypesDiv"		objectSpecs = {class:"radioInputTypesDiv",id:undefined,content:undefined};break;
 		default:
 		return undefined;
@@ -264,7 +269,9 @@ switch (type) {
 }
 function showError(errString, element){
 	var errDiv = $('.error');
+	errDiv.hide();
 	errDiv.addClass("active");
+	errDiv.slideDown('fast');
 	$('<p>'+errString+'</p>').appendTo(errDiv);
 	focusElement(element);
 	
@@ -283,8 +290,10 @@ function focusElement(element){
 }
 //Функция для отчистки строки ошибок
 function clearErrors(){
-		$('.error').empty();
-		$('.error').removeClass("active");
+		errorElem = $('.error');
+		errorElem.slideUp('fast');
+		errorElem.empty();
+		errorElem.removeClass("active");
 		$('.focused').each(function(){
 			$(this).removeClass('focused');
 		});
@@ -303,7 +312,7 @@ function createNewDivElement(type, contents, isEdited){
 	case "show":
 		newElement 		= fabric("div", 		getObjectSpecs("divacc",undefined,contents.id));
 		newElement.data("branches", contents.branches);
-		newHeader 		= fabric("h3", 			getObjectSpecs("headerAccordion",contents.header)); 
+		newHeader 		= fabric("h3", 			getObjectSpecs("headerAccordion",isEdited?'<span>'+contents.header + '</span>' +'<span class="idSpan">id: '+ contents.id+'</span>': '<span>'+contents.header + '</span>')); 
 		newParagraph 	= fabric("p",  			getObjectSpecs("description",contents.description)); 
 		
 		
@@ -312,7 +321,9 @@ function createNewDivElement(type, contents, isEdited){
 		newHeader.appendTo( newElement );
 		newHeader.click( onHeaderClick );
 		
+		
 		newParagraph.appendTo( newElement );
+		newParagraph.hide();
 		switch(contents.inputType){
 			case "radio":
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
@@ -325,7 +336,9 @@ function createNewDivElement(type, contents, isEdited){
 				else{
 					newRadio.change(onTextChanged);
 				}
+				
 			}
+			newRadio.hide();
 			break;
 			case "textarea":
 				
@@ -338,54 +351,66 @@ function createNewDivElement(type, contents, isEdited){
 						$(this).blur();
 					}
 				});
+				newInput.hide();
 			//}
 			break;
 			case "text":
 				for(var i = 0; i < contents.fieldsList.length; i++){
-					newInput = newInput		= fabric("text",  	getObjectSpecs("accordiontextarea",contents.fieldsList[i])); 
+					newInput = newInput		= fabric("textinline",  	getObjectSpecs("accordiontextarea",contents.fieldsList[i])); 
 					newInput.appendTo( newElement );
+					newInput.hide();
 					
 				}
 				newInput.change(onTextChanged);
+				newInput.hide();
 			break;
 		}
+		
+		//newRadio.hide();
 		//в режиме конструктора отображается кнопка edit
 		if (isEdited){
-		
+		//newElementIdField = fabric("p",			getObjectSpecs("p", "Id элемента:"+contents.id) );
 
 		newButton 		= fabric("buttoninline",  	getObjectSpecs("editbutton"	,"edit"));
 		//кнопка редактирования
+		//	newElementIdField.appendTo( newElement );
 			newButton.click(onEditClick);
 			newButton.appendTo( newElement);
+			newButton.hide();
 		}
 	break;
 	//заполняем поля значениями, которые были
 	case "edit":
-			newElement 			= fabric("div", 			getObjectSpecs("div",undefined,contents.id) );
+			newElement 			= fabric("div", 			getObjectSpecs("div",undefined,undefined) );
+			newElementName		= fabric("textinline edit", getObjectSpecs("elementName", contents.id) );
 			newHeader 			= fabric("textinline edit", getObjectSpecs("header", contents.header) );
 			newParagraph    	= fabric("text area edit", 	getObjectSpecs("text area", contents.description) );
 			newInputDiv 		= fabric("div",				getObjectSpecs("div", undefined ,"radioInputTypesDiv") );
 			newInput    		= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
 			newIsSwitch   		= fabric("checkbox" , 		getObjectSpecs("checkboxBranch") );
+			newIsSwitchLabel	= fabric("label" , 			getObjectSpecs("checkboxBranchLabel") );
 			//newInputRadio   = fabric("text edit", 		getObjectSpecs("text area", contents.radio, "radioOptions") );
 			newHeaderParagraph 	= fabric("p",getObjectSpecs("p"));
 			newInputRadio   	= createRadioOptionsList(contents.radio, contents.branches);
 			newPosition   		= fabric("text edit", 		getObjectSpecs("text area", contents.position ,"position" ) );
 			//newInputFieldsCount = fabric("textinline edit",   getObjectSpecs("text area", contents.inputFieldsCount, "inputFieldsCount") );
 			newInputFields      = createTextInputField(contents.fieldsList||undefined);
+			newAddElementButtonP = fabric("p", 		getObjectSpecs("addElementButtonP") );
+			newAddElementButton = fabric("buttoninline", 		getObjectSpecs("addElementButton") );
 			
 			
 			
 			addHelpTriggers();
 			
-			
+			newElementName.appendTo( newElement);
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
 			//newHeader.children(':input').val(contents.header);
 			newParagraph.appendTo( newElement );
 			//newParagraph.val(contents.description);
 			newIsSwitch.appendTo( newElement );
-			newIsSwitch.children(':input').click(onBranchClick);
+			newIsSwitchLabel.appendTo( newElement );
+			newIsSwitch.click(onBranchClick);
 			//newInput.appendTo ( newElement );
 			newInput.appendTo ( newInputDiv );
 			
@@ -394,6 +419,9 @@ function createNewDivElement(type, contents, isEdited){
 			newInputRadio.hide();
 			newInputFields.hide();
 			newInputFields.appendTo( newElement );
+			newAddElementButtonP.appendTo ( newElement)
+			newAddElementButton.appendTo ( newAddElementButtonP);
+			newAddElementButton.click(addElement);
 		//	newInputFieldsCount.appendTo(newElement);
 		//	newInputFieldsCount.hide();
 			
@@ -422,37 +450,46 @@ function createNewDivElement(type, contents, isEdited){
 			
 			
 			if ( (contents.branches == undefined) || (contents.branches.length < 2 ) ){
-				newIsSwitch.children(":input").prop('checked', false);
+				newIsSwitch.prop('checked', false);
+				newIsSwitchLabel.removeClass("active_checkBoxLabel");
 			}
 			else{
-				newIsSwitch.children(":input").prop('checked', true);
+				newIsSwitch.prop('checked', true);
+				newIsSwitchLabel.addClass("active_checkBoxLabel");
 				
 				//moveDeleteButtons();
 			}
+			
 	break;
 	//создаем новый temp_div
 	default:
-			newElement 			= fabric("div", 		getObjectSpecs("div",undefined,contents.id) );
+			newElement 			= fabric("div", 			getObjectSpecs("divacc",undefined,undefined) );
+			newElementName		= fabric("textinline", 			getObjectSpecs("elementName", "Введите имя элемента") );
 			newHeader 			= fabric("textinline", 		getObjectSpecs("header", contents.header) );
-			newParagraph    	= fabric("text area", 	getObjectSpecs("text area", contents.description) );
-			newInput    		= fabric("radio"	, 	getObjectSpecs("radioInputTypes") );
+			newParagraph    	= fabric("text area", 		getObjectSpecs("text area", contents.description) );
+			newInput    		= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
 			newInputDiv 		= fabric("div",				getObjectSpecs("div",undefined ,"radioInputTypesDiv") );
 			
 			newIsSwitch   		= fabric("checkbox" , 	getObjectSpecs("checkboxBranch") );
+			newIsSwitchLabel	= fabric("label" , 		getObjectSpecs("checkboxBranchLabel") );
 			newHeaderParagraph 	= fabric("p",getObjectSpecs("p"));
 			//newInputRadio   = fabric("text"	    , 	getObjectSpecs("text area", "введите варианты перечисления","radioOptions") );
 			newInputRadio   	= createRadioOptionsList();
 			newPosition   		= fabric("text"	    , 	getObjectSpecs("text area", undefined ,"position" ) );
 			//newInputFieldsCount = fabric("textinline edit",   getObjectSpecs("text area", 1, "inputFieldsCount") );
 			newInputFields      = createTextInputField();
+			newAddElementButton = fabric("buttoninline", 		getObjectSpecs("addElementButton") );
+			newAddElementButtonP = fabric("p", 		getObjectSpecs("addElementButtonP") );
 			
 			
 			addHelpTriggers();
+			newElementName.appendTo( newElement);
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
 			newParagraph.appendTo( newElement );
 			newIsSwitch.appendTo( newElement );
-			newIsSwitch.children(':input').click(onBranchClick);
+			newIsSwitchLabel.appendTo( newElement );
+			newIsSwitch.click(onBranchClick);
 			//newInput.appendTo ( newElement );
 			newInput.appendTo ( newInputDiv );
 			newInputDiv.appendTo(newElement);
@@ -467,7 +504,9 @@ function createNewDivElement(type, contents, isEdited){
 			
 			newInputFields.hide();
 			newInputFields.appendTo( newElement );
-			
+			newAddElementButtonP.appendTo ( newElement)
+			newAddElementButton.appendTo ( newAddElementButtonP);
+			newAddElementButton.click(addElement);
 	}
 	return newElement;
 }
@@ -532,7 +571,7 @@ function addElement(){
 	
 	if ( (name == "") || !(namePattern.test(name) ) ){
 		showError('Имя блока должно быть заполнено, начинаться с латинской буквы \
-			и состоять только из латинских букв, цифр, символов "-" и "_"', "#newelementName");
+			и состоять только из латинских букв, цифр, символов "-" и "_"', "#newElementName");
 		//$('#newElementName').focus();
 		return;
 	}
@@ -545,7 +584,7 @@ function addElement(){
 	var input 			= undefined;
 	var radio 			= undefined;
 	var fieldsListArray = undefined;
-	if ($(":input","#branch").is(":checked")){
+	if ($("#branch").is(":checked")){
 		branches = [];
 		$(".branchId").each(function(){
 			branches.push($(this).val());
@@ -691,9 +730,10 @@ function addElement(){
 		
 		}
 	}
-	
+	newHeader.trigger('click');
 	createNewTempElement(); //обнуляем значения у temp_div
-	$('#newElementName').val("");
+	//$('#newElementName').val("");
+	
 }
 function onEditClick(){
 var position;
@@ -711,8 +751,8 @@ var position;
 		}
 	});
 	//removeElement(parentBlock);
-	$('#newElementName').val(objectDiv.id);
-	objectDiv.id = undefined;
+	//$('#newElementName').val(objectDiv.id);
+	//objectDiv.id = undefined;
 	//objectDiv.radio = ["text","radio"];
 	//objectDiv.radioName = "inputType";
 	createNewTempElement(objectDiv);
@@ -720,7 +760,9 @@ var position;
 //если есть ветвление - то тип по дефолту радио
 function onBranchClick(){
 	if ($(this).is(':checked') ) {
+		$('label[for='+$(this).attr('id')+']').addClass("active_checkBoxLabel");
 		$(':input[name=inputType][value=1]').prop('checked',true);
+	//	$('#branchCheckBox').addClass("activeCheckBox");
 		$("#radioOptions", '#temp_divs').slideDown("slow");
 		$(':input[name=inputType]').parent().slideUp("slow");
 		$('#fieldsList').slideUp("slow");
@@ -731,9 +773,11 @@ function onBranchClick(){
 				$('.branchId').slideDown("slow");
 			}
 		})
+		showHelp("branches");
 		//$('.branchId').slideToggle("slow");
 	}
 	else{
+		$('label[for='+$(this).attr('id')+']').removeClass("active_checkBoxLabel");
 		//$(':input[name=inputType][value=radio]').attr('checked',"checked");
 		//$("#radioOptions", '#temp_divs').hide();
 		//$(':input[name=inputType][value=radio]').attr('checked',undefined)
@@ -742,9 +786,10 @@ function onBranchClick(){
 				$(this).siblings(":input[type=button]").animate({"left": "-=100px"}, "slow");
 			}
 		});
-		
+		//showHelp("input");
+		showHelp("radio");
 	}
-		
+	//showHelp("radio");	
 	
 }
 function radioOptionsIsFilled(){
@@ -860,7 +905,7 @@ function createRadioOptionsList( optionsList, branchesList ){
 	return newRadioOptions;
 }
 function moveDeleteButtons(){
-	if ( $("#branch").children().prop('checked') == true ){
+	if ( $("#branch").prop('checked') == true ){
 		deleteButtonsSelection = $(".removebutton", "#radioOptions");
 		deleteButtonsSelection.each(function(){
 			$(this).animate({"left": "+=100px"},'fast');
@@ -1030,47 +1075,67 @@ function showHelp(elemType){
 	//paragraphSelection.slide
 	//заполняем в соотв. с типом
 	switch (elemType) {
-	case 'name'		   : paragraphSelection.text('В этом поле указывается имя элемента. \
-									Имя элемента должно начинаться с латинской буквы и состоять \
-									из латинских букв и цифр. Задавайте имена блокам в соответствии \
+	case 'name'		   : paragraphSelection.html('В этом поле указывается имя элемента. <br>\
+									<strong>  Имя элемента должно начинаться с латинской буквы и состоять \
+									из латинских букв и цифр.</strong> Задавайте имена блокам в соответствии \
 									с их содержанием, т.к. при выгрузке будут использоваться эти имена.');
 						
 	break;
-	case 'header'	   : paragraphSelection.text('meh header');
+	case 'header'	   : paragraphSelection.html('В этом поле указывается заголовок блока.<br>\
+											Не используйте в этом поле слишком длинных конструкций, \
+											имя блока должно как можно точнее отображать суть блока.');
 	break;
-	case 'description' : paragraphSelection.text('meh descr');
+	case 'description' : paragraphSelection.html('В этом поле указывается описание блока. <br> \
+											Здесь можно указать всю информацию, которую необходимо знать \
+											оператору. Постарайтесь не перегружать оператора лишней информацией.');
 	break;
-	case 'input' : paragraphSelection.text('Если требуется сделать несколько ветвей диалога - установите галочку "Ветвление", \
+	case 'input' : paragraphSelection.html('Если требуется сделать несколько ветвей диалога - установите галочку "Ветвление", \
 											в противном случае выберите тип вводимой информации');
 	break;
-	case 'radio' : paragraphSelection.text('meh radio selection');
+	case 'radio' : paragraphSelection.html('Этот тип данных позволяет выбрать одно из нескольких предопределенных значений. <br> \
+											Для этого типа данных необходимо указать \
+											<strong>как минимум два значения.</strong>  ');
 	break;
-	case 'inputfields' : paragraphSelection.text('meh several input fields');
+	case 'inputfields' : paragraphSelection.html('Этот тип данных позволяет создать одно или несколько полей ввода. <br> \
+												<strong>В полях ввода необходимо указать название поля.</strong>	');
 	break;
-	case 'textarea' : paragraphSelection.text('meh simple text');
+	case 'textarea' : paragraphSelection.html('Этот тип данных позволяет создать многострочное поле ввода');
 	break;
+	case 'branches' : paragraphSelection.html('Позволяет сделать ветвление на основе  выбранного варианта ответа.<br> \
+												Для каждого варианта ответа можно указать id элемента, на который шагнет \
+												скрипт. <strong>Указывать нужно только уже существующие элементы!</strong>');
 	default: 
-	//	helpDivSelection.slideUp(); 
+	//	helpDivSelection.slideUp({duration:'fast',queue:"helpQ"}).dequeue("helpQ"); 
 		
 	break;
 		
 	}
 	helpDivSelection.data('type', elemType);
-	//helpDivSelection.slideDown('slow');
+	if (helpDivSelection.css('display') == 'none'){
+		helpDivSelection.slideDown({duration:'fast',queue:"helpQ"}).dequeue("helpQ");
+	}
 }
 
 function addHelpTriggers(){
 	newHeader.focus(function(){
+		//$(this).stop(true,true);
 		showHelp('header');
 	});
 	newParagraph.focus(function(){
+		//$(this).stop(true,true);
 		showHelp('description');
 	});
 	newHeader.blur(function(){
+		//$(this).stop(true,true);
 		showHelp();
 	});
 	newParagraph.blur(function(){
+		//$(this).stop(true,true);
 		showHelp('input');
 		
+	});
+	newElementName.focus(function(){
+		//$(this).stop(true,true);
+		showHelp('name');
 	});
 }
