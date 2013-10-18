@@ -27,6 +27,8 @@ function fabric ( type,  options) {
 	//получаем данные, которые вставим внутрь элемента
 	elementInnerData = (options.content == undefined)? "": options.content;
 	switch ( type ) {
+		case "br":
+			elementContent = '<br>'; break;
 		case "div":
 			elementContent = '<div>' + elementInnerData + '</div>'; break;
 		case "p":
@@ -99,6 +101,7 @@ function onHeaderClick(){
 	allDivBlocks.children('h3').each(function(){
 		$(this).removeClass("active_header");
 		});
+	
 	//div_block.find("textarea").focus();
 }
 //событие при изменении инпута
@@ -110,6 +113,7 @@ function onTextChanged() {
 	if (nextDivBlock.size() == 0 ){
 		//div_block.
 		divBlock.children().not("h3").slideUp("slow");
+		showSubmitBlock();
 	}
 	else{
 		nextDivBlock.children("h3:first").trigger("click");
@@ -216,15 +220,22 @@ function createObjectFromDiv(element){
 }
 function importFromJSON(stringJSON, container, isEdited)
 {
-	isEdited = (isEdited == undefined ? true : isEdited);
+	isEdited = (isEdited == undefined ? false : isEdited);
 	var objectJSON = JSON.parse(stringJSON);
 	var newElement;
 	var container = $(container);
 	$("#container").empty();
+	firstElement = false;
 	for (var i = 0; i < objectJSON.blocks.length; i++){
-		createNewDivElement("show", objectJSON.blocks[i], isEdited).appendTo(container);
+		if (objectJSON.blocks[i].id == objectJSON.first){
+			firstElement = true;
+		}
+		createNewDivElement("show", objectJSON.blocks[i], isEdited, firstElement).appendTo(container);
+		firstElement = false;
 		
 	}
+	
+	
 	return objectJSON.first;
 	//var divArray = 
 	
@@ -234,7 +245,9 @@ function importFromJSON(stringJSON, container, isEdited)
 function getObjectSpecs(type,content,name){
 var objectScpecs;
 switch (type) {
+		case "br": 						objectSpecs = {class:undefined,content:undefined, id:undefined};break;
 		case "description":				objectSpecs = {class:"description",content:content};break;
+		case "textfield":				objectSpecs = {class:"accordiontext",content:content,id:name};break;					
 		case "header":					objectSpecs = {class:"header",content:content};break;
 		case "headerAccordion":			objectSpecs = {class:"accordionheader",content:content};break;
 		case "text area":				objectSpecs = {class:"textarea",content:content,id:name};break;
@@ -255,7 +268,7 @@ switch (type) {
 		case "radioOptionText edit": 	objectSpecs = {class:"radioOptionInput",content:content,id:undefined};break;
 		case "nextElementText": 		objectSpecs = {class:"branchId",content:"id элемента",id:undefined};break;
 		case "nextElementText edit":	objectSpecs = {class:"branchId",content:content,id:undefined};break;
-		case "fieldsListText":			objectSpecs = {class:"radioOptionInput",content:"Введите значение",id:undefined};break;
+		case "fieldsListText":			objectSpecs = {class:"radioOptionInput",content:"Введите название",id:undefined};break;
 		case "fieldsListText edit":		objectSpecs = {class:"radioOptionInput",content:content,id:undefined};break;
 		case "elementName":				objectSpecs = {class:undefined,content:content,id:'newElementName'};break;
 		case "addElementButton":		objectSpecs = {class:"addbutton",content:"Добавить элемент",id:'add_div'};break;
@@ -306,8 +319,8 @@ function removeElement(element){
 //contents - объект, содержащий необходимые поля
 //параметр type = show для создания блока для отображения
 //если show не указано - то создается блок для редактирования
-function createNewDivElement(type, contents, isEdited){
-	isEdited = (isEdited == undefined ? true : isEdited);
+function createNewDivElement(type, contents, isEdited, first){
+	isEdited = (isEdited == undefined ? false : isEdited);
 	switch (type){
 	case "show":
 		newElement 		= fabric("div", 		getObjectSpecs("divacc",undefined,contents.id));
@@ -324,6 +337,9 @@ function createNewDivElement(type, contents, isEdited){
 		
 		newParagraph.appendTo( newElement );
 		newParagraph.hide();
+		newLine = fabric("br", getObjectSpecs("br") ) ;
+		newLine.appendTo(newElement);
+		newLine.hide();
 		switch(contents.inputType){
 			case "radio":
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
@@ -336,6 +352,10 @@ function createNewDivElement(type, contents, isEdited){
 				else{
 					newRadio.change(onTextChanged);
 				}
+				if (first){
+					newRadio.change(TriggersOnFirstElement);
+				}
+				
 				
 			}
 			newRadio.hide();
@@ -352,20 +372,30 @@ function createNewDivElement(type, contents, isEdited){
 					}
 				});
 				newInput.hide();
+				if (first){
+					newInput.change(TriggersOnFirstElement);
+				}
 			//}
 			break;
 			case "text":
 				for(var i = 0; i < contents.fieldsList.length; i++){
-					newInput = newInput		= fabric("textinline",  	getObjectSpecs("accordiontextarea",contents.fieldsList[i])); 
+					newInput = newInput		= fabric("textinline",  	getObjectSpecs("textfield",contents.fieldsList[i])); 
 					newInput.appendTo( newElement );
 					newInput.hide();
+					if (first){
+						newInput.change(TriggersOnFirstElement);
+					}
 					
 				}
 				newInput.change(onTextChanged);
 				newInput.hide();
+				
+				
 			break;
 		}
-		
+		newLine = fabric("br", getObjectSpecs("br") ) ;
+		newLine.appendTo(newElement);
+		newLine.hide();
 		//newRadio.hide();
 		//в режиме конструктора отображается кнопка edit
 		if (isEdited){
@@ -711,7 +741,7 @@ function addElement(){
 	}
 	lastDiv.data("branches", branchesPrevElement); 
 	thisDiv.remove();
-	newDiv = createNewDivElement("show",contents);
+	newDiv = createNewDivElement("show",contents, true);
 	//это новый элемент
 	if (position === "") {
 		
@@ -1009,12 +1039,33 @@ function removeFieldsListItem(){
 
 
 //---------------------------------------------------------------------------------------------		
-function moveDiv()
+function moveDiv(value, id)
 {
-	contents = createObjectFromDiv($(this));
-	removeElement($(this));
-	newDivElement = createNewDivElement("show", contents);
-	newDivElement.appendTo($('#imported'));
+	
+	if (value == undefined){
+		that = this;
+	}
+	else{
+		that = value;
+	}
+	$(that).slideUp({duration:'slow',complete:function(){
+		that = this;
+		contents = createObjectFromDiv($(that));
+		removeElement($(that));
+		if (contents.id == id ){
+			first = true;
+		}
+		else{
+			first = false;
+		}
+		newDivElement = createNewDivElement("show", contents, $('#container').data("sstype")  , first);
+		newDivElement.appendTo($('#imported'));
+		if ( $('#container').length){
+			showBranch(id, false);
+		}
+		
+		}
+	});
 	
 }
 function hideDivElements(){
@@ -1024,7 +1075,7 @@ function hideDivElements(){
 	currBranch = branches[selectedValue];
 	//selectedValue = $(this).val();
 	nextElements = divBlock.siblings().slice(divBlock.index());
-	nextElements.each(moveDiv);
+	nextElements.each(function(index, value){moveDiv(value)});
 	showBranch(currBranch, false);
 		
 	
@@ -1032,6 +1083,7 @@ function hideDivElements(){
 //отображает блок с заданным id
 function showBranch(currBranch,hide){
 	if (currBranch == ""){
+		showSubmitBlock();
 		return;
 	}
 	else{
@@ -1039,7 +1091,8 @@ function showBranch(currBranch,hide){
 			divElement.children().hide();
 			divElement.appendTo("#container");
 			
-			divElement.children("h3").slideDown("slow");
+			
+			divElement.children("h3").slideDown({duration:"slow"});
 			//divElement.children().not("h3").hide();
 			if (hide){
 				
@@ -1052,11 +1105,16 @@ function showBranch(currBranch,hide){
 			}
 			branches = divElement.data("branches");
 			if ( (branches == undefined) || (branches.length > 1) ) {
+				if (branches == undefined){
+					showSubmitBlock();
+				}
 				return;
 			}
 			else{
+				divElement.children("h3");
 				showBranch(branches[0], hide);
 			}
+		
 	}
 }
 //отображение помощи при заполнении редактора
@@ -1104,8 +1162,10 @@ function showHelp(elemType){
 	case 'branches' : paragraphSelection.html('Позволяет сделать ветвление на основе  выбранного варианта ответа.<br> \
 												Для каждого варианта ответа можно указать id элемента, на который шагнет \
 												скрипт. <strong>Указывать нужно только уже существующие элементы!</strong>');
+	case 'send'		: paragraphSelection.html('Анкета отправлена успешно!');
+	break;
 	default: 
-	//	helpDivSelection.slideUp({duration:'fast',queue:"helpQ"}).dequeue("helpQ"); 
+		helpDivSelection.animate({opacity:'hide'},'fast'); 
 		
 	break;
 		
@@ -1127,7 +1187,7 @@ function addHelpTriggers(){
 	});
 	newHeader.blur(function(){
 		//$(this).stop(true,true);
-		showHelp();
+		//showHelp();
 	});
 	newParagraph.blur(function(){
 		//$(this).stop(true,true);
@@ -1138,4 +1198,28 @@ function addHelpTriggers(){
 		//$(this).stop(true,true);
 		showHelp('name');
 	});
+}
+function showSubmitBlock(){
+	$('#submit-block').slideDown({duration:"slow", complete:function(){
+		//$('#submit-block').toggleClass("dummy");
+		$('.tableRight').toggleClass("dummy");
+		}
+	});
+	$('.tableRight').toggleClass("dummy");
+	//$('#submit-block').toggleClass("dummy");
+}
+function reloadStructure(){
+	divBlock = $('#container').children('div');
+	id = divBlock.first().attr('id');
+	//nextElements = divBlock.siblings();
+	divBlock.each( function(index, value){
+		moveDiv(value, id)
+	});
+	
+}
+function TriggersOnFirstElement(){
+	showHelp();
+	fillingStarted();
+	//todo: реквест о начале заполнения скрипта
+	
 }

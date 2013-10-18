@@ -18,15 +18,15 @@
 	<script src="js/common_new.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	//checkSession();
+	checkSession();
 	createNewTempElement();
 
 
 	
 
-	
+	$("#container").data("sstype",true);
 	$("#btnSaveStructure").click(saveStructure);
-	$("#btnLoadStructure").click(loadStructure);
+	$("#btnLoadStructure").click(function(){loadStructure(true)});
 	$("#sendXML").click(sendData);
 
 	$("#logout").click(logout);
@@ -38,38 +38,45 @@
 </head>
 
 <body>
-<div class = "page_header"></div>
+<div class = "page_header">
+</div>
 <div class = "tables">
 <div class = "tableLeft">
-<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить структуру" type="button" class = "addbutton"></p>
-<p class = "addbuttonP"><input id="btnLoadStructure" value="ЗагрузитьСтруктуру" type="button" class = "addbutton"></p>
-<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
-<p class = "addbuttonP"><input id="logout" value="Выйти" type="button" class = "addbutton"> </p>
-<p id="response" ></p>
-<div id= "help" class = "help"><p></p></div>
+	<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить структуру" type="button" class = "addbutton"></p>
+	<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить cтруктуру" type="button" class = "addbutton"></p>
+	<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
+	<p class = "addbuttonP"><input id="logout" value="Выйти" type="button" class = "addbutton"> </p>
+	<p id="response" style="display:none"></p>
+	<div id= "help" class = "help focused">
+		<h3>Подсказка</h3>
+		<p></p>
+	</div>
 </div>
 
 <div class = "tableRight">
 	<div class="error"></div>
+	
 		
 		
 
-<div id="temp_divs" class= "accordion" style="margin-top:10px" >
+	<div id="temp_divs" class= "accordion" style="margin-top:10px" >
 
-</div>
+	</div>
 
-<div id="imported" class= "accordion" style = "display:none">
-</div>
-</br>
+	<div id="imported" class= "accordion" style = "display:none">
+	</div>
+	</br>
 
 
 
 	
 
-<div class="accordion" id = "container" ></div>
-</br>
+	<div class="accordion" id = "container" ></div>
+	</br>
 
 
+</div>
+<div class = "tableInfo">
 </div>
 </div>
 <!-- <input type="button" id="import">build from json</input> -->

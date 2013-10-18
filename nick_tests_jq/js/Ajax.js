@@ -15,7 +15,7 @@ function saveStructure() {
             
 }
 //загружает структуру сценария из 1С
-function loadStructure() {
+function loadStructure(type) {
     
     request = sendRequest("GetScriptStructure");
 	request.done(function( msg ) {
@@ -25,8 +25,9 @@ function loadStructure() {
 				redirect("testauth.html");
 				return;
 				}
-			first = importFromJSON( $( "#response" ).text(), "#imported", false);
+			first = importFromJSON( $( "#response" ).text(), "#imported", type);
 			showBranch(first,false);
+			$('#btnLoadStructureClient').slideUp('Slow');
 		});
 	request.fail(function( jqXHR, textStatus ) {
 		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
