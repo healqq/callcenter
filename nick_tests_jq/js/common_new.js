@@ -170,9 +170,9 @@ function createObjectFromDiv(element){
 	var name, header, description, inputType, inputValues;
 	branchesList = $(element).data("branches");
 	id 				= $(element).attr("id");
-	header 			= $(element).children("h3").children().not(".idSpan").text();
+	header 			= $(element).children("h3").children().not(".idSpan").html();
 	pSelection 		= $(element).children("p");
-	description 	= pSelection.first().text();
+	description 	= pSelection.first().html();
 	inputSelection 	= $(element).find(':input[type=radio]');
 	textAreaSelection = $(element).find('textarea');
 	textSelection   = $(element).find(":input[type=text]");
@@ -188,7 +188,7 @@ function createObjectFromDiv(element){
 		radio = [];
 		inputType = "radio";
 		inputSelection.each(function(){
-				radio.push($('label[for='+$(this).attr('id')+']').text());
+				radio.push($('label[for='+$(this).attr('id')+']').html());
 		});
 	}
 	
@@ -961,9 +961,14 @@ function addRadioOptionsListItem(){
 		newOptionRemove.appendTo(newIn);
 		newIn.hide();
 		// newOption.appendTo($("#radioOptions"));
-		if ($(":input","#branch").is(':checked') ){
-			newOptionNextElement.show();
-			newOptionRemove.animate({"left": "+=100px"},'fast');
+		if ($("#branch").is(':checked') ){
+			//newOptionNextElement.show();
+			
+			newOptionRemove.animate({"left": "+=100px"},{duration: 'fast',complete:function(){
+				newOptionRemove.css("left", 0);
+				newOptionNextElement.slideDown('slow');
+				}
+			});
 		}
 		else{
 			newOptionNextElement.hide();
@@ -1065,7 +1070,7 @@ function moveDiv(value, id)
 		}
 		newDivElement = createNewDivElement("show", contents, $('#container').data("sstype")  , first);
 		newDivElement.appendTo($('#imported'));
-		if ( $('#container').length){
+		if (!( $('#container').length) ){
 			showBranch(id, false);
 		}
 		
@@ -1215,13 +1220,25 @@ function showSubmitBlock(){
 	$('.tableRight').toggleClass("dummy");
 	//$('#submit-block').toggleClass("dummy");
 }
+function hideSubmitBlock(){
+	$('#submit-block').slideUp({duration:"slow", complete:function(){
+		//$('#submit-block').toggleClass("dummy");
+		$('.tableRight').toggleClass("dummy");
+		}
+	});
+	$('.tableRight').toggleClass("dummy");
+	//$('#submit-block').toggleClass("dummy");
+}
 function reloadStructure(){
 	divBlock = $('#container').children('div');
 	id = divBlock.first().attr('id');
+	hideSubmitBlock();
 	//nextElements = divBlock.siblings();
 	divBlock.each( function(index, value){
 		moveDiv(value, id)
 	});
+	 
+	
 	
 }
 function TriggersOnFirstElement(){

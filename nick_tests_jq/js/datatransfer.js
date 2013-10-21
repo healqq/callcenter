@@ -10,7 +10,7 @@ function getInputValue(element){
 		if (! (textBlocksSelection.length == 0 ) ){
 			value = [];
 			textBlocksSelection.each(function(){
-			value.push({key:$(this).attr('placeholder'), value:$(this).val()} );
+			value.push({key:$(this).attr('id')+$(this).attr('placeholder'), value:$(this).val()} );
 				});
 			}
 		else{
