@@ -1,0 +1,610 @@
+﻿		body {
+			font-family: Calibri; /* Семейство шрифтов */
+			font-size: 11pt; /* Размер основного шрифта в пунктах  */
+		/*	background-image: url(images/FonBlack.png);  */
+		/*	background-color: #f0f0f0; /* Цвет фона веб-страницы */ 
+			background-color: #B0B195;
+			
+			color: #121310; /* Цвет основного текста */
+			width: 100%;
+			height: 100%;
+}
+
+		html {
+			width: 100%;
+			height: 100%;
+			overflow:  hidden; 
+}
+		.page_header{
+		height: 5%;
+}
+		.tables{
+			display: -webkit-box;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-box-direction: normal;
+			-moz-box-direction: normal;
+			-webkit-box-orient: horizontal;
+			-moz-box-orient: horizontal;
+			-webkit-flex-direction: row;
+			-ms-flex-direction: row;
+			flex-direction: row;
+			-webkit-flex-wrap: nowrap;
+			-ms-flex-wrap: nowrap;
+			flex-wrap: nowrap;
+			-webkit-box-pack: start;
+			-moz-box-pack: start;
+			-webkit-justify-content: flex-start;
+			-ms-flex-pack: start;
+			justify-content: flex-start;
+			-webkit-align-content: stretch;
+			-ms-flex-line-pack: stretch;
+			align-content: stretch;
+			-webkit-box-align: stretch;
+			-moz-box-align: stretch;
+			-webkit-align-items: stretch;
+			-ms-flex-align: stretch;
+			align-items: stretch;
+}
+		.tableRight {
+		/*	font-family: Calibri; /* Семейство шрифтов */
+		/*	font-size: 11pt; /* Размер основного шрифта в пунктах  */
+		/* 	background-image: url(images/FonLeftTable.png); */
+		/*	background-color:#EEECBB;
+		/*	margin-left: 20%;
+			margin-top: 2%;
+			padding: 1;
+		/*	width: 75%; */
+			/*height: 20000%;*/
+			margin-bottom: 2%;
+			/*display:table-cell;*/
+		/*	min-height: 90%;
+			max-height: none;
+		/*	overflow:  hidden; */
+			border-bottom: 1px solid #121310; /* Параметры линии внизу */
+		/*	border-left: 1px solid #121310; /* Линия слева от текста */
+		/*	border-right: 1px solid #121310; /* Линия справа от текста */
+			border-top: 1px solid #121310; /* Линия сверху от текста */
+			/*position:relative;*/
+			-webkit-flex:  0 1 80%;
+           flex: 0 1 50%;
+			-webkit-order: 0;
+           order: 0;
+		   align-self: auto;	
+			
+					
+}
+		.tableRight, .tableInfo{
+		background-color:#EEECBB;
+		
+}
+		.tableInfo {
+		/*	font-family: Calibri; /* Семейство шрифтов */
+		/*	font-size: 11pt; /* Размер основного шрифта в пунктах  */
+		/* 	background-image: url(images/FonLeftTable.png); */
+		/*	background-color:#EEECBB;
+		/*	margin-left: 20%;
+			margin-top: 2%;
+			padding: 1;
+		/*	width: 75%; */
+			/*height: 20000%;*/
+			margin-bottom: 2%;
+			/*display:table-cell;*/
+		/*	min-height: 90%;
+			max-height: none;
+		/*	overflow:  hidden; */
+			border-bottom: 1px solid #121310; /* Параметры линии внизу */
+		/*	border-left: 1px solid #121310; /* Линия слева от текста */
+			border-right: 1px solid #121310; /* Линия справа от текста */
+			border-top: 1px solid #121310; /* Линия сверху от текста */
+			/*position:relative;*/
+			-webkit-flex:  0 1 25%;
+           flex: 0 1 25%;
+			-webkit-order: 0;
+           order: 0;
+		   align-self: auto;	
+			
+					
+}
+		.tableLeft {
+			/*display:table-cell;*/
+			/*position: absolute;*/
+		/*	font-family: Calibri; /* Семейство шрифтов */
+		/*	font-size: 11pt; /* Размер основного шрифта в пунктах  */
+			background-color:#95AA61;
+			/* background-image: url(images/FonTable.png); */
+			margin-left: 2%;
+			/*padding: 1;
+			width: 18%;
+			
+			height: 100%;*/
+			margin-bottom: 2%;
+			overflow: hidden;
+			/*height: 100%;*/
+		/*	min-height: 90%;
+			max-height: none;*/
+			border-bottom: 1px solid #121310; /* Параметры линии внизу */
+			border-left: 1px solid #121310; /* Линия слева от текста */
+			border-right: 1px solid #121310; /* Линия справа от текста */
+			border-top: 1px solid #121310; /* Линия сверху от текста */
+			/*float: left;*/ /* Обтекание по правому краю */
+			-webkit-flex:  0 1 20%;
+           flex: 0 1 20%;
+			-webkit-order: 0;
+           order: 0;
+			align-self: auto;		   
+		
+}
+/*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		.error {
+		/*	color: #121310;*/
+			background-color:#EEECBB;
+			background-image: url(images/error.png);
+			position: relative;
+			display: none;
+			width: 90%;
+			margin-left: auto; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+}
+	
+		.active {
+			/*color: #121310;*/
+			/*background-color:#EEECBB;
+			background-image: url(images/error.png);
+			/*position: relative;
+			display: none;*/
+}
+	
+		.warning {
+			color: #121310;
+			background-color:#EEECBB;
+			background-image: url(images/warning.png);
+}
+
+		.warning, .error {
+			/* border: 1px solid; */
+			margin: 10px 0px;
+			padding:15px 10px 15px 50px;
+			background-repeat: no-repeat;
+			background-position: 10px center;
+}
+/*блок ошибки --------------------------------------------------------------------- */
+
+
+/*		.test {
+			width: 80%;
+			position: relative;
+			margin-left: 10px;
+}
+		.delete_div{
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			margin-left: 10px;
+				
+}
+
+		.button {
+			width: 60px;
+			height: 25px;
+			position: relative;
+			color: #121310;
+			background-color: white; /* Цвет фона кнопки */
+	/*		padding-left: 0.2%; /* Расстояние между линией и текстом */
+	/*		margin-left: 10px; /* Расстояние от левого края до линии */
+	/*		padding-bottom: 0.2%; 
+			margin-bottom: 10px; 
+			padding-right: 0.2%; 
+			margin-right: 10px;
+			padding-top: 0.2%; 
+			margin-top: 10px;
+					
+}
+		.control{
+			width: 100%;
+			height: 100px;
+			position: relative;
+}
+		.text{
+			color: #121310;
+			position: relative;
+			margin-left: 10px;
+			background-color: #white;
+			padding-left: 0.2%; /* Расстояние между линией и текстом */
+			
+/*}
+		
+
+		.input{
+			
+			width: 200px;
+			background-color: white;
+			padding-left: 0.2%; /* Расстояние между линией и текстом */	
+
+				
+		
+/*}*/
+/* temp divs block +++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
+		.temp-div{
+			background: #D6E68A;
+			border: 1px solid #121310; /* Параметры линии внизу */
+			width: 90%;
+			margin-left: auto; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+			display:table;
+}
+		#newElementName{
+			width:20%;
+			margin-top:10px;
+	/*margin-bottom:10px;*/
+			margin-left: 5%;
+}
+		.temp-div-header{
+			width: 90%;
+			margin-left: 5%; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+			
+}
+		.select{
+				margin-left: 10px;
+}
+		.textarea{
+			position: relative;
+			display: block;
+			width: 90%;
+			height: 100px;
+			resize: none;	
+			margin-bottom: 10px; 
+			margin-top: 10px;
+			margin-right: 5%;
+			margin-left: 5%;
+			background-color: white;
+			font-family: Calibri;	
+			font-size: 11pt;			
+}
+		.header {
+			display: block;
+			width: 100%;
+			/*margin: auto;*/
+			margin-top: 10px;
+			background-color: white;
+			 /* Расстояние между линией и текстом */			
+}
+		#radioInputTypesDiv > p{
+			margin-left: 5%;
+			margin-top: 0.2%;
+			margin-bottom: 0;
+			
+		}
+		#radioInputTypesDiv {
+			margin-bottom: 5px;
+			
+		}
+/*RADIO OPTIONS ELEMENTS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		#radioOptions, #fieldsList{
+	
+			position: relative;
+			display: none;
+			width: 90%;
+			/*padding-left:5%;*/
+			margin-left: 5%;
+			margin-right: 5%;
+			
+	
+	
+}
+		.radioOption > p{
+			position:relative;
+			height: 26px;
+			display: block;
+			width: 90%;
+		/*	margin-left: 5%;*/
+			
+}
+		.radioOption > input[type=text] [class = radioOptionInput] {
+			position:relative;
+			width: 35%;
+			height: 20px;
+			margin-left: 0px;
+			background-color: white;
+			padding-left: 0.2%; /* Расстояние между линией и текстом */	
+}
+		.branchId{
+			width: 15%;
+			height: 16px;
+			position: relative;
+			margin-top: 2px;
+			margin-bottom : 2px;
+			margin-right: 10px;
+			margin-left: 10px;
+}
+		.checkBox{
+	
+			margin-left: 5%;
+	
+}
+
+		.active_checkBoxLabel{
+	
+	/*color:#C5AFCF;*/
+			font-weight:bold;
+	
+	
+}
+/*RADIO OPTIONS ELEMENTS --------------------------------------------------------------------*/
+/*Поля  для многострочного текста*/
+		
+/*temp divs block ------------------------------------------------------*/
+/* ACCORIDON                  +++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		.accordion{
+			background: #D6E68A;
+			border: 1px solid #121310; /* Параметры линии внизу */
+			width: 90%;
+			margin-left: auto; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+			display:table;
+}
+		.accordionheader, .accordiontextarea, .accordiontext, .editbutton, .removebutton, .header, .textarea  {
+			padding-left: 0.2%; /* Расстояние между линией и текстом */	
+		}
+		
+		.accordionheader {
+		    margin-top: 2%;
+			background: #95AA61;
+		 /* Семейство шрифтов */
+			font-size: 13pt;
+			cursor: pointer;
+			width: 95%;
+						
+			margin-right: 2%;
+			margin-left: 2%;
+			opacity : 0.6;
+			
+}
+		.accordion h3:hover {
+			opacity : 0.8;
+}
+		.accordion h3.active {
+			/* background-position: right 5px; */
+}
+		.accordion p {
+	
+			margin: 0;
+			width: 90%;
+			
+			margin-right: auto;
+			margin-left: auto;
+		
+}
+		.accordiontextarea,.accordiontext {
+			margin-right: 5%;
+			margin-left: 5%;
+		
+}
+		.accordiontextarea, .accordiontext {
+		  resize: none;
+		  border:none;
+}
+		.accordiontextarea {
+			margin-top: 1%;
+			margin-bottom: 1%;
+	        font-family: Calibri; /* Семейство шрифтов */
+			font-size: 11pt;
+			height: 100px;
+			width: 90%;
+}
+
+
+		.accordiontext {
+			margin-bottom: 2%;
+	        width: 40%;
+}
+
+
+		.divacc{
+			width: 100%;
+}
+		.active_header{
+			opacity: 1.0;
+	
+}
+/* чекбоксы  начало*/
+		.checkBoxLabel{
+			font-family: Calibri;
+	/*margin-left: 5%;*/
+	/*color:#828282;*/
+}
+
+/* чекбоксы  конец*/
+
+.idSpan{
+	float: right;
+	
+}
+/* ACCORIDON                  -----------------------------------------------------------*/
+/* BUTTONS                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .editbuttonAccordion{
+		border:none;
+		color: #121310;
+		
+}
+		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .idSpan, .help, .editbuttonAccordion{
+		background-color: #C5AFCF;
+}
+		.editbutton, .removebutton, .editbuttonAccordion{
+		
+		
+		
+		
+	
+		/* margin-bottom: 10px; */ 
+		padding-right: 0.2%; 
+		
+		margin-right: 10px;
+		
+}
+
+		.editbutton, .editbuttonAccordion  {
+			
+			height: 25px;
+			position: relative;
+			/*margin-left: 5%;*/ 
+			
+			/*margin-bottom: 5px;*/ 
+			margin-top: 5px;
+			padding-top: 0.2%;
+			padding-bottom: 0.2%;
+}
+
+		.editbuttonAccordion {
+			
+			margin-left: 5%; 
+			width: 80px;
+			margin-bottom: 5px;
+		
+}
+		.editbutton{
+			width: 60px;
+			margin-left: 5px;
+}
+
+		.removebutton {
+	        width: 40px;
+			height: 19px;
+			/*left : 37%;*/
+			
+			
+			position: relative;
+			padding: 0px;
+			margin-bottom: 4px;
+			margin-left: 10px; 
+		
+			/* background-image: url(images/minus.png); */
+			/*background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, rgba(255,255,255,0.2)), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.5, transparent), color-stop(1,rgba(255,255,255,0.15)), to(transparent));
+			background-image: -webkit-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
+			background-image: -moz-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
+			background-image: -ms-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
+			background-image: -o-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
+			background-image: linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);*/
+	
+}
+		.editbutton:hover, .removebutton:hover{
+		opacity: 1.0;
+		
+	}
+		.editbutton:hover, .removebutton:hover, .addbutton:hover, .editbuttonAccordion:hover{
+		background-color: #8270B6;
+		font-weight: bold;
+	}
+	
+/*хочу такие кнопки ! */
+		.addbutton {
+			width: 100%;
+			height: 40px;
+			position: relative;
+			font-size: 16px;
+			/*margin: auto; */
+			opacity: 1.0;
+		
+			
+					
+}
+		.addbutton:hover{ 
+		/*opacity: 1.0;*/
+		font-weight:bold;
+		
+}
+		.addbuttonP {
+			width: 90%;
+			height: 40px;
+			
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 10px !important;
+			margin-bottom : 10px !important;
+			opacity: 1.0;
+		
+			
+					
+}
+		
+/*		.removebutton1 {
+	width: 60px;
+	height: 25px;
+	color: #121310;
+background-color: #EEECBB;
+-webkit-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em, /* inner shadow * hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px, /* color border * rgba(0,0,0,0.2) 0 .5em 5px;
+/*-moz-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em, /* inner shadow  hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px,  color border  rgba(0,0,0,0.2) 0 .5em 5px;
+/*box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em, /* inner shadow * hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px,  color border  rgba(0,0,0,0.2) 0 .5em 5px;
+/*border-top-color: rgba(255,255,255,0.5);
+-webkit-border-radius: 1.6em 1.6em 1em 1em / 4em 4em 1em 1em;
+-moz-border-radius: 1.6em 1.6em 1em 1em / 4em 4em 1em 1em;
+border-radius: 1.6em 1.6em 1em 1em / 4em 4em 1em 1em;
+padding-left: 0.2%; 
+			margin-left: 10px; 
+			padding-bottom: 0.2%; 
+			margin-bottom: 10px; 
+			padding-right: 0.2%; 
+			margin-right: 10px;
+			padding-top: 0.2%; 
+			margin-top: 10px;
+
+}*/
+/* BUTTONS                  ------------------------------------------------------------*/
+
+
+		.focused{
+			border: 2px solid;
+			box-shadow: 0 0 10px #FFF;/*#DAA520;*/
+			border-color :#DAA520;
+}
+/*HELP BLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		.help{
+			position:relative;
+			width: 95%;
+			display:none;
+			/*float:right;*/
+			padding: 1%;
+			margin: 5px;
+		/*	border-left: solid 1px;
+			border-top: solid 1px;
+			border-bottom: solid 1px;*/
+	
+}
+		.help p{
+			text-align:center;
+			margin-top: 2px;
+}
+		.help h3{
+			text-align:center;
+			margin-top: 5px;
+			margin-bottom: 0px !important;
+}
+
+/*HELP BLOCK --------------------------------------------------------------------------*/
+/*SUBMIT BLOCK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+#submit-block {
+	padding-right:1px;
+	padding-left:-1px;
+	/*background: #D6E68A;
+	border-bottom: 1px solid #121310; /* Параметры линии внизу */
+	/*border-left: 1px solid #121310; /* Линия слева от текста */
+	/*border-right: 1px solid #121310; /* Линия справа от текста */
+	/*border-top: 1px solid #121310; /* Линия сверху от текста */
+	width: 90%;
+	margin-left: auto; /* Расстояние от левого края до линии */
+	margin-right: auto; /* Расстояние от правого края до линии */
+	display: none;
+	/*font-family: none;*/
+	
+}
+/*SUBMIT BLOCK ------------------------------------------------------------------------*/
+.dummy{
+	font-family: Calibri; /* Семейство шрифтов */
+	/*padding-right:5px;
+	/*padding-left:-1px;*/
+}
