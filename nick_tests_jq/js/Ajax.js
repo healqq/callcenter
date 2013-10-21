@@ -1,6 +1,14 @@
 //сохраняет структуру сценария в 1С
 function saveStructure() {
-    
+    var r=confirm("Внимание! Старая версия анкеты будет заменена! Продолжить?");
+		if (r==true)
+	{
+		
+	}
+	else
+	{
+		return;
+	}
     request = sendRequest("SetScriptStructure", [{key:'EncodedData', value: exportToJSON(["#container","#imported"])}]);
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );

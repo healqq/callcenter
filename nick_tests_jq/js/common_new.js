@@ -90,20 +90,51 @@ function fabric ( type,  options) {
 
 //сворачивание/разворачивание при клике на заголовок
 function onHeaderClick(){
-	var that = $(this);
-	that.siblings().slideToggle("slow");
-	var div_block = that.parent("div");
+	//var that = $(this);
+	$(this).siblings().slideToggle("slow");
+	var div_block = $(this).parent("div");
 	allDivBlocks = div_block.siblings().not(div_block);
 	allDivBlocks.children().not("h3").slideUp("slow");
 		
-	that.toggleClass("active_header");
+	$(this).toggleClass("active_header");
 	
 	allDivBlocks.children('h3').each(function(){
 		$(this).removeClass("active_header");
+		divBlock = $(this).parent('div');
+		markHeaders(divBlock);
 		});
 	
 	//div_block.find("textarea").focus();
 }
+function markHeaders(element){
+	divObject = createObjectFromDiv(element);
+	state = 'filled';
+	switch (divObject.inputType) {
+		case "text": textSelection   = $(element).find(":input[type=text]");
+					textSelection.each(function(){if ( $(element).val().trim() == "")
+							state = "warning";
+						});
+		break;
+		case "radio": radioSelection   = $(element).find(":input[type=radio]:checked");
+					if (radioSelection.length == 0 )
+							state = "warning";
+		break;
+		case "textarea": textAreaSelection   = $(element).find("textarea");
+					if (textAreaSelection.val().trim() == "" )
+							state = "warning";
+		break;
+		
+		
+	}
+	if (state == "warning"){
+		$(element).addClass("not-filled");
+	}
+	else{
+		$(element).removeClass("not-filled");
+	}
+}
+	
+
 //событие при изменении инпута
 //переходит на следующее сообщение, если такое есть.
 //иначе просто сворачивает текущее	
@@ -170,9 +201,9 @@ function createObjectFromDiv(element){
 	var name, header, description, inputType, inputValues;
 	branchesList = $(element).data("branches");
 	id 				= $(element).attr("id");
-	header 			= $(element).children("h3").children().not(".idSpan").html();
+	header 			= $(element).children("h3").children().not(".idSpan").text();
 	pSelection 		= $(element).children("p");
-	description 	= pSelection.first().html();
+	description 	= pSelection.first().text();
 	inputSelection 	= $(element).find(':input[type=radio]');
 	textAreaSelection = $(element).find('textarea');
 	textSelection   = $(element).find(":input[type=text]");
@@ -188,7 +219,7 @@ function createObjectFromDiv(element){
 		radio = [];
 		inputType = "radio";
 		inputSelection.each(function(){
-				radio.push($('label[for='+$(this).attr('id')+']').html());
+				radio.push($('label[for='+$(this).attr('id')+']').text());
 		});
 	}
 	
@@ -961,14 +992,9 @@ function addRadioOptionsListItem(){
 		newOptionRemove.appendTo(newIn);
 		newIn.hide();
 		// newOption.appendTo($("#radioOptions"));
-		if ($("#branch").is(':checked') ){
-			//newOptionNextElement.show();
-			
-			newOptionRemove.animate({"left": "+=100px"},{duration: 'fast',complete:function(){
-				newOptionRemove.css("left", 0);
-				newOptionNextElement.slideDown('slow');
-				}
-			});
+		if ($(":input","#branch").is(':checked') ){
+			newOptionNextElement.show();
+			newOptionRemove.animate({"left": "+=100px"},'fast');
 		}
 		else{
 			newOptionNextElement.hide();
@@ -1070,7 +1096,7 @@ function moveDiv(value, id)
 		}
 		newDivElement = createNewDivElement("show", contents, $('#container').data("sstype")  , first);
 		newDivElement.appendTo($('#imported'));
-		if (!( $('#container').length) ){
+		if (( $('#container').children().length == 0) ){
 			showBranch(id, false);
 		}
 		
@@ -1097,6 +1123,7 @@ function showBranch(currBranch,hide){
 		return;
 	}
 	else{
+			hideSubmitBlock();
 			divElement = $('#'+currBranch);
 			divElement.children().hide();
 			divElement.appendTo("#container");
@@ -1109,6 +1136,7 @@ function showBranch(currBranch,hide){
 				
 			}
 			else{
+				
 				divElement.children("h3").trigger("click");
 				focusOnInput(divElement);
 				hide = true;
@@ -1232,13 +1260,10 @@ function hideSubmitBlock(){
 function reloadStructure(){
 	divBlock = $('#container').children('div');
 	id = divBlock.first().attr('id');
-	hideSubmitBlock();
 	//nextElements = divBlock.siblings();
 	divBlock.each( function(index, value){
 		moveDiv(value, id)
 	});
-	 
-	
 	
 }
 function TriggersOnFirstElement(){
