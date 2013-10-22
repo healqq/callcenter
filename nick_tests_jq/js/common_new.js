@@ -90,20 +90,51 @@ function fabric ( type,  options) {
 
 //сворачивание/разворачивание при клике на заголовок
 function onHeaderClick(){
-	var that = $(this);
-	that.siblings().slideToggle("slow");
-	var div_block = that.parent("div");
+	//var that = $(this);
+	$(this).siblings().slideToggle("slow");
+	var div_block = $(this).parent("div");
 	allDivBlocks = div_block.siblings().not(div_block);
 	allDivBlocks.children().not("h3").slideUp("slow");
 		
-	that.toggleClass("active_header");
+	$(this).toggleClass("active_header");
 	
 	allDivBlocks.children('h3').each(function(){
 		$(this).removeClass("active_header");
+		divBlock = $(this).parent('div');
+		markHeaders(divBlock);
 		});
 	
 	//div_block.find("textarea").focus();
 }
+function markHeaders(element){
+	divObject = createObjectFromDiv(element);
+	state = 'filled';
+	switch (divObject.inputType) {
+		case "text": textSelection   = $(element).find(":input[type=text]");
+					textSelection.each(function(){if ( $(element).val().trim() == "")
+							state = "warning";
+						});
+		break;
+		case "radio": radioSelection   = $(element).find(":input[type=radio]:checked");
+					if (radioSelection.length == 0 )
+							state = "warning";
+		break;
+		case "textarea": textAreaSelection   = $(element).find("textarea");
+					if (textAreaSelection.val().trim() == "" )
+							state = "warning";
+		break;
+		
+		
+	}
+	if (state == "warning"){
+		$(element).addClass("not-filled");
+	}
+	else{
+		$(element).removeClass("not-filled");
+	}
+}
+	
+
 //событие при изменении инпута
 //переходит на следующее сообщение, если такое есть.
 //иначе просто сворачивает текущее	
@@ -1065,7 +1096,7 @@ function moveDiv(value, id)
 		}
 		newDivElement = createNewDivElement("show", contents, $('#container').data("sstype")  , first);
 		newDivElement.appendTo($('#imported'));
-		if ( $('#container').length){
+		if (( $('#container').children().length == 0) ){
 			showBranch(id, false);
 		}
 		
@@ -1092,6 +1123,7 @@ function showBranch(currBranch,hide){
 		return;
 	}
 	else{
+			hideSubmitBlock();
 			divElement = $('#'+currBranch);
 			divElement.children().hide();
 			divElement.appendTo("#container");
@@ -1104,6 +1136,7 @@ function showBranch(currBranch,hide){
 				
 			}
 			else{
+				
 				divElement.children("h3").trigger("click");
 				focusOnInput(divElement);
 				hide = true;
@@ -1208,6 +1241,15 @@ function addHelpTriggers(){
 }
 function showSubmitBlock(){
 	$('#submit-block').slideDown({duration:"slow", complete:function(){
+		//$('#submit-block').toggleClass("dummy");
+		$('.tableRight').toggleClass("dummy");
+		}
+	});
+	$('.tableRight').toggleClass("dummy");
+	//$('#submit-block').toggleClass("dummy");
+}
+function hideSubmitBlock(){
+	$('#submit-block').slideUp({duration:"slow", complete:function(){
 		//$('#submit-block').toggleClass("dummy");
 		$('.tableRight').toggleClass("dummy");
 		}
