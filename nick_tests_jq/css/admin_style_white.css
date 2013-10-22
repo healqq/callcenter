@@ -488,7 +488,7 @@
 			font-size: 16px;
 			/*margin: auto; */
 			opacity: 1.0;
-			font-size: 14pt;
+			/*font-size: 14pt;*/
 			border: 1px solid #999;
 }
 		.editbutton, .removebutton, .addbuttonP, .addbutton, .idSpan, .help, .editbuttonAccordion{
