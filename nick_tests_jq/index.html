@@ -10,15 +10,16 @@
 
 
 
-	<link rel="stylesheet" href="css/admin_style.css" type="text/css">
+	<link rel="stylesheet" href="css/admin_style_white.css" type="text/css">
 	<script src="js/admin.js" type="text/javascript"></script>
 	<script src="js/ajax.js" type="text/javascript"></script>
 	<script src="js/Auth.js" type="text/javascript"></script>
 	<script src="js/datatransfer.js" type="text/javascript"></script>
+	<script src="js/drawing.js" type="text/javascript"></script>
 	<script src="js/common_new.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	checkSession();
+	//checkSession();
 	createNewTempElement();
 
 
@@ -30,6 +31,7 @@
 	$("#sendXML").click(sendData);
 
 	$("#logout").click(logout);
+	$("#draw").click(draw);
 
 });
 	
@@ -38,48 +40,60 @@
 </head>
 
 <body>
+
 <div class = "page_header">
 </div>
+
 <div class = "tables">
-<div class = "tableLeft">
-	<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить структуру" type="button" class = "addbutton"></p>
-	<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить cтруктуру" type="button" class = "addbutton"></p>
-	<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
-	<p class = "addbuttonP"><input id="logout" value="Выйти" type="button" class = "addbutton"> </p>
-	<p id="response" style="display:none"></p>
-	<div id= "help" class = "help">
-		<h3>Подсказка</h3>
-		<p></p>
-	</div>
-</div>
-
-<div class = "tableRight">
-	<div class="error"></div>
-	
+	<div class = "tableLeft">
+		<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить структуру" type="button" class = "control-button"></p>
+		<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить cтруктуру" type="button" class = "control-button"></p>
+		<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
 		
+		<p id="response" style="display:none"></p>
+		<br>
+		<div id= "help" class = "help">
+			<h3>Подсказка</h3>
+			<p></p>
+		</div>
+	</div>
+
+	<div class = "tableRight">
+		<div class="error"></div>
+		
+			
+			
+
+		<div id="temp_divs" class="temp-div" style="margin-top:10px" >
+
+		</div>
+
+		<div id="imported" class= "accordion" style = "display:none">
+		</div>
+		</br>
+
+
+
 		
 
-	<div id="temp_divs" class="temp-div" style="margin-top:10px" >
+		<div class="accordion" id = "container" ></div>
+		</br>
+
 
 	</div>
-
-	<div id="imported" class= "accordion" style = "display:none">
+	<div class = "tableInfo">
+		<p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>
+		<p class = "addbuttonP" id="drawP"><input type = button class = "control-button" id="draw" value="draw"></p>
+		<div id="draw_block" style="display:none">
+			
+			<canvas id="scheeme" height="500"></canvas>
+		</div>
 	</div>
-	</br>
-
-
-
-	
-
-	<div class="accordion" id = "container" ></div>
-	</br>
-
-
 </div>
-<div class = "tableInfo">
-</div>
+<div class = "page_footer">
 </div>
 <!-- <input type="button" id="import">build from json</input> -->
+
 </body>
 
 </html>

@@ -8,6 +8,7 @@
 			color: #121310; /* Цвет основного текста */
 			width: 100%;
 			height: 100%;
+			margin: 0;
 }
 
 		html {
@@ -15,15 +16,33 @@
 			height: 100%;
 			overflow:  hidden; 
 }
-		.page_header{
+		.page_header, .page_footer{
 		height: 5%;
+		flex: 100%;
+		order: 0;
+		background-color: #D1D1D1;
 }
+		.page_footer{
+		height: 5%;
+		width: 100%;
+		flex: 100%;
+		order: 0;
+		position: relative;
+		bottom: 0%;
+		left: 0%;
+		
+}
+		
 		.tables{
+			/*transition: all 2s; 
+			box-sizing: border-box;*/
 			display: -webkit-box;
 			display: -moz-box;
 			display: -ms-flexbox;
 			display: -webkit-flex;
 			display: flex;
+			min-width: 100%;
+			min-height: 90%;
 			-webkit-box-direction: normal;
 			-moz-box-direction: normal;
 			-webkit-box-orient: horizontal;
@@ -47,8 +66,10 @@
 			-webkit-align-items: stretch;
 			-ms-flex-align: stretch;
 			align-items: stretch;
-}
+			
+}	
 		.tableRight {
+			margin-left: 2%;
 		/*	font-family: Calibri; /* Семейство шрифтов */
 		/*	font-size: 11pt; /* Размер основного шрифта в пунктах  */
 		/* 	background-image: url(images/FonLeftTable.png); */
@@ -68,8 +89,10 @@
 		/*	border-right: 1px solid #121310; /* Линия справа от текста */
 		/*	border-top: 1px solid #121310; /* Линия сверху от текста */
 			/*position:relative;*/
-			-webkit-flex:  0 1 80%;
-           flex: 0 1 50%;
+			height: 99999%;
+			width: 70%;
+			-webkit-flex:  0 1 60%;
+           flex: 60%;
 			-webkit-order: 0;
            order: 0;
 		   align-self: auto;	
@@ -89,8 +112,10 @@
 			margin-top: 2%;
 			padding: 1;
 		/*	width: 75%; */
-			/*height: 20000%;*/
+			/*height: 20000%;
+			height: 99999%;*/
 			margin-bottom: 2%;
+			/*width: 25%;*/
 			/*display:table-cell;*/
 		/*	min-height: 90%;
 			max-height: none;
@@ -101,7 +126,7 @@
 		/*	border-top: 1px solid #121310; /* Линия сверху от текста */
 			/*position:relative;*/
 			-webkit-flex:  0 1 25%;
-           flex: 0 1 25%;
+           flex: 25%;
 			-webkit-order: 0;
            order: 0;
 		   align-self: auto;	
@@ -113,26 +138,28 @@
 			/*position: absolute;*/
 		/*	font-family: Calibri; /* Семейство шрифтов */
 		/*	font-size: 11pt; /* Размер основного шрифта в пунктах  */
-			background-color:#FAFAFA;
-			background:#FAFAFA;
+			background-color:#DDD;
+		/*	background: #EEE; */
 			/* background-image: url(images/FonTable.png); */
-			margin-left: 2%;
-			/*padding: 1;
+		/*	margin-left: 2%;
+			/*padding: 1;*/
 			width: 18%;
 			
-			height: 100%;*/
-			margin-bottom: 2%;
+		/*	height: 99999%;*/
+		/*	margin-bottom: 2%;
 			overflow: hidden;
+		/*	border: 1px solid #999;*/
 			/*height: 100%;*/
-		/*	min-height: 90%;
-			max-height: none;*/
+			min-height: 90%
+		/*	max-height: none;*/
 		/*	border-bottom: 1px solid #121310; /* Параметры линии внизу */
 		/*	border-left: 1px solid #121310; /* Линия слева от текста */
 		/*	border-right: 1px solid #121310; /* Линия справа от текста */
 		/*	border-top: 1px solid #121310; /* Линия сверху от текста */
 			/*float: left;*/ /* Обтекание по правому краю */
-			-webkit-flex:  0 1 20%;
-           flex: 0 1 20%;
+			-webkit-flex:  0 1 15%;
+           flex: 15%;
+		   
 			-webkit-order: 0;
            order: 0;
 			align-self: auto;		   
@@ -141,24 +168,32 @@
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		.error {
 		/*	color: #121310;*/
-			background-color:#EEECBB;
-			background-image: url(images/error.png);
+			background-color:#FFCCCC;
+			/*background-image: url(images/error.png);
+			opacity: 0.7;*/
 			position: relative;
 			display: none;
 			width: 90%;
-			margin-left: auto; /* Расстояние от левого края до линии */
+			height: 20px;
+			/*height: 25pt;*/
+			margin-top: 5px;
+			/*height: 5%;*/
+			text-align: center;
+			margin-left: 5%; /* Расстояние от левого края до линии */
 			margin-right: auto; /* Расстояние от правого края до линии */
+			background-repeat: no-repeat;
+			background-position: 10px center;
 }
 	
 		.active {
-			/*color: #121310;*/
+			color: #121310;
 			/*background-color:#EEECBB;
 			background-image: url(images/error.png);
 			/*position: relative;
 			display: none;*/
 }
 	
-		.warning {
+/*		.warning {
 			color: #121310;
 			background-color:#EEECBB;
 			background-image: url(images/warning.png);
@@ -166,11 +201,11 @@
 
 		.warning, .error {
 			/* border: 1px solid; */
-			margin: 10px 0px;
+/*			margin: 10px 0px;
 			padding:15px 10px 15px 50px;
 			background-repeat: no-repeat;
 			background-position: 10px center;
-}
+}*/
 /*блок ошибки --------------------------------------------------------------------- */
 
 
@@ -230,7 +265,7 @@
 /* temp divs block +++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 		.temp-div{
 			background: #FAFAFA;
-			border: 1px solid #121310; /* Параметры линии внизу */
+			border: 1px solid #999; /* Параметры линии внизу */
 			width: 90%;
 			margin-left: auto; /* Расстояние от левого края до линии */
 			margin-right: auto; /* Расстояние от правого края до линии */
@@ -327,7 +362,7 @@
 	
 }
 
-		.active_checkBoxLabel{
+		.active-checkBoxLabel{
 	
 	/*color:#C5AFCF;*/
 			font-weight:bold;
@@ -354,7 +389,7 @@
 		
 		.accordionheader {
 		    margin: 0;
-			background: #999999;
+			background: #BBB;
 		 /* Семейство шрифтов */
 			font-size: 13pt;
 			cursor: pointer;
@@ -426,19 +461,40 @@
 
 .idSpan{
 	float: right;
+	/*margin-top:0;
+	height: 35px;*/
+	margin-right: 1px;
 	
 }
+.not-filled{
+			background-image: url(images/warning_bg.png);
+			opacity: 0.7;
+		}
 /* ACCORIDON                  -----------------------------------------------------------*/
 /* BUTTONS                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .editbuttonAccordion{
+		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .editbuttonAccordion, .exit-button, .control-button{
 		border:none;
 		color: #121310;
 		
 }
-		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .idSpan, .help, .editbuttonAccordion{
-		background-color: #C5AFCF;
+		
+		.control-button{
+			width: 100%;
+			/*background-image: url(images/buttons_bg.png);*/
+			/*background-color: #00EE00;*/
+			background-color: #DFDFDF;
+			height: 40px;
+			position: relative;
+			font-size: 16px;
+			/*margin: auto; */
+			opacity: 1.0;
+			font-size: 14pt;
+			border: 1px solid #999;
 }
-		.editbutton, .removebutton, .editbuttonAccordion{
+		.editbutton, .removebutton, .addbuttonP, .addbutton, .idSpan, .help, .editbuttonAccordion{
+		background-color: #FAFAFA;
+}
+		.editbutton, .removebutton{
 		
 		
 		
@@ -450,7 +506,7 @@
 		margin-right: 10px;
 		
 }
-
+		
 		.editbutton, .editbuttonAccordion  {
 			
 			height: 25px;
@@ -465,48 +521,68 @@
 
 		.editbuttonAccordion {
 			
-			margin-left: 5%; 
-			width: 80px;
+			/*margin-left: 5%; */
+			/*width: 80px;*/
 			margin-bottom: 5px;
 		
 }
+		.edit-block{
+			/*margin-left: 5%;*/
+			background-color: #EEE;
+			width: 95%;
+			margin-bottom: 0;
+			padding-left :5%;
+		}
 		.editbutton{
-			width: 60px;
+			width: 32px;
+			height: 32px;
 			margin-left: 5px;
+			/*background: linear-gradient(to top, #00FF00, #00EE00);*/
+			background-position: 0px 0px;
+			background-image: url(images/add.png);
 }
-
+		.editbutton:hover{
+			background-position: 0px 33px;
+}
+		.removebutton:hover{
+			background-position: 0px 22px;
+}
 		.removebutton {
-	        width: 40px;
-			height: 19px;
-			/*left : 37%;*/
+	        width: 32px;
+			height: 22px;
+		
+			top: 5px;
+	
 			
-			
+			background-image: url(images/minus.png);
+			background-position: 0px 0px;
 			position: relative;
-			padding: 0px;
-			margin-bottom: 4px;
+	
 			margin-left: 10px; 
 		
-			/* background-image: url(images/minus.png); */
-			/*background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(0, rgba(255,255,255,0.2)), color-stop(0.5, rgba(255, 255, 255, 0.15)), color-stop(0.5, transparent), color-stop(1,rgba(255,255,255,0.15)), to(transparent));
-			background-image: -webkit-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
-			background-image: -moz-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
-			background-image: -ms-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
-			background-image: -o-linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);
-			background-image: linear-gradient(rgba(255,255,255,0.2) 0%, rgba(255, 255, 255, 0.15) 50%, transparent 50%, rgba(255, 255, 255, 0.15) 100%);*/
+		
 	
 }
 		.editbutton:hover, .removebutton:hover{
-		opacity: 1.0;
+			opacity: 1.0;
 		
 	}
-		.editbutton:hover, .removebutton:hover, .addbutton:hover, .editbuttonAccordion:hover{
-		background-color: #8270B6;
-		font-weight: bold;
+		  .addbutton:hover, .editbuttonAccordion:hover,.control-button:hover{
+		/*background-color: #8270B6;*/
+			font-weight: bold;
+			box-shadow: 0 0 10px #FA0;
 	}
+		.exit-button:focus, .addbutton:focus, .editbutton:focus{
+			outline:none;
+	}
+		
 	
 /*хочу такие кнопки ! */
 		.addbutton {
 			width: 100%;
+			background-image: url(images/add.png);
+			background-position: 0px, 0px;
+			/*background-color: #00EE00;*/
 			height: 40px;
 			position: relative;
 			font-size: 16px;
@@ -517,9 +593,12 @@
 					
 }
 		.addbutton:hover{ 
+		
 		/*opacity: 1.0;*/
 		font-weight:bold;
 		
+		/*box-shadow: 0 0 10px #FA0;
+		*/
 }
 		.addbuttonP {
 			width: 90%;
@@ -535,44 +614,44 @@
 					
 }
 		
-/*		.removebutton1 {
-	width: 60px;
-	height: 25px;
-	color: #121310;
-background-color: #EEECBB;
--webkit-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em, /* inner shadow * hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px, /* color border * rgba(0,0,0,0.2) 0 .5em 5px;
-/*-moz-box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em, /* inner shadow  hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px,  color border  rgba(0,0,0,0.2) 0 .5em 5px;
-/*box-shadow: inset rgba(255,254,255,0.6) 0 0.3em .3em, inset rgba(0,0,0,0.15) 0 -0.1em .3em, /* inner shadow * hsl(88, 70%, 40%) 0 .1em 3px, hsl(88, 70%, 30%) 0 .3em 1px,  color border  rgba(0,0,0,0.2) 0 .5em 5px;
-/*border-top-color: rgba(255,255,255,0.5);
--webkit-border-radius: 1.6em 1.6em 1em 1em / 4em 4em 1em 1em;
--moz-border-radius: 1.6em 1.6em 1em 1em / 4em 4em 1em 1em;
-border-radius: 1.6em 1.6em 1em 1em / 4em 4em 1em 1em;
-padding-left: 0.2%; 
-			margin-left: 10px; 
-			padding-bottom: 0.2%; 
-			margin-bottom: 10px; 
-			padding-right: 0.2%; 
-			margin-right: 10px;
-			padding-top: 0.2%; 
-			margin-top: 10px;
-
-}*/
+		.exitP{
+			position: relative;
+			
+			float: right;
+			margin-right: 15px;
+			
+			width: 32px;
+			height: 32px;
+			/*margin: 0;*/
+		}
+		.exit-button{
+			background-color: #FAFAFA;
+			width: 32px;
+			height: 32px;
+			margin: 0;
+			background-image: url(images/exit.png);
+			background-position:0px 0px;
+		}
+		.exit-button:hover{
+			background-position:0px 32px;
+		}
 /* BUTTONS                  ------------------------------------------------------------*/
 
 
 		.focused{
-			border: 2px solid;
-			box-shadow: 0 0 10px #FFF;/*#DAA520;*/
-			border-color :#DAA520;
+			/*border: 2px solid;
+			border-color :#F00;*/
+			box-shadow: 0 0 10px #FA0;/*#DAA520;*/
+			
 }
 /*HELP BLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		.help{
 			position:relative;
-			width: 95%;
+			width: 90%;
 			display:none;
 			/*float:right;*/
 			padding: 1%;
-			margin: 5px;
+			margin: 10px;
 		/*	border-left: solid 1px;
 			border-top: solid 1px;
 			border-bottom: solid 1px;*/
@@ -612,4 +691,11 @@ padding-left: 0.2%;
 	font-family: Calibri; /* Семейство шрифтов */
 	/*padding-right:5px;
 	/*padding-left:-1px;*/
+}
+
+/* CANVAS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+#scheeme{
+/*height: 5000px;*/
+width: 100%;
+position: relative;
 }
