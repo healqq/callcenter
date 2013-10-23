@@ -1,5 +1,6 @@
 
 //Синглтон для рисования дерева
+//очень крутой.
 var drawerSingleton = (function(){
     function drawerSingleton() {
 	//private
@@ -13,7 +14,7 @@ var drawerSingleton = (function(){
 			return;
 		else{
 			ctx.fillStyle = "blue";
-			 ctx.fillRect(row*50,column*50,25,25);
+			 ctx.fillRect((row+instance.getMaxRow())*30,column*50,25,25);
 			 instance.addItem(element, column, row);
 			 nextElements = $('#'+element).data('branches');
 			 if ( nextElements == undefined )
@@ -22,8 +23,8 @@ var drawerSingleton = (function(){
 					for (var i=0; i< nextElements.length; i++){
 						ctx.lineWidth = 2;
 						ctx.beginPath();
-						ctx.moveTo(row*50 + 13,column*50+ 25);
-						ctx.lineTo((row+i)*50 +13 ,(column+1)*50);
+						ctx.moveTo((row)*30 + 13,column*50+ 25);
+						ctx.lineTo((row+instance.getMaxRow()+i)*30 +13 ,(column+1)*50);
 						ctx.stroke();
 					drawElement(nextElements[i], row + i, column+1);
 					}
@@ -52,7 +53,7 @@ var drawerSingleton = (function(){
 		draw :  function (){
 		//layer =( layer == undefined? 1, layer);
 			element = $("#container").children().first().attr('id');
-			drawElement(element, 1, 1);
+			drawElement(element, 0, 1);
 			
 			//do stuff
 		},
@@ -62,7 +63,7 @@ var drawerSingleton = (function(){
 			if (canvas.getContext){
 				itemsArray = []; 
 				ctx = canvas.getContext('2d');
-				maxRow = 1;
+				maxRow = 0;
 				maxColumn = 1;
 				return this;
 			}

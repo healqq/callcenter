@@ -14,7 +14,10 @@
 		html {
 			width: 100%;
 			height: 100%;
-			overflow:  hidden; 
+			/*overflow:  hidden;*/ 
+}
+		::-webkit-scrollbar {
+			display: none; 
 }
 		.page_header, .page_footer{
 		height: 5%;
@@ -615,11 +618,12 @@
 }
 		
 		.exitP{
-			position: relative;
-			
-			float: right;
-			margin-right: 15px;
-			
+			position: fixed;
+			right: 10px;
+			top: 5%;
+			/*float: right;			
+			margin-right: 15px;*/
+			display: block;
 			width: 32px;
 			height: 32px;
 			/*margin: 0;*/
@@ -629,6 +633,7 @@
 			width: 32px;
 			height: 32px;
 			margin: 0;
+			
 			background-image: url(images/exit.png);
 			background-position:0px 0px;
 		}
