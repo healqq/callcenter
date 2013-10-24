@@ -763,6 +763,7 @@ function addElement(){
 	};
 	
 	branchesPrevElement = undefined;
+	lastDiv = undefined;
 	//это новый элемент
 	if (position === "") {
 		lastDiv = $('#container').children(':last');
@@ -810,7 +811,9 @@ function addElement(){
 			}
 		}
 	}
-	lastDiv.data("branches", branchesPrevElement); 
+	if ( lastDiv !== undefined ){
+		lastDiv.data("branches", branchesPrevElement); 
+	}
 	thisDiv.remove();
 	newDiv = createNewDivElement("show",contents, true);
 	//это новый элемент
@@ -1152,7 +1155,7 @@ function moveDiv(value, id)
 		}
 		newDivElement = createNewDivElement("show", contents, $('#container').data("sstype")  , first);
 		newDivElement.appendTo($('#imported'));
-		if (( $('#container').children().length == 0) ){
+		if (( $('#container').children().length == 0) && (id !== undefined) ){
 			showBranch(id, false);
 		}
 		
@@ -1326,5 +1329,62 @@ function TriggersOnFirstElement(){
 	showHelp();
 	fillingStarted();
 	//todo: реквест о начале заполнения скрипта
+	
+}
+
+function hideCanvasHelp(){
+	$('#scheeme-help').hide();
+}
+function findPathToElementStep(element, node){
+	var path = undefined;
+	var nodeElement = $('#'+node);
+	var branches = undefined;
+	if (nodeElement.attr('id') == element )
+		return new Array();
+	branches = nodeElement.data("branches");
+	if ( branches == undefined )
+		return undefined;
+	else{
+		if ( branches.length > 1){
+			for(var i = 0; i< branches.length; i++ ){
+				path = findPathToElementStep(element, branches[i]);
+				if (path !== undefined ){
+					path.push({"id":node,"branch":i});
+					return path;
+				}
+			}
+		}
+		else{
+			return findPathToElementStep(element, branches[0]);
+		}
+	}
+	
+}
+function findPathToElement(element){
+	var start = $('#container').children().first();
+	var path = undefined;
+	path = findPathToElementStep(element, start.attr('id'));
+	return path;
+	
+}
+function showElement( element ){
+	//он спрятан и нужно его найти
+	if ($('#'+element, '#container').length == 0 ){
+		var path = findPathToElement(element);
+		if (path !== undefined ){
+			path.reverse();
+			//прячем все блоки
+			$('#container').children().each( function(){
+				$(this).appendTo($('#imported') );
+			});
+			showBranch( path[0].id, true);
+			for (var i = 0; i < path.length; i++ ){
+				showBranch( $('#'+path[i].id).data('branches')[path[i].branch], true );
+			}
+			
+		}
+	}
+	$('#'+element).children('h3').trigger('click');
+	
 	
 }

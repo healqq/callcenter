@@ -396,9 +396,9 @@
 		 /* Семейство шрифтов */
 			font-size: 13pt;
 			cursor: pointer;
-			width: 100%;
+			width: 99%;
 			height:35px;
-			padding-left: 0.2%;
+			padding-left: 1%;
 			
 						
 		/*	margin-right: 2%;
@@ -533,8 +533,9 @@
 			/*margin-left: 5%;*/
 			background-color: #EEE;
 			width: 95%;
-			margin-bottom: 0;
+			margin-bottom: 1px;
 			padding-left :5%;
+			
 		}
 		.editbutton{
 			width: 32px;
@@ -701,6 +702,63 @@
 /* CANVAS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 #scheeme{
 /*height: 5000px;*/
-width: 100%;
-position: relative;
+	width: 100%;
+	/*top: 50px;*/
+	position: relative;
+	/*border: 1px solid #999;*/
+}
+#scheeme-help{
+	position: fixed;
+	display: none;
+	background: #FAFAFA;
+	top: 0;
+	right: 100%;
+	width: 150px;
+	height: 80px;
+	border: 1px solid #999;
+	z-index: 10;
+	border-radius: 10px;
+	
+	
+}
+#scheeme-help > h4{
+	margin-top:2px !important;
+	margin-bottom: 5px !important;
+	padding-left: 5pt;
+}
+#scheeme-help-exit{
+	position:absolute;
+	top: 0;
+	right: 6px;
+	width: 20px;
+	height: 20px;
+	
+	margin: 0;
+}
+#scheeme-exit, #goto-elem{
+	border: none;
+	
+	height: 20px;
+	/*background-image: url(images/exit_small.png);
+	background-position: 0px 0px;*/
+	z-index: 10;
+	background-color: #FAFAFA;
+	
+}
+#scheeme-exit{
+	background-image: url(images/exit_small.png);
+	background-position: 0px 0px;
+	width: 20px;
+}
+#scheeme-id{
+	/*text-align: center;*/
+	padding-left: 5pt;
+	margin: 0;
+	
+}
+#scheeme-exit:hover{
+	background-position: 0px 20px;
+}
+#scheeme-exit:focus, #goto-elem{
+	outline: none;
 }

@@ -82,7 +82,7 @@ function auth(login, pwd){
 		//alert(SESSID);
 		if ( !(SESSID == "") ){
 			//all ok
-			setCookie('PHPSESSID', SESSID,{expires:24*60, path:'/'});
+			setCookie('PHPSESSID', SESSID,{expires:60*60*60, path:'/'});
 			redirect("index.html");
 		}
 		else{
@@ -111,7 +111,7 @@ function confimSession(sessionID){
 		//alert(SESSID);
 		if ( sessionType == "admin" ) {
 			//all ok
-			setCookie('PHPSESSID', sessionID,{expires:24*60, path:'/'});
+			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/'});
 			redirect("index.html");
 			//return true;
 		}
@@ -119,7 +119,7 @@ function confimSession(sessionID){
 		
 		
 			//alert("Неправильная пара логин пароль!");
-			setCookie('PHPSESSID', sessionID,{expires:24*60, path:'/'});
+			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/'});
 			redirect("client.html");
 			//window.location.replace("testauth.html");
 			//return false;
