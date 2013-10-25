@@ -114,6 +114,9 @@ function onHeaderClick(){
 				markHeaders(divBlock);
 			}
 		});
+	drawerSingleton.getInstance().clear();
+	drawerSingleton.getInstance().draw();
+	
 	
 	//div_block.find("textarea").focus();
 }
@@ -266,7 +269,9 @@ function importFromJSON(stringJSON, container, isEdited)
 	var objectJSON = JSON.parse(stringJSON);
 	var newElement;
 	var container = $(container);
+	//очищаем контейнеры
 	$("#container").empty();
+	$('#imported').empty();
 	firstElement = false;
 	for (var i = 0; i < objectJSON.blocks.length; i++){
 		if (objectJSON.blocks[i].id == objectJSON.first){
@@ -835,6 +840,8 @@ function addElement(){
 		}
 	}
 	newHeader.trigger('click');
+	drawerSingleton.getInstance().clear();
+	drawerSingleton.getInstance().draw();
 	createNewTempElement(); //обнуляем значения у temp_div
 	//$('#newElementName').val("");
 	
@@ -861,6 +868,7 @@ var position;
 	//objectDiv.radio = ["text","radio"];
 	//objectDiv.radioName = "inputType";
 	createNewTempElement(objectDiv);
+	
 }
 //нажатие на "скопировать"
 function onCopyClick(){
@@ -1369,8 +1377,16 @@ function findPathToElement(element){
 }
 function showElement( element ){
 	//он спрятан и нужно его найти
-	if ($('#'+element, '#container').length == 0 ){
-		var path = findPathToElement(element);
+	var symbolIndex = element.search(':');
+	var elementId  = element;
+	var branchIndex = undefined;
+	//если нашлось двоеточие - то это элемент такой, особенный, которого ещё нет.
+	if (symbolIndex !== -1 ){
+		elementId  = element.substring(0, symbolIndex);
+		branchIndex = element.substring(symbolIndex+1);
+	}
+	if ($('#'+elementId, '#container').length == 0 ){
+		var path = findPathToElement(elementId);
 		if (path !== undefined ){
 			path.reverse();
 			//прячем все блоки
@@ -1384,7 +1400,38 @@ function showElement( element ){
 			
 		}
 	}
-	$('#'+element).children('h3').trigger('click');
+	//если это был псевдоэлемент - тогда ставим значение перечисления
+	if (symbolIndex !== -1 ){
+		$($('#'+elementId).find('input[type=radio]')[parseInt( branchIndex)]).prop('checked', true).trigger('change');
+	}
+	$('#'+elementId).children('h3').trigger('click');
 	
 	
 }
+//двигает вправо влево табицы
+function switchTables(){
+	var isActive = ( $('.state-active').length !== 0 );
+	$('#toggle-state-btn').toggleClass('state-active');
+	$('.tableLeft').animate({width: 'toggle'}, "fast");
+	if (isActive){
+		//$('.tableLeft').show();
+	/*$('.tableRight').animate({width: '60%'},{duration:'slow',
+		step: function( now, fx ) {
+			var data = fx.elem.id;
+			$(data).css('flex', '+=1%');
+			
+			}
+		});*/
+		$('.tableRight').css('flex', '60%');
+		$('.tableInfo').css('flex','25%');
+		
+		
+	}
+	else{
+		//$('.tableLeft').hide();
+		$('.tableRight').css('flex', '30%');
+		$('.tableInfo').css('flex','70%');
+		
+	}
+}
+//toggle-state-btn

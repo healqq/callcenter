@@ -33,8 +33,13 @@ function loadStructure(type) {
 				redirect("testauth.html");
 				return;
 				}
+			//очищаем контейнеры
+			
 			first = importFromJSON( $( "#response" ).text(), "#imported", type);
 			showBranch(first,false);
+			if (drawerSingleton !== undefined){
+				drawerSingleton.getInstance().init().draw();
+			}
 			$('#btnLoadStructureClient').slideUp('Slow');
 		});
 	request.fail(function( jqXHR, textStatus ) {

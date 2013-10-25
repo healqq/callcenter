@@ -31,7 +31,8 @@
 	$("#sendXML").click(sendData);
 
 	$("#logout").click(logout);
-	$("#draw").click(draw);
+	//$("#draw").click(draw);
+	$('#toggle-state-btn').click(switchTables);
 	
 
 });
@@ -82,14 +83,18 @@
 
 
 	</div>
+	<div id="controls-block">
+		<p id="toggle-state"><input type="button" id="toggle-state-btn" value=""></p>
+	</div>
+	
 	<div class = "tableInfo">
-		
-		
-		<div id="draw_block">
+		<div id="draw-block">
 			<!-- <p class = "addbuttonP" id="drawP"><input type = button class = "control-button" id="draw" value="draw"></p> -->
-			<canvas id="scheeme" height="500px"></canvas>
-			<p id="test-output"></p>
+			<canvas id="scheeme"></canvas>
+			<!-- <p id="test-output"></p> -->
 		</div>
+		
+		
 	</div>
 </div>
 <p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>

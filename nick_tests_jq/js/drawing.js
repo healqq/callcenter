@@ -10,9 +10,10 @@ var drawerSingleton = (function(){
 	var maxRow;
 	var maxColumn;
 	var canvas;
-	var blockWidth = 30;
-	var blockHeight = 30;
+	var blockWidth = 40;
+	var blockHeight = 40;
 	var spaceCoff = 0.5;
+	var blockSize = blockWidth *(1 +  spaceCoff);
 	
 	//draw element 
 	var drawNext = ( function( element, row, column){
@@ -26,27 +27,43 @@ var drawerSingleton = (function(){
 			"rowComputed": undefined,
 			"branchesSize": undefined,
 			"notFilled": false,
-		}
+			"currentElement": false
+		};
+		var pseudoElement = (element.search(':') !== -1);
+		var nextElements = undefined;
+		var activeID = undefined;
+		var activeElement = $('.active_header');
+		if (activeElement.length !== 0){
+			activeID = $('.active_header').parent().attr('id');
+		}	
+		options.currentElement = ( activeID == element);
 		
-		//if (element == "")
-		//	return;
 		
-		nextElements = $('#'+element).data('branches');
-		if ( (nextElements !== undefined) && (nextElements.length > 1) ){
-			options.branchesSize = nextElements.length;
-			//это развилка, бахаем круг
-			$(nextElements).each(function(){
-				if (this == "" ){
-					//eсли ветвей меньше чем вариантов - делаем красным
-					options.notFilled = true;
-				}
-			});
-			drawElement("circle", options);
+		//незаполненный элемент используется только для отображения
+		if (pseudoElement){
+				options.notFilled = true;
+				drawElement("square", options);
+				
 		}
 		else{
-			//рисуем квадрат
-			drawElement("square", options);
-		} 
+			nextElements = $('#'+element).data('branches');
+			if ( (nextElements !== undefined) && (nextElements.length > 1) ){
+				options.branchesSize = nextElements.length;
+				//это развилка, бахаем круг
+				$(nextElements).each(function(){
+					if (this == "" ){
+						//eсли ветвей меньше чем вариантов - делаем красным
+						options.notFilled = true;
+					}
+				});
+				drawElement("circle", options);
+			}
+			else{
+				
+				//рисуем квадрат
+				drawElement("square", options);
+			} 
+		}
 		instance.addItem(element, column, row);
 		if ( nextElements == undefined )
 		//конец ветки
@@ -56,10 +73,18 @@ var drawerSingleton = (function(){
 				
 				//рисуем линию и следующий элемент
 				options.rowComputed = instance.getMaxRow() + ( (i == 0)?0:1);
-				if (nextElements[i] !== "" ){
-					drawElement( "line", options);
-					drawNext(nextElements[i], options.rowComputed , options.column+1);
+				
+				//resize canvas
+				resizeCanvas(options.rowComputed, options.column+1);
+				//if (canvas.options.rowComputed *blockSize 
+				if (nextElements[i] == "" ){
+					elementId =element +':'+i;
 				}
+				else{
+					elementId = nextElements[i];
+				}
+				drawNext(elementId, options.rowComputed , options.column+1);
+				drawElement( "line", options);
 			}
 		});
 		step(nextElements, row, column);
@@ -67,17 +92,72 @@ var drawerSingleton = (function(){
 			
 		
 	});
-	
-	var drawElement =( function ( type,options)/* row, column, spaceCoff, blockWidth, blockHeight)*/{
+	var resizeCanvas 	= ( function(rows, columns){
+	var canvasElement 	= $(canvas);
+	var oldCanvas = undefined;
+		var resizeWidth =  ( (parseInt( canvasElement.css('width') ) - rows * blockSize ) < blockSize ) ;
+		var resizeHeight = ( (parseInt( canvasElement.css('height') ) - columns * blockSize ) < blockSize ) ; 
+		var widthBefore, widthAfter, heightBefore, heightAfter;
+		if  ( resizeWidth || resizeHeight ){
+			//resizing
+			
+/*			widthBefore =  parseInt( canvasElement.css('width') );
+			heightBefore =  parseInt( canvasElement.css('height') );
+			widthAfter  = widthBefore + (resizeWidth?1 : 0 ) *  blockSize;
+			heightAfter = heightBefore + (resizeHeight?1 : 0 ) * blockSize;*/
+			/*ctx.scale( widthAfter/widthBefore, heightAfter/heightBefore);*/
+			//ctx.scale(1,1);
+			oldCanvas = canvas.toDataURL("image/png"); //saving canvas 
+		/*	canvasElement.css('width', '+='+ (resizeWidth?1 : 0 ) *  blockSize+'px' );
+			canvasElement.css('height', '+='+ (resizeHeight?1 : 0 ) * blockSize+'px') ;*/
+			canvas.height += (resizeHeight?1 : 0 ) * blockSize;
+			canvas.width += (resizeWidth?1 : 0 ) * blockSize;
+		//	ctx.scale( parseInt( canvasElement.css('width') )/widthBefore, parseInt( canvasElement.css('height') )/heightBefore); 
+			//canvas.height += (resizeHeight?1 : 0 ) * 2 * blockSize;
+			
+			var img = new Image();
+			img.src = oldCanvas;
+			img.onload = function (){
+				ctx.drawImage(img, 0, 0);
+			};
+		//	ctx.scale(1,1);
+			
+		}
+			//alert("time to resize!");
+			
+		
+	});
+	//рисуем элементы
+	var drawElement =( function ( type,options){
 		//var globalShift = 5;
+		ctx.strokeStyle = (options.notFilled? "red": "black"); 
+		var grd = ctx.createRadialGradient(
+					options.row* (1+options.spaceCoff) * options.blockWidth /*inner*/
+					,options.column*(1+options.spaceCoff) * options.blockWidth,
+					10,
+					options.row*(1+options.spaceCoff) * options.blockWidth,	/*outer*/
+					options.column*(1+options.spaceCoff) * options.blockWidth,
+					50);
+				grd.addColorStop(0,"#FFD700");	/*inner*/
+				grd.addColorStop(1,'white');
+		
 		switch (type){
 			case "circle":
-				ctx.fillStyle = "red";
-				ctx.strokeStyle = (options.notFilled? "red": "black"); 
-					
+				
+				
+				if (options.currentElement){
+					ctx.fillStyle = grd;
+					ctx.beginPath();
+
+					ctx.arc(  ( 0.5 + (options.row) * (1+options.spaceCoff) ) * options.blockWidth,
+						(0.5 + options.column*(1+options.spaceCoff) )*options.blockHeight, 
+						options.spaceCoff * options.blockWidth,0,
+						2*Math.PI);
+					ctx.fill();
+				}
 								
 				ctx.beginPath();
-
+				ctx.lineWidth = 2;
 				ctx.arc(  ( 0.5 + (options.row) * (1+options.spaceCoff) ) * options.blockWidth,
 					(0.5 + options.column*(1+options.spaceCoff) )*options.blockHeight, 
 					options.spaceCoff * options.blockWidth,0,
@@ -95,8 +175,8 @@ var drawerSingleton = (function(){
 					(0.5  +  options.column*(1+options.spaceCoff) )*options.blockHeight);
 			break;
 			case "square":
-				ctx.fillStyle = "blue";
-				var linearGradient = ctx.createLinearGradient((options.row)*(1+options.spaceCoff)*options.blockWidth,
+				//ctx.fillStyle = "blue";
+			/*	var linearGradient = ctx.createLinearGradient((options.row)*(1+options.spaceCoff)*options.blockWidth,
 															options.column*(1+options.spaceCoff)*options.blockHeight,
 															(1 + options.row*(1+options.spaceCoff) )*options.blockWidth,
 															(1 + options.column*(1+options.spaceCoff) )*options.blockHeight);
@@ -104,7 +184,18 @@ var drawerSingleton = (function(){
 			//	linearGradient.addColorStop(0.5, '#fff');
 			//	linearGradient.addColorStop(0.5, '#26C000');
 				linearGradient.addColorStop(1, '#fff');
-				ctx.fillStyle = linearGradient;
+				ctx.fillStyle = linearGradient;*/
+				
+				
+				
+				if (options.currentElement){
+					ctx.fillStyle = grd;
+					ctx.fillRect((options.row)*(1+options.spaceCoff)*options.blockWidth,
+						options.column*(1+options.spaceCoff)*options.blockHeight,
+						options.blockWidth,
+						options.blockHeight);	
+				}
+				ctx.lineWidth = 2;
 				ctx.strokeRect((options.row)*(1+options.spaceCoff)*options.blockWidth,
 					options.column*(1+options.spaceCoff)*options.blockHeight,
 					options.blockWidth,
@@ -114,10 +205,26 @@ var drawerSingleton = (function(){
 				ctx.lineWidth = 1;
 				ctx.lineCap = "round";
 				ctx.beginPath();
-				ctx.moveTo( (options.row*(1+options.spaceCoff) + options.spaceCoff )*options.blockWidth  ,
-					(1 + options.column*(1+options.spaceCoff) )*options.blockHeight);
-				ctx.lineTo(( ( options.rowComputed )*(1+options.spaceCoff) + options.spaceCoff )*options.blockWidth,
-					((options.column+1)*(1+options.spaceCoff) )*options.blockHeight);
+				
+				var startX  = (options.row*(1+options.spaceCoff) + options.spaceCoff )*options.blockWidth + 0.5;
+				var startY  = (1 + options.column*(1+options.spaceCoff) )*options.blockHeight;
+				var finishX = ( ( options.rowComputed )*(1+options.spaceCoff) + options.spaceCoff )*options.blockWidth + 0.5;
+				var finishY = ((options.column+1)*(1+options.spaceCoff) )*options.blockHeight;
+				ctx.moveTo( startX  ,startY );
+				if (options.row == options.rowComputed){
+					ctx.lineTo( finishX, finishY);
+				
+				}
+				else{
+					//var coff = (options.rowComputed - options.row) * (options.rowComputed - options.row)/ 
+					//options.rowComputed/options.rowComputed;
+					var coff = (options.rowComputed - options.row)/options.rowComputed;
+					ctx.bezierCurveTo( 
+					/*start*/
+						startX,finishY ,
+						finishX,startY,
+					/*finish*/finishX,finishY);
+				}
 				ctx.stroke();
 			break;
 		}
@@ -130,9 +237,9 @@ var drawerSingleton = (function(){
 		var text = "";
 		var mouseX 	= evt.pageX - canvas.offsetLeft;
 		var mouseY 	= evt.pageY - canvas.offsetTop;
-		var rows 	= (mouseX  ) /( blockWidth*(1+2*spaceCoff) );
-		var columns = (mouseY  ) /( blockHeight*(1+2*spaceCoff) );
-		var blockSize = blockWidth / ( blockWidth*(1+2*spaceCoff) );
+		var rows 	= (mouseX  ) /( blockWidth*(1+spaceCoff) );
+		var columns = (mouseY  ) /( blockHeight*(1+spaceCoff) );
+		var blockSize = blockWidth / ( blockWidth*(1+spaceCoff) );
 		var row 	= Math.floor( rows );
 		var nothing = false;
 		var column 	= Math.floor( columns);
@@ -167,8 +274,10 @@ var drawerSingleton = (function(){
 			hideCanvasHelp();
 			text = "miss";
 		}
-		$("#scheeme-id").empty();
-		$("#scheeme-id").append(text);
+		$('#test-output').empty();
+		$('#test-output').append(text);
+	//	$("#scheeme-id").empty();
+	//	$("#scheeme-id").append(text);
 		
 	});
 	//public
@@ -203,6 +312,8 @@ var drawerSingleton = (function(){
 				ctx = canvas.getContext('2d');
 				maxRow = 0;
 				maxColumn = 1;
+				canvas.height = 240;
+				canvas.width = 240;
 				canvas.addEventListener("click",mouseclick);
 				
 				
@@ -210,8 +321,11 @@ var drawerSingleton = (function(){
 			}
 		return undefined;
 		},
-		scale: function(ratio){
-			ctx.scale(ratio, ratio);
+		clear: function(){
+			canvas.width = canvas.width;
+			maxRow = 0;
+			maxColumn = 1;
+			itemsArray = [];
 		},
 		//retuns array with div blocks info
 		getArray: function(){
@@ -233,7 +347,14 @@ var drawerSingleton = (function(){
 			var helpDiv 	= $('#scheeme-help');
 			var idParagraph = $('#scheeme-id');
 			idParagraph.empty();
-			idParagraph.append("id: " + id);
+			if (id.search(':') !== -1 ){
+				idParagraph.append("У элемента <strong>" + id.substr(0,id.search(':'))  + 
+				"</strong> не заполнена ветвь номер <strong>" +
+				( parseInt(id.substr(id.search(':')+1 ) ) + 1) +'</strong>.' );
+			}
+			else{
+				idParagraph.append("<strong>id: </strong>" + id);
+			}
 			if (helpDiv.css("display") == "none" ){
 				//переносим в угол
 				helpDiv.css("left", canvasLeft+'px');
@@ -265,6 +386,7 @@ var drawerSingleton = (function(){
                 instance = new drawerSingleton();
                 // Hide the constructor so the returned objected can't be new'd...
                 instance.constructor = null;
+				instance.init();
             }
             return instance;
         }
