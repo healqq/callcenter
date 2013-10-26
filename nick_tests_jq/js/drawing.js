@@ -134,11 +134,11 @@ var drawerSingleton = (function(){
 		var grd = ctx.createRadialGradient(
 					options.row* (1+options.spaceCoff) * options.blockWidth /*inner*/
 					,options.column*(1+options.spaceCoff) * options.blockWidth,
-					10,
+					15,
 					options.row*(1+options.spaceCoff) * options.blockWidth,	/*outer*/
 					options.column*(1+options.spaceCoff) * options.blockWidth,
-					50);
-				grd.addColorStop(0,"#FFD700");	/*inner*/
+					100);
+				grd.addColorStop(0,"#FFCCCC");	/*inner FFD700*/
 				grd.addColorStop(1,'white');
 		
 		switch (type){

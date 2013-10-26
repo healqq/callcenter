@@ -143,9 +143,10 @@
 			position: relative;
 			display: none;
 			width: 90%;
-			height: 20px;
+			height: 25px;
 			/*height: 25pt;*/
 			margin-top: 5px;
+			font-size: 14pt;
 			/*height: 5%;*/
 			text-align: center;
 			margin-left: 5%; /* Расстояние от левого края до линии */

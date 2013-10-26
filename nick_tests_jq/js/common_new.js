@@ -1404,7 +1404,10 @@ function showElement( element ){
 	if (symbolIndex !== -1 ){
 		$($('#'+elementId).find('input[type=radio]')[parseInt( branchIndex)]).prop('checked', true).trigger('change');
 	}
-	$('#'+elementId).children('h3').trigger('click');
+	elementBlock = $('#'+elementId);
+	if (elementBlock.find('.active_header').length == 0 ){
+		elementBlock.children('h3').trigger('click');
+	}
 	
 	
 }
