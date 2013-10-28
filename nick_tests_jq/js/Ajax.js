@@ -14,7 +14,7 @@ function saveStructure() {
 		$( "#response" ).html( msg );
 			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
 			if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
-				redirect("testauth.html");
+				redirect("auth.html");
 			}
 		});
 	request.fail(function( jqXHR, textStatus ) {
@@ -30,7 +30,7 @@ function loadStructure(type) {
 		$( "#response" ).html( msg );
 			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
 			if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
-				redirect("testauth.html");
+				redirect("auth.html");
 				return;
 				}
 			//очищаем контейнеры
@@ -70,7 +70,7 @@ function combineSoapRequest(action, arrayParam){
 	//параметр токен обязателен
 	var sessionID = getCookie('PHPSESSID');
 	if (sessionID == undefined){
-		redirect("testauth.html");
+		redirect("auth.html");
 	}
 	//params = [{key:'Token',value:sessionID}];
 	paramString += fillParam('Token', sessionID); 

@@ -51,7 +51,7 @@ function sendData(){
 		$( "#response" ).html( msg );
 			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
 			if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
-				redirect("testauth.html");
+				redirect("auth.html");
 			}
 			else{
 				if ( $.parseJSON($("#response").find("m\\:return").html() ) == true ){
@@ -82,7 +82,7 @@ function fillingStarted() {
 		$( "#response" ).html( msg );
 			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
 			if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
-				redirect("testauth.html");
+				redirect("auth.html");
 				return;
 			}
 			else{

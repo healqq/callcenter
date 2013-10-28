@@ -99,11 +99,11 @@ function fabric ( type,  options) {
 //сворачивание/разворачивание при клике на заголовок
 function onHeaderClick(){
 	//var that = $(this);
-	$(this).siblings().slideToggle("slow");
-	var div_block = $(this).parent("div");
-	allDivBlocks = div_block.siblings().not(div_block);
-	allDivBlocks.children().not("h3").slideUp("slow");
-		
+	var that  = this;
+	
+	
+	var div_block = $(that).parent("div");
+	var allDivBlocks = div_block.siblings().not(div_block);	
 	$(this).toggleClass("active_header");
 	
 	
@@ -114,11 +114,16 @@ function onHeaderClick(){
 				markHeaders(divBlock);
 			}
 		});
-	drawerSingleton.getInstance().clear();
-	drawerSingleton.getInstance().draw();
+	allDivBlocks.children().not("h3").slideUp({duration:"slow"});
+	$(this).siblings().slideToggle({duration:"slow"});
+	/*$(this).dequeue( "toggle-queue" );*/
 	
+		
+		
+		
 	
 	//div_block.find("textarea").focus();
+	redraw();
 }
 function markHeaders(element){
 	divObject = createObjectFromDiv(element);
@@ -840,8 +845,7 @@ function addElement(){
 		}
 	}
 	newHeader.trigger('click');
-	drawerSingleton.getInstance().clear();
-	drawerSingleton.getInstance().draw();
+	redraw();
 	createNewTempElement(); //обнуляем значения у temp_div
 	//$('#newElementName').val("");
 	
@@ -1437,4 +1441,21 @@ function switchTables(){
 		
 	}
 }
-//toggle-state-btn
+//отображение помощи по работе со схемой
+function showScheemeHelp(){
+	$('#scheeme-help-layer').show();
+	$('#scheeme-help-basic').slideDown('slow');
+}
+function hideScheemeHelp(){
+	$('#scheeme-help-layer').hide();
+	$('#scheeme-help-basic').slideUp('slow');
+}
+//перерисовка схемы
+function redraw(){
+	if (window.drawerSingleton){
+	
+		drawerSingleton.getInstance().clear();
+		drawerSingleton.getInstance().draw();
+	
+	}
+}

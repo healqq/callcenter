@@ -45,7 +45,7 @@ function checkSession(){
 	var cookieSESSID = getCookie('PHPSESSID');
 	if (cookieSESSID == undefined) {
 		//show login page
-		redirect("testauth.html");
+		redirect("auth.html");
 		
 		//auth(login, pwd);
 		//start new session ( send request login, pwd )
@@ -57,6 +57,9 @@ function checkSession(){
 }
 //при нажатии кнопки логин
 function login(){
+	$('.waiting-layer').show();
+	$('error').slideUp('fast');
+	$('#error').empty();
 	login = $("#login").val();
 	pwd	  = $("#pwd").val();
 	var login_pattern = /^[a-zA-Z0-9]{3,30}$/;
@@ -67,7 +70,9 @@ function login(){
 		auth(login, pwd);
 	}
 	else{
-		alert(' Неверная пара логин пароль!');
+		$('.waiting-layer').hide();
+		$('#error').append('<h3>Неправильная пара логин пароль!</h3>');
+		$('#error').slideDown('fast');
 		//return false;
 	}
 	
@@ -86,13 +91,18 @@ function auth(login, pwd){
 			redirect("index.html");
 		}
 		else{
-			alert("Неправильная пара логин пароль!");
+			$('.waiting-layer').hide();
+			$('#error').append('<h3>Неправильная пара логин пароль!</h3>');
+			$('#error').slideDown('fast');
+			
 			
 		}
 		//showBranch(first,false);
 	});
 	request.fail(function( jqXHR, textStatus ) {
-		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		$('.waiting-layer').show();
+		$('#error').append( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		$('#error').slideDown('fast');
 		});
 }
 //проверка, что текущая сессия существует на сервере
@@ -104,7 +114,7 @@ function confimSession(sessionID){
 		reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
 		if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
 				removeCookie('PHPSESSID');
-				redirect("testauth.html");
+				redirect("auth.html");
 				return;
 			}		
 		sessionType =  $.trim($( "#response" ).text());
@@ -121,7 +131,7 @@ function confimSession(sessionID){
 			//alert("Неправильная пара логин пароль!");
 			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/'});
 			redirect("client.html");
-			//window.location.replace("testauth.html");
+			//window.location.replace("auth.html");
 			//return false;
 		}
 		//showBranch(first,false);
@@ -148,7 +158,7 @@ function logout(){
 	request = sendRequest("Logout");
 	request.done(function (msg){
 			removeCookie('PHPSESSID');
-			redirect("testauth.html");
+			redirect("auth.html");
 		});
 	request.fail(function( jqXHR, textStatus ) {
 		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );

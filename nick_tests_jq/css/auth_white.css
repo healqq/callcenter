@@ -1,0 +1,148 @@
+html{
+	width: 100%;
+	height: 100%;
+	font-size: 11pt;
+	font-family: Calibri;
+	
+}
+body{
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	background-color: #FAFAFA;
+	
+}
+#info-block{
+	
+	position: relative;
+	top: 10%;
+	height: 60%;
+	width: 50%;
+	margin: auto;
+	background-color: #DADADA;
+	text-align: center;
+	border-radius: 10px;
+	background-image: url(images/bg_white.png);
+	padding-top: 10px;
+
+	/*opacity: 0.5;*/
+	
+	
+}
+#info-block>h1{
+	text-shadow: 1px 4px 4px #999;
+	
+	/*color: #999;*/
+}
+#login-form{
+	
+	
+	text-align: left;
+	top:30%;
+	position:relative;
+	margin: auto;
+	width: 40%;
+	
+	background-color: #999;
+	/*height: 50%;*/
+	height: 180px;
+	display: block;
+	padding-top: 10px;
+	/*background-color: #EEECBB;*/
+	
+}
+.text-input ,#login-button , .labels-p, .labels{
+	width: 90%;
+	margin: auto;
+	margin-left: 5%;
+	
+}
+#login-p,#password-p,#btn-p {
+	position: relative;
+	display: block;
+	width: 90%;
+	margin-left: 5%;
+	margin-right: auto;
+	margin-bottom: 5px;
+	margin-top: 0px;
+}
+#login-p{
+	
+}
+#btn-p{
+	/*float:right;*/
+	margin-top: 0px;
+	height: 32px;
+}
+.labels-p{
+	
+	margin-left: 5%;
+	color: #FFF;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+#login-button{
+	border: none;
+	margin-top: 10px;
+	/*float:left;*/
+	height: 32px;
+	padding: 0;
+	margin-left: 5%;
+	color: #FFF;
+	font-weight: bold;
+	background: linear-gradient(to bottom, #00DD7D, #32CD32);
+	
+	
+	
+	
+	
+}
+#login-button:hover{
+	box-shadow: 0 0 15px #00DD7D;
+}
+#login-button:focus{
+	outline: none;
+}
+.waiting-layer{
+	width: 100%;
+	opacity: 0.8;
+	height: 100%;
+	background-color: #666;
+	position: absolute;
+	top: 0px;
+	display: none;
+	
+}
+#error, #login-button, #login-form{
+	border-radius: 5px;
+}
+#error {
+		/*	color: #121310;*/
+	top: 25%;
+	background-color:#FFAAAA;
+		/*background-image: url(images/error.png);
+			opacity: 0.7;*/
+	position: relative;
+	display: none;
+	width: 90%;
+	height: 25px;
+			/*height: 25pt;*/
+	margin-top: 5px;
+	font-size: 11pt;
+			/*height: 5%;*/
+	text-align: center;
+	margin-left: 5%; /* Расстояние от левого края до линии */
+	margin-right: auto; /* Расстояние от правого края до линии */
+	background-image: url(images/bg_white.png);
+			
+			
+}
+#img-block{
+	top: 50%;
+	margin: auto;
+	width:32px;
+	height: 32px;
+	position: relative;
+	background-image: url(images/loader.gif);
+}

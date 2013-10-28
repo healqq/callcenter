@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Авторизация</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+	<script src="js/ajax.js" type="text/javascript"></script>
+	<script src="js/Auth.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/auth_white.css" type="text/css">
+	<script type="text/javascript">
+		$(document).ready(function(){
+				checkSession();
+				//$('#login-button').click(login);
+				$('#login-button').click(login);
+				$('.text-input').keypress( function (e) {
+					var code = event.keyCode ? event.keyCode : event.which;
+					if (code == 13){
+						$('#login-form').submit();
+					}
+				});
+					
+		});
+	</script>
+ 	
+	
+</head>
+<body>
+	<div id="info-block">
+	
+		<h1>Авторизация в системе Гидровелл-Коллцентр</h1>
+		<div id="error">
+			
+		</div>
+		<div id="login-form" action = "javascript:login()" onsubmit="return false">
+			<form >
+				<p class = "labels-p"><label class ="labels" for="login"> Имя пользователя:</label></p>
+				<p id = "login-p"> <input class = "text-input" type="text" id="login" placeholder = "Имя пользователя"></p>
+				<p class = "labels-p"><label class ="labels" for="pwd"> Пароль: </label></p>
+				<p id = "password-p"> <input class = "text-input" type="password" id="pwd" placeholder = "Пароль"></p>
+				<p id="btn-p"><input type="submit" value="login" id="login-button" ></p>
+			</form>
+		
+		
+		
+		</div>
+	</div>
+	<p id="response" style="visibility:hidden"></p>
+	<div class="waiting-layer"><div id="img-block"></div></div>
+</body>
+</html>
