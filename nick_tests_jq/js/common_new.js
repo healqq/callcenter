@@ -220,9 +220,9 @@ function createObjectFromDiv(element){
 	var name, header, description, inputType, inputValues;
 	branchesList = $(element).data("branches");
 	id 				= $(element).attr("id");
-	header 			= $(element).children("h3").children().not(".idSpan").text();
+	header 			= $(element).children("h3").children().not(".idSpan").html();
 	pSelection 		= $(element).children("p");
-	description 	= pSelection.first().text();
+	description 	= pSelection.first().html();
 	inputSelection 	= $(element).find(':input[type=radio]');
 	textAreaSelection = $(element).find('textarea');
 	textSelection   = $(element).find(":input[type=text]");
