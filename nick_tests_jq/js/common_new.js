@@ -561,6 +561,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			else{
 				newIsSwitch.prop('checked', true);
 				newIsSwitchLabel.addClass("active-checkBoxLabel");
+				newInputDiv.hide();
 				
 				//moveDeleteButtons();
 			}
@@ -893,7 +894,7 @@ function onBranchClick(){
 		$(':input[name=inputType][value=1]').prop('checked',true);
 	//	$('#branchCheckBox').addClass("activeCheckBox");
 		$("#radioOptions", '#temp_divs').slideDown("slow");
-		$(':input[name=inputType]').parent().slideUp("slow");
+		$('#radioInputTypesDiv').slideUp("slow");
 		$('#fieldsList').slideUp("slow");
 		//$('.removebutton').animate({"left": "+=50px"}, "slow");
 		
@@ -910,7 +911,7 @@ function onBranchClick(){
 		//$(':input[name=inputType][value=radio]').attr('checked',"checked");
 		//$("#radioOptions", '#temp_divs').hide();
 		//$(':input[name=inputType][value=radio]').attr('checked',undefined)
-		$(':input[name=inputType]').parent().slideToggle("slow");
+		$('#radioInputTypesDiv').slideDown("slow");
 		$('.branchId').animate({"height": "hide"}, {duration:"slow",complete:function(){
 				$('.removebutton', '#radioOptions').css("left", 100);
 				$(this).siblings(":input[type=button]").animate({"left": "-=100px"}, "slow");
@@ -1416,10 +1417,13 @@ function showElement( element ){
 	
 }
 //двигает вправо влево табицы
-function switchTables(){
-	var isActive = ( $('.state-active').length !== 0 );
-	$('#toggle-state-btn').toggleClass('state-active');
-	$('.tableLeft').animate({width: 'toggle'}, "fast");
+function switchTables(event, isRedraw){
+	var isActive =  ( $('.state-active').length !== 0 ) ;
+	var redraw  = ( ( isRedraw !== undefined) && isRedraw ) ;
+	
+	
+	
+	
 	if (isActive){
 		//$('.tableLeft').show();
 	/*$('.tableRight').animate({width: '60%'},{duration:'slow',
@@ -1429,17 +1433,61 @@ function switchTables(){
 			
 			}
 		});*/
-		$('.tableRight').css('flex', '60%');
-		$('.tableInfo').css('flex','25%');
+		
+		if (redraw){
+			computeTablesWidth(true);
+			return;
+			
+		}
+		else{
+    
+			$('.tableRight').css('flex', '60%');
+			$('.tableInfo').css('flex','25%');
+		}
 		
 		
 	}
 	else{
-		//$('.tableLeft').hide();
-		$('.tableRight').css('flex', '30%');
-		$('.tableInfo').css('flex','70%');
+		if (isRedraw == undefined){
+			computeTablesWidth(false);
+		}
+		else{
+			return;
+		}
 		
 	}
+	$('#toggle-state-btn').toggleClass('state-active');
+	$('.tableLeft').animate({width: 'toggle'}, "fast");
+}
+function computeTablesWidth(active){
+	var coff ;// коэффициэнт для shift'а 
+	var shift, 
+		canvasWidth,
+		tableWidth,
+		tableFlex;
+	canvasWidth = parseInt( $('#scheeme').css('width'));
+	tableWidth 	= parseInt( $('.tableInfo').css('width'));
+	tableFlex 	= $('.tableInfo').css('flex') ;
+	tableFlex   = Math.floor( parseInt( tableFlex.substring(tableFlex.search('%')-3,tableFlex.search('%')) ) );
+		//$('.tableLeft').hide();
+	if ( canvasWidth < tableWidth ){
+	}
+	else{
+			//calculating lengths
+		
+			
+			
+		shift 		= tableWidth  / canvasWidth ;
+		shift		= tableFlex / shift;
+		coff 		= 50/canvasWidth * 100;
+			//shift 		+= 25;
+		shift 		+= coff;
+		shift 		= ( ( ( shift  > 70) )? 70 : shift);
+		$('.tableRight').css('flex', (100-shift) + '%');
+		$('.tableInfo').css('flex', shift+'%');
+	
+	}
+	
 }
 //отображение помощи по работе со схемой
 function showScheemeHelp(){
@@ -1452,10 +1500,11 @@ function hideScheemeHelp(){
 }
 //перерисовка схемы
 function redraw(){
-	if (window.drawerSingleton){
+	if (typeof drawerSingleton !== 'undefined'){
 	
 		drawerSingleton.getInstance().clear();
 		drawerSingleton.getInstance().draw();
+		switchTables(undefined, true);
 	
 	}
 }
