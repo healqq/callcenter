@@ -35,7 +35,7 @@ function createDataList(){
 		}
 	});
 	dataString += '</data>';
-	//alert (escapeHTML((dataString)) );
+	//showError (escapeHTML((dataString)) );
 	return dataString;
 }
 
@@ -55,15 +55,17 @@ function sendData(){
 			}
 			else{
 				if ( $.parseJSON($("#response").find("m\\:return").html() ) == true ){
-					//alert("Анкета отправлена!");
+					//showError("Анкета отправлена!");
 					showHelp("send");
 					reloadStructure();
 				}
 			}
+			$('.waiting-layer').hide();
 				});
 	request.fail(function( jqXHR, textStatus ) {
-		alert( "Request failed: " + textStatus );
+		showError( "Request failed: " + textStatus );
 		});
+		$('.waiting-layer').hide();
 }
 
 var escapeHTML = (function () {
@@ -88,10 +90,11 @@ function fillingStarted() {
 			else{
 				setCookie('PHPSESSID', getCookie('PHPSESSID'),{expires:24*60, path:'/'});
 			}
-			
+		$('.waiting-layer').hide();	
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		showError( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		$('.waiting-layer').hide();
 		});
             
 }

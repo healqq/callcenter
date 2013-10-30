@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Гидровелл-коллцентр администратор</title>
@@ -19,7 +19,7 @@
 	<script src="js/common_new.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	//checkSession();
+	checkSession();
 	createNewTempElement();
 
 
@@ -70,6 +70,7 @@
 			
 
 		<div id="temp_divs" class="temp-div" style="margin-top:10px" >
+			
 
 		</div>
 
@@ -80,7 +81,7 @@
 
 
 		
-
+		<h2 id="container-title">Предварительный просмотр</h2>
 		<div class="accordion" id = "container" ></div>
 		</br>
 
@@ -92,6 +93,7 @@
 	</div>
 	
 	<div class = "tableInfo">
+		<h2 id="scheeme-title">Схема скрипта</h2>
 		<div id="draw-block">
 			<!-- <p class = "addbuttonP" id="drawP"><input type = button class = "control-button" id="draw" value="draw"></p> -->
 			<canvas id="scheeme"></canvas>
@@ -114,14 +116,14 @@
 	
 </div>
 <div id = "scheeme-help-basic" class = "focused">
-		<h3>Обозначения на схеме.</h3>
-		<img src = "css/images/round-black.png"><span>Круги в схеме означают элементы - ветвления. Цифра в
+		<h3>Обозначения на схеме</h3>
+		<img src = "css/images/round-black.png" alt="черный круг"><span>Круги в схеме означают элементы - ветвления. Цифра в
 		центре круга - количество веток.</span><br>
-		<img src = "css/images/square-black.png"><span>Квадраты - все остальные элементы.</span><br>
-		<img src = "css/images/round-red.png"><span>Красный круг означает, что не все ветви заполнены.</span><br>
-		<img src = "css/images/square-red.png"><span>Дозаполнить ветви можно, нажав на красный квадрат,
+		<img src = "css/images/square-black.png" alt="черный квадрат"><span>Квадраты - все остальные элементы.</span><br>
+		<img src = "css/images/round-red.png" alt="красный круг"><span>Красный круг означает, что не все ветви заполнены.</span><br>
+		<img src = "css/images/square-red.png" alt="красный квадрат"><span>Дозаполнить ветви можно, нажав на красный квадрат,
 		соответсвующий нужной ветви.</span><br>
-		<img src = "css/images/square-blue.png"><span>Закрашенный синим элемент отображает текущее местоположение.</span>
+		<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><span>Закрашенный синим элемент отображает текущее местоположение.</span>
 		<span> Для перехода на другой элемент нужно
 		нажать на него и на кнопку "перейти".</span>
 		<p id="scheeme-help-basic-exit" >
@@ -130,9 +132,10 @@
 		
 	</div>
 <div class = "page_footer">
+<a id = "credits" href="http://www.tabus.ru/" rel="author">Технологии автоматизации бизнеса 2013 г.</a>
 </div>
 <!-- <input type="button" id="import">build from json</input> -->
-
+<div class="waiting-layer"><div id="img-block"></div></div>
 </body>
 
 </html>
