@@ -9,6 +9,7 @@ function saveStructure() {
 	{
 		return;
 	}
+	
     request = sendRequest("SetScriptStructure", [{key:'EncodedData', value: exportToJSON(["#container","#imported"])}]);
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );
@@ -16,9 +17,11 @@ function saveStructure() {
 			if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
 				redirect("auth.html");
 			}
+			$('.waiting-layer').hide();
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		alert( "Request failed: " + textStatus );
+		showError( "Request failed: " + textStatus );
+		$('.waiting-layer').hide();
 		});
             
 }
@@ -37,13 +40,12 @@ function loadStructure(type) {
 			
 			first = importFromJSON( $( "#response" ).text(), "#imported", type);
 			showBranch(first,false);
-			if (drawerSingleton !== undefined){
-				drawerSingleton.getInstance().init().draw();
-			}
+			redraw();
 			$('#btnLoadStructureClient').slideUp('Slow');
+			$('.waiting-layer').hide();
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		showError( "При попытке загрузить данные анкеты произошла ошибка: " + textStatus);
 		});
             
 }
@@ -52,7 +54,8 @@ function loadStructure(type) {
 function sendRequest(action, params){
 	var wsUrl = 'ws/ws/callcenterexchange';
     var soapRequest = combineSoapRequest(action, params) ;
-   // alert(soapRequest);
+   // showError(soapRequest);
+    $('.waiting-layer').show();
     var request = $.ajax({
                     type: "POST",
                     url: wsUrl,

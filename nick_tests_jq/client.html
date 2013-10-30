@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Гидровелл-коллцентр</title>
@@ -14,6 +14,7 @@
  	<script type="text/javascript">
 	$(document).ready(function(){
 	checkSession();
+	loadStructure(false);
 	$("#container").data("sstype",false);
 	$("#btnLoadStructure").click(function(){loadStructure(false)});
 	$("#logout").click(logout);
@@ -36,7 +37,7 @@
 	</div>
 
 	<div class = "tableRight">
-
+		<div class="error"></div>
 		<div id="imported" class= "accordion" style = "display:none">
 		</div>
 		</br>
@@ -50,7 +51,7 @@
 		<br>
 		<div id ="submit-block">
 		
-		<p class = "addbuttonP"><button id="btnSendData" value="dfgdfgdf" type="button" class = "control-button"></p>
+		<p class = "addbuttonP"><button id="btnSendData" value="Отправить" type="button" class = "control-button no-display-fix"><span>Отправить</span></p>
 	 
 		</div>
 	</div>
@@ -59,7 +60,9 @@
 	</div>
 </div>
 <div class = "page_footer">
+	<a id = "credits" href="http://www.tabus.ru/" rel="author">Технологии автоматизации бизнеса 2013 г.</a>
 </div>
+<div class="waiting-layer"><div id="img-block"></div></div>
 <!-- <input type="button" id="import">build from json</input> -->
 </body>
 

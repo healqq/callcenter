@@ -59,6 +59,7 @@ function checkSession(){
 function login(){
 	$('.waiting-layer').show();
 	$('error').slideUp('fast');
+	
 	$('#error').empty();
 	login = $("#login").val();
 	pwd	  = $("#pwd").val();
@@ -100,7 +101,7 @@ function auth(login, pwd){
 		//showBranch(first,false);
 	});
 	request.fail(function( jqXHR, textStatus ) {
-		$('.waiting-layer').show();
+		$('.waiting-layer').hide();
 		$('#error').append( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		$('#error').slideDown('fast');
 		});
@@ -110,6 +111,7 @@ function confimSession(sessionID){
 	//params = [{key:'Token',value:sessionID}];
 	request = sendRequest("CheckSession");
 	request.done(function (msg){
+		
 		$( "#response" ).html( msg );
 		reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
 		if (!(reqAttr == undefined) && $.parseJSON(reqAttr) == true ){
@@ -134,9 +136,11 @@ function confimSession(sessionID){
 			//window.location.replace("auth.html");
 			//return false;
 		}
+		$('.waiting-layer').hide();
 		//showBranch(first,false);
 	});
 	request.fail(function( jqXHR, textStatus ) {
+		$('.waiting-layer').hide();
 		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		});
 	
@@ -155,6 +159,15 @@ function redirect(path){
 function logout(){
 	//var sessionID = getCookie('PHPSESSID');
 	//params = [{key:'Token',value:sessionID}];
+	var r=confirm("Вы действительно хотите выйти?");
+		if (r==true)
+	{
+		
+	}
+	else
+	{
+		return;
+	}
 	request = sendRequest("Logout");
 	request.done(function (msg){
 			removeCookie('PHPSESSID');
@@ -162,6 +175,7 @@ function logout(){
 		});
 	request.fail(function( jqXHR, textStatus ) {
 		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		$('.waiting-layer').hide();
 		});
 		//showBranch(first,false);
 }
