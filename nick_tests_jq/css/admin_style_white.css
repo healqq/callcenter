@@ -20,19 +20,19 @@
 			display: none; 
 }
 		.page_header, .page_footer{
-		height: 5%;
+		height: 32px;
 		flex: 100%;
 		order: 0;
 		background-color: #D1D1D1;
 }
 		.page_footer{
-		height: 5%;
+		height: 32px;
 		width: 100%;
 		flex: 100%;
 		order: 0;
-		position: relative;
-		bottom: 0%;
-		left: 0%;
+		position: fixed;
+		bottom: 0;
+		left: 0;
 		/*text-align: center;*/
 		
 }
@@ -46,7 +46,7 @@
 			display: -webkit-flex;
 			display: flex;
 			min-width: 100%;
-			min-height: 90%;
+			min-height: calc(100% - 32px);
 			-webkit-box-direction: normal;
 			-moz-box-direction: normal;
 			-webkit-box-orient: horizontal;
@@ -78,6 +78,7 @@
 			/*height: 20000%;*/
 			margin-bottom: 2%;
 		/*	height: 99999%;*/
+			
 			width: 70%;
 			-webkit-flex:  0 1 60%;
            flex: 60%;
@@ -92,6 +93,7 @@
 		
 }
 		.tableInfo {
+		min-height: 100%;
 		margin-bottom: 2%;
 		-webkit-flex:  0 1 25%;
            flex: 25%;
@@ -103,7 +105,7 @@
 }
 		.tableLeft {
 	
-		
+			
 			background-color:#666;
 	
 			width: 15%;
@@ -119,7 +121,7 @@
 			align-self: auto;		   
 		
 }
-	.active_header, .control-button, .editbutton, .editbuttonAccordion, #goto-elem, label:before {
+	.active_header, .control-button, .editbutton, .editbuttonAccordion, #goto-elem, label:before , .line-button{
 		background: linear-gradient(to top, #7EC0EE, #6CA6CD);
 	}
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -285,6 +287,52 @@
 			margin-bottom: 5px;
 			
 		}
+/*BB BUTTONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		#bb-block{
+			/*width: 90%;
+			margin:auto;*/
+			padding-left: 5%;
+			
+			
+		}
+		
+		.line-button{
+			/*font-weight: bold;*/
+			/*line-height: 15px;*/
+			height: 20px;
+			width: 20px;
+			padding: 0;
+			color: #FFF;  
+    /*font-size: 28pt;*/  
+			text-align: center;  
+			display:inline-block;
+			content:"\2022";
+			background-image: url(images/bb-buttons.png);
+			margin-right: 2px;
+			border-radius: 3px;
+		}
+		
+		#bb-bold{
+		
+			background-image: url(images/bb-buttons.png);
+			background-position: 0px 0px;
+			
+			
+		}
+		#bb-bold:hover,#bb-italic:hover,#bb-underline:hover{
+			background-position-x: 20px;
+		}
+		#bb-italic{
+		
+			background-position: 0px 40px;
+			
+		}
+
+		#bb-underline{
+			
+			background-position: 0px 20px;
+		}
+/*BB BUTTONS --------------------------------------------------------------------------------*/
 /*RADIO OPTIONS ELEMENTS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		#radioOptions, #fieldsList{
 	
@@ -368,7 +416,7 @@
 		
 		.accordionheader {
 		    margin: 0;
-			background: #BBB;
+			background-color: #BBB;
 		 /* Семейство шрифтов */
 			font-size: 13pt;
 			cursor: pointer;
@@ -392,7 +440,7 @@
 	
 			margin: 0;
 			width: 90%;
-			
+			position: relative;
 			margin-right: auto;
 			margin-left: auto;
 		
@@ -418,12 +466,14 @@
 
 		.accordiontext {
 			margin-bottom: 2%;
-	        width: 40%;
+	        width: 80%;
+			height: 20px;
 }
 
 
 		.divacc{
 			width: 100%;
+			position: relative;
 }
 		.active_header{
 			opacity: 1.0;
@@ -453,9 +503,9 @@
 		}
 /* ACCORIDON                  -----------------------------------------------------------*/
 /* BUTTONS                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .editbuttonAccordion, .exit-button, .control-button{
+		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .editbuttonAccordion, .exit-button, .control-button, .line-button{
 		border:none;
-		color: #121310;
+		color: #FFF;
 		
 }
 		
@@ -522,8 +572,9 @@
 			margin-bottom: 5px;
 		
 }
-		.edit-block, #scheeme-help > h4, #scheeme-help-basic>h3, #temp-title, #container-title, #scheeme-title, #help>h3{
+		.edit-block, #scheeme-help > h4, #scheeme-help-basic>h3, #temp-title, #container-title, #scheeme-title, #help>h3, #bb-block{
 			background-color: #EEE;
+			margin-top: 2px;
 }
 		.edit-block{
 			/*margin-left: 5%;*/
@@ -615,18 +666,21 @@
 }
 		
 		.exitP{
-			position: fixed;
-			right: 10px;
-			top: 5%;
+			position: absolute;
+			
+			right: 0;
+			top: 0;
 			/*float: right;			
 			margin-right: 15px;*/
 			display: block;
 			width: 32px;
 			height: 32px;
+			margin: 0 !important;
 			/*margin: 0;*/
 		}
 		.exit-button{
-			background-color: #FAFAFA;
+			background-color: #D1D1D1;
+			/*background-color: #D1D1D1;*/
 			width: 32px;
 			height: 32px;
 			margin: 0;
@@ -640,7 +694,7 @@
 /* BUTTONS                  ------------------------------------------------------------*/
 
 
-		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover{
+		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
 			/*border: 2px solid;
 			border-color :#F00;*/
 			box-shadow: 0 0 10px #FA0;/*#DAA520;*/
@@ -778,6 +832,7 @@ display: inline;
 	margin-top:2px !important;
 	margin-bottom: 5px !important;
 	padding-left: 5pt;
+	border-radius: 5px;
 	
 }
 #scheeme-help-exit{

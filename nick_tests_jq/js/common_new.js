@@ -114,8 +114,22 @@ function onHeaderClick(){
 				markHeaders(divBlock);
 			}
 		});
-	allDivBlocks.children().not("h3").slideUp({duration:"slow"});
-	$(this).siblings().slideToggle({duration:"slow"});
+	if (allDivBlocks.length === 0)
+		$(that).siblings().slideToggle({duration:"slow"});
+	else{
+		
+		var myEvent = function(){
+			allDivBlocks.children().not("h3").animate({height:"hide",opacity:"hide"},{duration:"slow"});
+		};
+		$.when(myEvent() ).done(function(){
+			$(that).siblings().slideToggle({duration:"slow"});
+		});
+		
+		
+			
+		
+	}
+	//$(this).siblings().slideToggle({duration:"slow"});
 	/*$(this).dequeue( "toggle-queue" );*/
 	
 		
@@ -124,13 +138,16 @@ function onHeaderClick(){
 	
 	//div_block.find("textarea").focus();
 	redraw();
+	/*if (that === $('#container').children(":last")[0]){
+		showSubmitBlock();
+	}*/
 }
 function markHeaders(element){
 	divObject = createObjectFromDiv(element);
 	state = 'filled';
 	switch (divObject.inputType) {
 		case "text": textSelection   = $(element).find(":input[type=text]");
-					textSelection.each(function(){if ( $(element).val().trim() == "")
+					textSelection.each(function(){if ( $(this).val().trim() == "")
 							state = "warning";
 						});
 		break;
@@ -164,6 +181,7 @@ function onTextChanged() {
 		//div_block.
 		divBlock.children().not("h3").slideUp("slow");
 		showSubmitBlock();
+		focusElement('#btnSendData');
 	}
 	else{
 		nextDivBlock.children("h3:first").trigger("click");
@@ -211,7 +229,8 @@ function exportToJSON(idNames){
 	objectJSON.first  = first;
 	return JSON.stringify(objectJSON);
 }
-function createObjectFromDiv(element){
+function createObjectFromDiv(element, noConvert){
+	noConvert = ( (noConvert == undefined)? true: noConvert);
 	var pSelection;
 	var radio = undefined;
 	var input = undefined;
@@ -220,9 +239,9 @@ function createObjectFromDiv(element){
 	var name, header, description, inputType, inputValues;
 	branchesList = $(element).data("branches");
 	id 				= $(element).attr("id");
-	header 			= $(element).children("h3").children().not(".idSpan").html();
+	header 			= $(element).children("h3").children().not(".idSpan").text();
 	pSelection 		= $(element).children("p");
-	description 	= pSelection.first().html();
+	description 	= (noConvert ? pSelection.first().html() : bbCodeParserSingleton.getInstance().htmlToBB(pSelection.first().html()) );
 	inputSelection 	= $(element).find(':input[type=radio]');
 	textAreaSelection = $(element).find('textarea');
 	textSelection   = $(element).find(":input[type=text]");
@@ -282,6 +301,7 @@ function importFromJSON(stringJSON, container, isEdited)
 		if (objectJSON.blocks[i].id == objectJSON.first){
 			firstElement = true;
 		}
+		objectJSON.blocks[i].description = bbCodeParserSingleton.getInstance().bbToHTML(objectJSON.blocks[i].description);
 		createNewDivElement("show", objectJSON.blocks[i], isEdited, firstElement).appendTo(container);
 		firstElement = false;
 		
@@ -317,6 +337,8 @@ switch (type) {
 		case "radioInputTypes":			objectSpecs = {class:undefined,content:["Многострочное поле","Выбор из нескольких элементов","Однострочные поля"],name:"inputType"};break;
 		case "radio":					objectSpecs = {class:undefined,content:content,name:name};break;
 		case "temp-title":				objectSpecs = {class:undefined,content:content,id:'temp-title'};break;
+		case "bb-block":				objectSpecs = {class:undefined,content:content,id:'bb-block'};break;
+		case "bb-button":				objectSpecs = {class:'line-button',content:content,id:name};break;
 		//show
 		case "accordiontextarea":		objectSpecs = {class:"accordiontextarea",content:content,id:name};break;
 		case "textfield":				objectSpecs = {class:"accordiontext",content:content,id:name};break;	
@@ -492,7 +514,8 @@ function createNewDivElement(type, contents, isEdited, first){
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
 			newElementName		= fabric("textinline edit", getObjectSpecs("elementName", contents.id) );
 			newHeader 			= fabric("textinline edit", getObjectSpecs("temp-div-header", contents.header) );
-			newParagraph    	= fabric("text area edit", 	getObjectSpecs("text area", contents.description) );
+			newBBControls 		= addBBControls();
+			newParagraph    	= fabric("text area edit", 	getObjectSpecs("text area", contents.description, 'desc-block') );
 			newInputDiv 		= fabric("div",				getObjectSpecs("div", undefined ,"radioInputTypesDiv") );
 			newInput    		= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
 			newIsSwitchP		= fabric("p",				getObjectSpecs("branchP") );
@@ -513,7 +536,9 @@ function createNewDivElement(type, contents, isEdited, first){
 			newTitle.appendTo( newElement);
 			newElementName.appendTo( newElement);
 			newHeader.appendTo (newHeaderParagraph);
+			
 			newHeaderParagraph.appendTo( newElement );
+			newBBControls.appendTo(newElement);
 			//newHeader.children(':input').val(contents.header);
 			newParagraph.appendTo( newElement );
 			//newParagraph.val(contents.description);
@@ -578,7 +603,8 @@ function createNewDivElement(type, contents, isEdited, first){
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
 			newElementName		= fabric("textinline", 			getObjectSpecs("elementName", "Введите имя элемента") );
 			newHeader 			= fabric("textinline", 		getObjectSpecs("temp-div-header", contents.header) );
-			newParagraph    	= fabric("text area", 		getObjectSpecs("text area", contents.description) );
+			newBBControls 		= addBBControls();
+			newParagraph    	= fabric("text area", 		getObjectSpecs("text area", contents.description, 'desc-block') );
 			newInput    		= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
 			newInputDiv 		= fabric("div",				getObjectSpecs("div",undefined ,"radioInputTypesDiv") );
 			newIsSwitchP		= fabric("p",				getObjectSpecs("branchP") );
@@ -599,6 +625,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			newElementName.appendTo( newElement);
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
+			newBBControls.appendTo(newElement);
 			newParagraph.appendTo( newElement );
 			newIsSwitchP.appendTo( newElement );
 			newIsSwitch.appendTo( newIsSwitchP );
@@ -773,7 +800,7 @@ function addElement(){
 	var contents ={
 		id: name,
 		header:thisDiv.children('p').children(':input[type=text]').val(),
-		description:thisDiv.children('textarea').val(),
+		description:bbCodeParserSingleton.getInstance().bbToHTML(thisDiv.children('textarea').val()),
 		radio: radio,
 		radioName: "radio"+name,
 		input: input,
@@ -1176,7 +1203,8 @@ function moveDiv(value, id)
 	}
 	$(that).slideUp({duration:'slow',complete:function(){
 		that = this;
-		contents = createObjectFromDiv($(that));
+		contents = createObjectFromDiv($(that), true);
+		
 		removeElement($(that));
 		if (contents.id == id ){
 			first = true;
@@ -1209,7 +1237,9 @@ function hideDivElements(){
 //отображает блок с заданным id
 function showBranch(currBranch,hide){
 	if (currBranch == ""){
-		showSubmitBlock();
+		if (!hide){
+			showSubmitBlock();
+		}
 		return;
 	}
 	else{
@@ -1234,7 +1264,9 @@ function showBranch(currBranch,hide){
 			branches = divElement.data("branches");
 			if ( (branches == undefined) || (branches.length > 1) ) {
 				if (branches == undefined){
-					showSubmitBlock();
+					if (!hide){
+						showSubmitBlock();
+					}
 				}
 				return;
 			}
@@ -1248,6 +1280,7 @@ function showBranch(currBranch,hide){
 //отображение помощи при заполнении редактора
 function showHelp(elemType){
 	helpDivSelection = $('#help');
+	helpDivSelection.stop();
 	prevType = helpDivSelection.data('type') || undefined;
 	if ( prevType == elemType ) 
 		return;
@@ -1294,15 +1327,15 @@ function showHelp(elemType){
 	case 'send'		: paragraphSelection.html('Анкета отправлена успешно!');
 	break;
 	default: 
-		helpDivSelection.animate({opacity:'hide'},'fast'); 
+		helpDivSelection.slideUp('fast'); 
 		
 	
 		
 	}
 	focusElement(".help", "focus");
-	helpDivSelection.data('type', elemType);
-	if (helpDivSelection.css('display') == 'none'){
-		helpDivSelection.slideDown({duration:'fast',queue:"helpQ"}).dequeue("helpQ");
+	helpDivSelection.data('type', ((elemType === undefined)?"null": elemType ) );
+	if ( (helpDivSelection.css('display') == 'none') && (elemType !== undefined) ){
+		helpDivSelection.slideDown({duration:'fast'});
 	}
 }
 
@@ -1529,4 +1562,27 @@ function redraw(){
 		switchTables(undefined, true);
 	
 	}
+}
+function addBBControls(){
+	
+	bbBlock 	= fabric('div', getObjectSpecs('bb-block') );
+	bbBold  	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Жирный','bb-bold'));
+	bbItalic 	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Курсив','bb-italic'));
+	bbUnderline	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Подчеркнутый','bb-underline'));
+	bbColor		= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'color','bb-color'));
+	
+	bbBold.appendTo(bbBlock);
+	bbBold.click(function(){bbCodeParserSingleton.getInstance().addTag($('#desc-block'),'b')});
+	bbItalic.appendTo(bbBlock);
+	bbItalic.click(function(){bbCodeParserSingleton.getInstance().addTag($('#desc-block'),'i')});
+	bbUnderline.appendTo(bbBlock);
+	bbUnderline.click(function(){bbCodeParserSingleton.getInstance().addTag($('#desc-block'),'u')});
+	//bbColor.appendTo(bbBlock);
+	//bbColor.click(function(){bbCodeParserSingleton.getInstance().addTag($('.textarea'),'color')});
+//	bbNewLine.appendTo(bbBlock);
+//	bbNewLine.click(function(){bbCodeParserSingleton.getInstance().addTag($('.textarea'),'br')});
+	return bbBlock;
+	
+	
+	
 }
