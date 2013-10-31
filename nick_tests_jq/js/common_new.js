@@ -347,6 +347,7 @@ switch (type) {
 		case "editbutton":				objectSpecs = {class:"editbutton",content:content};break;
 		case "removebutton":			objectSpecs = {class:"removebutton",content:'"Удалить элемент"'};break;
 		case "addbutton":				objectSpecs = {class:"editbutton",content:'"Добавить ещё элемент"'};break;
+		case "text-block":				objectSpecs = {class:"textfields-block",content:undefined,id: undefined};break;
 		//checkbox
 		case "branchP":					objectSpecs = {class:undefined,content:undefined,id:"branch-block"};break;
 		case "checkboxBranch":			objectSpecs = {class:'checkBox',content:"Ветвление",id:"branch"};break;
@@ -435,9 +436,11 @@ function createNewDivElement(type, contents, isEdited, first){
 		newLine.hide();
 		switch(contents.inputType){
 			case "radio":
+			newInputBlock = fabric("div", getObjectSpecs('text-block') );
+			newInputBlock.appendTo(newElement);
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
 				newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
-				newRadio.appendTo( newElement );
+				newRadio.appendTo( newInputBlock );
 				
 				if (!( (contents.branches == undefined) || (contents.branches.length < 2 ) ) ){
 					newRadio.change(hideDivElements);
@@ -451,7 +454,7 @@ function createNewDivElement(type, contents, isEdited, first){
 				
 				
 			}
-			newRadio.hide();
+			newInputBlock.hide();
 			break;
 			case "textarea":
 				
@@ -471,17 +474,20 @@ function createNewDivElement(type, contents, isEdited, first){
 			//}
 			break;
 			case "text":
+					newInputBlock = fabric("div", getObjectSpecs('text-block') );
+					newInputBlock.appendTo(newElement);
+					newInputBlock.hide();
 				for(var i = 0; i < contents.fieldsList.length; i++){
 					newInput = newInput		= fabric("textinline",  	getObjectSpecs("textfield",contents.fieldsList[i])); 
-					newInput.appendTo( newElement );
-					newInput.hide();
+					newInput.appendTo( newInputBlock );
+					//newInput.hide();
 					if (first){
 						newInput.change(TriggersOnFirstElement);
 					}
 					
 				}
 				newInput.change(onTextChanged);
-				newInput.hide();
+				//newInput.hide();
 				
 				
 			break;
@@ -1223,7 +1229,7 @@ function moveDiv(value, id)
 	
 }
 function hideDivElements(){
-	divBlock = $(this).parent('div');
+	divBlock = $(this).parent().parent('div');
 	branches = divBlock.data("branches");
 	selectedValue = $(this).children(":input[type=radio]").val();
 	currBranch = branches[selectedValue];
