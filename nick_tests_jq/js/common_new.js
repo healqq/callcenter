@@ -464,6 +464,7 @@ function createNewDivElement(type, contents, isEdited, first){
 						$(this).blur();
 					}
 				});
+				newInput.keyup(resizeTextArea);
 				newInput.hide();
 				if (first){
 					newInput.change(TriggersOnFirstElement);
