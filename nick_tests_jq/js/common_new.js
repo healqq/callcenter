@@ -347,7 +347,6 @@ switch (type) {
 		case "editbutton":				objectSpecs = {class:"editbutton",content:content};break;
 		case "removebutton":			objectSpecs = {class:"removebutton",content:'"Удалить элемент"'};break;
 		case "addbutton":				objectSpecs = {class:"editbutton",content:'"Добавить ещё элемент"'};break;
-		case "text-block":				objectSpecs = {class:"textfields-block",content:undefined,id: undefined};break;
 		//checkbox
 		case "branchP":					objectSpecs = {class:undefined,content:undefined,id:"branch-block"};break;
 		case "checkboxBranch":			objectSpecs = {class:'checkBox',content:"Ветвление",id:"branch"};break;
@@ -436,11 +435,9 @@ function createNewDivElement(type, contents, isEdited, first){
 		newLine.hide();
 		switch(contents.inputType){
 			case "radio":
-			newInputBlock = fabric("div", getObjectSpecs('text-block') );
-			newInputBlock.appendTo(newElement);
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
 				newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
-				newRadio.appendTo( newInputBlock );
+				newRadio.appendTo( newElement );
 				
 				if (!( (contents.branches == undefined) || (contents.branches.length < 2 ) ) ){
 					newRadio.change(hideDivElements);
@@ -454,7 +451,7 @@ function createNewDivElement(type, contents, isEdited, first){
 				
 				
 			}
-			newInputBlock.hide();
+			newRadio.hide();
 			break;
 			case "textarea":
 				
@@ -474,20 +471,17 @@ function createNewDivElement(type, contents, isEdited, first){
 			//}
 			break;
 			case "text":
-					newInputBlock = fabric("div", getObjectSpecs('text-block') );
-					newInputBlock.appendTo(newElement);
-					newInputBlock.hide();
 				for(var i = 0; i < contents.fieldsList.length; i++){
 					newInput = newInput		= fabric("textinline",  	getObjectSpecs("textfield",contents.fieldsList[i])); 
-					newInput.appendTo( newInputBlock );
-					//newInput.hide();
+					newInput.appendTo( newElement );
+					newInput.hide();
 					if (first){
 						newInput.change(TriggersOnFirstElement);
 					}
 					
 				}
 				newInput.change(onTextChanged);
-				//newInput.hide();
+				newInput.hide();
 				
 				
 			break;
@@ -547,6 +541,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			newBBControls.appendTo(newElement);
 			//newHeader.children(':input').val(contents.header);
 			newParagraph.appendTo( newElement );
+			newParagraph.keyup(resizeTextArea);
 			//newParagraph.val(contents.description);
 			newIsSwitchP.appendTo( newElement );
 			newIsSwitch.appendTo( newIsSwitchP );
@@ -633,6 +628,8 @@ function createNewDivElement(type, contents, isEdited, first){
 			newHeaderParagraph.appendTo( newElement );
 			newBBControls.appendTo(newElement);
 			newParagraph.appendTo( newElement );
+			newParagraph.keyup(resizeTextArea);
+			//resizeTextArea
 			newIsSwitchP.appendTo( newElement );
 			newIsSwitch.appendTo( newIsSwitchP );
 			newIsSwitchLabel.appendTo( newIsSwitchP );
@@ -678,6 +675,7 @@ function createNewTempElement(contents, edit){
 	$('#temp_divs').empty();
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
+	$('#desc-block').keyup();
 	//newElement.hide();
 	
 	//сдвигаем кнопки в списке
@@ -903,7 +901,7 @@ var position;
 		//}
 		//else{
 	position = parentBlock.index();
-	objectDiv = createObjectFromDiv(parentBlock);
+	objectDiv = createObjectFromDiv(parentBlock, false);
 	objectDiv.position = position;
 	parentBlock.animate({opacity: 'hide',height:0+'px'},{duration:'slow',easing: 'swing',complete:function(){
 		removeElement(parentBlock);
@@ -1229,7 +1227,7 @@ function moveDiv(value, id)
 	
 }
 function hideDivElements(){
-	divBlock = $(this).parent().parent('div');
+	divBlock = $(this).parent('div');
 	branches = divBlock.data("branches");
 	selectedValue = $(this).children(":input[type=radio]").val();
 	currBranch = branches[selectedValue];
@@ -1553,9 +1551,11 @@ function computeTablesWidth(active){
 //отображение помощи по работе со схемой
 function showScheemeHelp(){
 	$('#scheeme-help-layer').show();
+	$('#scheeme-basic-exit').show();
 	$('#scheeme-help-basic').slideDown('slow');
 }
 function hideScheemeHelp(){
+	$('#scheeme-basic-exit').hide();
 	$('#scheeme-help-layer').hide();
 	$('#scheeme-help-basic').slideUp('slow');
 }
@@ -1591,4 +1591,12 @@ function addBBControls(){
 	
 	
 	
+}
+function resizeTextArea(){
+	var element = $(this);
+	//element.height = 'auto';
+	var diff = element[0].scrollHeight - element.height();
+	if ( (diff > 4    ) )
+		
+		element.animate({height:+element[0].scrollHeight+'px'},{duration:"fast"}); 
 }
