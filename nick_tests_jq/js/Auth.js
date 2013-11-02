@@ -159,6 +159,7 @@ function redirect(path){
 function logout(){
 	//var sessionID = getCookie('PHPSESSID');
 	//params = [{key:'Token',value:sessionID}];
+	$(window).off('beforeunload');
 	var r=confirm("Вы действительно хотите выйти?");
 		if (r==true)
 	{
@@ -166,6 +167,11 @@ function logout(){
 	}
 	else
 	{
+		$(window).on('beforeunload',function(){
+		
+			return "Внимание! Вся несохранённая информация будет потеряна! ";
+		
+	});
 		return;
 	}
 	request = sendRequest("Logout");

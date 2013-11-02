@@ -897,7 +897,10 @@ function addElement(){
 	if ( $('#autosave').prop('checked') === true ) 
 		saveStructure();
 	//$('#newElementName').val("");
-	
+	//отображаем остальные элементы
+	if ((newDiv.data('branches') !== undefined) && ( newDiv.data('branches').length < 2) ){ 
+		showBranch(newDiv.data('branches')[0],true);
+	}
 }
 //нажатие на "редактировать"
 function onEditClick(){
@@ -928,6 +931,7 @@ var position;
 	if (prevBlock.length !== 0)
 		//var branches = prevBlock
 		prevBlock.find('h3').trigger('click');
+	
 	
 	
 }
@@ -1299,7 +1303,7 @@ function showBranch(currBranch,hide){
 //отображение помощи при заполнении редактора
 function showHelp(elemType){
 	helpDivSelection = $('#help');
-	helpDivSelection.stop();
+	//helpDivSelection.stop();
 	prevType = helpDivSelection.data('type') || undefined;
 	if ( prevType == elemType ) 
 		return;
@@ -1346,7 +1350,7 @@ function showHelp(elemType){
 	case 'send'		: paragraphSelection.html('Анкета отправлена успешно!');
 	break;
 	default: 
-		helpDivSelection.animate({opacity:'0'},"fast"); 
+		helpDivSelection.slideUp('fast'); 
 		
 	
 		
@@ -1354,7 +1358,7 @@ function showHelp(elemType){
 	focusElement(".help", "focus");
 	helpDivSelection.data('type', ((elemType === undefined)?"null": elemType ) );
 	if ( ( (helpDivSelection.css('opacity') == '0') ||(helpDivSelection.css('display') == 'none') )  && (elemType !== undefined) ){
-		helpDivSelection.animate({opacity:'1'},"fast");
+		helpDivSelection.slideDown('fast');
 	}
 }
 
@@ -1459,6 +1463,7 @@ function showElement( element ){
 	var symbolIndex = element.search(':');
 	var elementId  = element;
 	var branchIndex = undefined;
+	var elementBlock = undefined;
 	//если нашлось двоеточие - то это элемент такой, особенный, которого ещё нет.
 	if (symbolIndex !== -1 ){
 		elementId  = element.substring(0, symbolIndex);
@@ -1476,7 +1481,9 @@ function showElement( element ){
 			});
 			showBranch( path[0].id, true);
 			for (var i = 0; i < path.length; i++ ){
-				showBranch( $('#'+path[i].id).data('branches')[path[i].branch], true );
+				var elementToShowID = $('#'+path[i].id).data('branches')[path[i].branch];
+				$($('#'+path[i].id).find('input[type=radio]')[path[i].branch]).prop('checked', true);
+				showBranch( elementToShowID, true );
 			}
 			
 		}
@@ -1486,7 +1493,7 @@ function showElement( element ){
 		$($('#'+elementId).find('input[type=radio]')[parseInt( branchIndex)]).prop('checked', true).trigger('change');
 	}
 	elementBlock = $('#'+elementId);
-	if (elementBlock.hasClass('.active_header') == 0 ){ 
+	if (!elementBlock.children('h3').hasClass('active_header') ){ 
 		elementBlock.children('h3').trigger('click');
 	}
 	

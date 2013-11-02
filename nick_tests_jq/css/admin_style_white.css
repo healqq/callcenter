@@ -706,8 +706,8 @@
 		.help{
 			position:relative;
 			width: 90%;
-			display:block;
-			opacity: 0;
+			display:none;
+			/*opacity: 0;*/
 			/*float:right;*/
 			padding: 1%;
 			margin: 10px;
