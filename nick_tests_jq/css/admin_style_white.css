@@ -384,7 +384,7 @@
 			margin-left: 5%;
 	
 }
-		#branch-block, .radio-block{
+		#branch-block, .radio-block, #autosave-p{
 			margin-left: 5%;
 			height: 20px;
 			display: block;
@@ -988,7 +988,7 @@ label{
 	margin-left: 25px;
 }
 	
-input[type=radio]{
+input[type=radio],input[type=checkbox]{
 	display:none;
 }
 input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:before {  
@@ -996,8 +996,12 @@ input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:b
     color: #FFF;  
     /*font-size: 28pt;*/  
     text-align: center;  
-    line-height: 15px;  
+    line-height: 15px; 
+	
 } 
+input[type=checkbox]:checked + label{
+	font-weight: bold;
+}
 input[type=radio]:checked + label:before {  
     content: "\2022";  
     
@@ -1030,4 +1034,11 @@ input[type=checkbox]:checked + label:before {
 	position: relative;
 	background-image: url(images/loader.gif);
 }
+#autosave-p{
+	color:#FFF;
+	/*font-size: 11pt;*/
+	
+	
+}
+
 /*ajax wait--------------------------------------------------------------*/

@@ -114,6 +114,9 @@ function onHeaderClick(){
 				markHeaders(divBlock);
 			}
 		});
+	$('#imported').children().each( function(){
+		$(this).find('h3').removeClass('active_header');
+	});
 	if (allDivBlocks.length === 0)
 		$(that).siblings().slideToggle({duration:"slow"});
 	else{
@@ -537,7 +540,8 @@ function createNewDivElement(type, contents, isEdited, first){
 			newTitle.appendTo( newElement);
 			newElementName.appendTo( newElement);
 			newHeader.appendTo (newHeaderParagraph);
-			
+			//записываем ветки
+			newElement.data("branches", contents.branches);
 			newHeaderParagraph.appendTo( newElement );
 			newBBControls.appendTo(newElement);
 			//newHeader.children(':input').val(contents.header);
@@ -621,7 +625,8 @@ function createNewDivElement(type, contents, isEdited, first){
 			newAddElementButton = fabric("buttoninline", 		getObjectSpecs("addElementButton") );
 			newAddElementButtonP = fabric("p", 		getObjectSpecs("addElementButtonP") );
 			
-			
+			//очищаем ветви
+			newElement.removeData("branches");
 			addHelpTriggers();
 			newTitle.appendTo( newElement);
 			newElementName.appendTo( newElement);
@@ -744,7 +749,7 @@ function addElement(){
 		});
 	}
 	else{
-		branches = undefined;
+		branches = thisDiv.data('branches');
 	}
 	//var position = undefined;
 	var position = thisDiv.children('#position').children(':input').val();
@@ -888,7 +893,9 @@ function addElement(){
 	}
 	newHeader.trigger('click');
 	redraw();
-	createNewTempElement(); //обнуляем значения у temp_div
+	createNewTempElement();//обнуляем значения у temp_div
+	if ( $('#autosave').prop('checked') === true ) 
+		saveStructure();
 	//$('#newElementName').val("");
 	
 }
@@ -915,6 +922,13 @@ var position;
 	//objectDiv.radio = ["text","radio"];
 	//objectDiv.radioName = "inputType";
 	createNewTempElement(objectDiv);
+	var prevBlock = $('#container').children(':nth-child('+(position)+')');
+	
+	//открываем предыдущий блок
+	if (prevBlock.length !== 0)
+		//var branches = prevBlock
+		prevBlock.find('h3').trigger('click');
+	
 	
 }
 //нажатие на "скопировать"
@@ -1340,7 +1354,7 @@ function showHelp(elemType){
 	focusElement(".help", "focus");
 	helpDivSelection.data('type', ((elemType === undefined)?"null": elemType ) );
 	if ( (helpDivSelection.css('display') == 'none') && (elemType !== undefined) ){
-		helpDivSelection.slideDown({duration:'fast'});
+		helpDivSelection.animate({width:'toggle'},"fast");
 	}
 }
 
@@ -1456,7 +1470,9 @@ function showElement( element ){
 			path.reverse();
 			//прячем все блоки
 			$('#container').children().each( function(){
-				$(this).appendTo($('#imported') );
+				var elem = $(this);
+				
+				elem.appendTo($('#imported') );
 			});
 			showBranch( path[0].id, true);
 			for (var i = 0; i < path.length; i++ ){
@@ -1470,7 +1486,7 @@ function showElement( element ){
 		$($('#'+elementId).find('input[type=radio]')[parseInt( branchIndex)]).prop('checked', true).trigger('change');
 	}
 	elementBlock = $('#'+elementId);
-	if (elementBlock.find('.active_header').length == 0 ){
+	if (elementBlock.hasClass('.active_header') == 0 ){ 
 		elementBlock.children('h3').trigger('click');
 	}
 	

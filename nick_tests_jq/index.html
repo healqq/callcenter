@@ -20,7 +20,7 @@
 	<script src="js/bbParser.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	//checkSession();
+	checkSession();
 	createNewTempElement();
 
 
@@ -36,6 +36,11 @@
 	$('#toggle-state-btn').click(switchTables);
 	$('#scheeme-help-btn').click(showScheemeHelp);
 	$('#scheeme-basic-exit').click(hideScheemeHelp);
+	$(window).bind('beforeunload',function(){
+		
+			return "Внимание! Вся несохранённая информация будет потеряна! ";
+		
+	});
 	
 	
 
@@ -54,8 +59,11 @@
 	<div class = "tableLeft">
 		<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить скрипт" type="button" class = "control-button"></p>
 		<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить cкрипт" type="button" class = "control-button"></p>
+		<p id="autosave-p">
+		<input id="autosave" value="" type="checkbox">
+		<label for="autosave" class="checkBoxLabel">автосохранение</label>
 		<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
-		
+		</p>
 		<p id="response" style="display:none"></p>
 		<br>
 		<div id= "help" class = "help">

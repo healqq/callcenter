@@ -10,7 +10,7 @@ function saveStructure() {
 		return;
 	}
 	
-    request = sendRequest("SetScriptStructure", [{key:'EncodedData', value: exportToJSON(["#container","#imported"])}]);
+    request = sendRequest("SetScriptStructure", [{key:'EncodedData', value: escapeHTML(exportToJSON(["#container","#imported"]))}]);
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );
 			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
