@@ -877,6 +877,7 @@ display: inline;
 	background-image: url(images/exit_small.png);
 	background-position: 0px 0px;
 	width: 20px;
+	background-color:  #EEE;
 }
 #scheeme-id{
 	/*text-align: center;*/

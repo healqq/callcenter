@@ -369,6 +369,7 @@ var drawerSingleton = (function(){
 				
 			}
 			helpDiv.animate({left:'+='+(x - 200 - divLeft)+'px', top:'+='+(y-divTop)+'px'},"fast");
+			//helpDiv.animate({left:(x)+'px', top:(y)+'px'},"fast");
 	//helpDiv.css("left", x+50+'px');
 	//helpDiv.css("top", y+'px');
 	
