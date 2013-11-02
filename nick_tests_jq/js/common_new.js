@@ -1346,15 +1346,15 @@ function showHelp(elemType){
 	case 'send'		: paragraphSelection.html('Анкета отправлена успешно!');
 	break;
 	default: 
-		helpDivSelection.slideUp('fast'); 
+		helpDivSelection.animate({opacity:'0'},"fast"); 
 		
 	
 		
 	}
 	focusElement(".help", "focus");
 	helpDivSelection.data('type', ((elemType === undefined)?"null": elemType ) );
-	if ( (helpDivSelection.css('display') == 'none') && (elemType !== undefined) ){
-		helpDivSelection.animate({width:'toggle'},"fast");
+	if ( ( (helpDivSelection.css('opacity') == '0') ||(helpDivSelection.css('display') == 'none') )  && (elemType !== undefined) ){
+		helpDivSelection.animate({opacity:'1'},"fast");
 	}
 }
 
