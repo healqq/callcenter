@@ -178,7 +178,9 @@ function markHeaders(element){
 //переходит на следующее сообщение, если такое есть.
 //иначе просто сворачивает текущее	
 function onTextChanged() {
-	var divBlock = $(this).parent("div");
+	var divBlock = $(this).parents(".divacc");
+	var inputValues = getInputValue(divBlock);
+	saveData(divBlock, inputValues);
 	var nextDivBlock = divBlock.next();
 	if (nextDivBlock.size() == 0 ){
 		//div_block.
@@ -1624,3 +1626,46 @@ function resizeTextArea(){
 		
 		element.animate({height:+element[0].scrollHeight+'px'},{duration:"fast"}); 
 }
+//saving input data ----------------------------------------------------------------------------------------
+function saveData(element, value){
+	var savedData = getSavedData();
+	savedData.items.push({'id': element.attr('id'), 'value': value});
+	setCookie('savdata', JSON.stringify(savedData),{expires:24*60*60,path:'/'});
+	
+}
+function getSavedData(){
+	var savedData = getCookie('savdata');
+	if (savedData === undefined){
+		savedData = {'items':[]};
+	}
+	else{
+		savedData = JSON.parse(savedData);
+	
+	}
+	return savedData;
+	
+}
+function clearData(){
+	removeCookie('savdata');
+}
+function restoreData(){
+	var savedData = getSavedData();
+	for (var i = 0; i < savedData.items.length; i++){
+		var objDiv = createObjectFromDiv('#'+savedData.items[i].id);
+		switch (objDiv.inputType){
+		case "textarea":
+			$('#'+savedData.items[i].id).find('textarea').val(savedData.items[i].value[0].value);
+		break;
+		case "radio":
+			$($('#'+savedData.items[i].id).find('input[type=radio]')[savedData.items[i].value[0].value]).prop('checked', true);
+		break;
+		case "text":
+			$('#'+savedData.items[i].id).find('input[type=text]').each(function(index, value){
+				$(value).val(savedData.items[i].value[index].value);
+			});
+		break;
+			
+		}
+	}
+}
+//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
