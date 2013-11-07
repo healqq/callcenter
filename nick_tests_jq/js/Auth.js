@@ -151,6 +151,7 @@ function redirect(path){
 	index = href.search('/Callcenter/');
 	basePath = href.substring(0,index + findString.length);
 	if (!(window.location.href == basePath+path)){
+			$(window).off('beforeunload');
 			window.location.replace(path);
 	
 	}

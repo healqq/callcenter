@@ -121,7 +121,7 @@
 			align-self: auto;		   
 		
 }
-	.active_header, .control-button, .editbutton, .editbuttonAccordion, #goto-elem, label:before , .line-button{
+	.active_header, .control-button, .editbutton, .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title{
 		background: linear-gradient(to top, #7EC0EE, #6CA6CD);
 	}
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -233,7 +233,7 @@
 			display:table;
 			border-radius: 5px;
 }
-		#temp-title, #container-title, #scheeme-title{
+		#temp-title, #container-title, #scheeme-title, #summary-title{
 			text-align: center;
 			font-size: 16pt;
 			 
@@ -656,8 +656,9 @@
 		.addbuttonP {
 			width: 90%;
 			height: 40px;
-			
-			margin-left: auto;
+			position: relative;
+			float:left;
+			margin-left: 5%;
 			margin-right: auto;
 			margin-top: 10px !important;
 			margin-bottom : 10px !important;
@@ -707,6 +708,7 @@
 			position:relative;
 			width: 90%;
 			display:none;
+			float: left;
 			/*opacity: 0;*/
 			/*float:right;*/
 			padding: 1%;
@@ -728,25 +730,7 @@
 }
 
 /*HELP BLOCK --------------------------------------------------------------------------*/
-/*SUBMIT BLOCK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-
-#submit-block {
-	padding-right:1px;
-	padding-left:-1px;
-	/*background: #D6E68A;
-	border-bottom: 1px solid #121310; /* Параметры линии внизу */
-	/*border-left: 1px solid #121310; /* Линия слева от текста */
-	/*border-right: 1px solid #121310; /* Линия справа от текста */
-	/*border-top: 1px solid #121310; /* Линия сверху от текста */
-	width: 90%;
-	margin-left: auto; /* Расстояние от левого края до линии */
-	margin-right: auto; /* Расстояние от правого края до линии */
-	display: none;
-	/*font-family: none;*/
-	
-}
-/*SUBMIT BLOCK ------------------------------------------------------------------------*/
 .dummy{
 	font-family: Calibri; /* Семейство шрифтов */
 	/*padding-right:5px;
@@ -1038,9 +1022,87 @@ input[type=checkbox]:checked + label:before {
 }
 #autosave-p{
 	color:#FFF;
+	float: left;
 	/*font-size: 11pt;*/
 	
 	
 }
 
 /*ajax wait--------------------------------------------------------------*/
+
+/*SUBMIT BLOCK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+#submit-block {
+	padding-right:1px;
+	padding-left:-1px;
+	/*background: #D6E68A;
+	border-bottom: 1px solid #121310; /* Параметры линии внизу */
+	/*border-left: 1px solid #121310; /* Линия слева от текста */
+	/*border-right: 1px solid #121310; /* Линия справа от текста */
+	/*border-top: 1px solid #121310; /* Линия сверху от текста */
+	width: 100%;
+	margin-left: auto; /* Расстояние от левого края до линии */
+	margin-right: auto; /* Расстояние от правого края до линии */
+	float:left;
+	position: relative;
+	display: none;
+	/*font-family: none;*/
+	
+}
+#submit-block > .addbuttonP{
+	margin-left: 5%;
+}
+#summary{
+	height: 100%;
+	position: relative;
+	width: 100%;
+	border-radius: 5px;
+	border: 1px solid #999;
+	display: none;
+	overflow: auto;
+	
+}
+#summary-title{
+	margin-top: 0px;
+	color: #fff;
+}
+.summary-element{
+	position: relative;
+	width: 100%;
+	overflow: auto;
+	border-top:1px solid #999;
+	
+	
+}
+.summary-element-name{
+	
+	width: 40%;
+
+}
+
+.summary-element-value{
+	/*border-left: 1px solid black;*/
+	width: 50%;
+	/*border: 1px solid black;*/
+
+}
+.summary-element-value, .summary-element-name{
+	float: left;	
+	padding-left: 2%;
+	text-align: center;
+	/*background-color: #D1EEEE; */
+	
+}
+.summary-element-value-p, .summary-element-name-p{
+	
+	padding-left: 2%;
+	text-align: center;
+	/*background-color: #D1EEEE; */
+	
+}
+.odd{
+	background-color: #BFEFFF;
+}
+
+/*SUBMIT BLOCK ------------------------------------------------------------------------*/

@@ -178,9 +178,11 @@ function markHeaders(element){
 //переходит на следующее сообщение, если такое есть.
 //иначе просто сворачивает текущее	
 function onTextChanged() {
-	var divBlock = $(this).parents(".divacc");
-	var inputValues = getInputValue(divBlock);
-	saveData(divBlock, inputValues);
+	//var element =( (item === undefined)?this: item );
+	var element = this;
+	var divBlock = $(element).parents(".divacc");
+	
+	addSavedData(divBlock);
 	var nextDivBlock = divBlock.next();
 	if (nextDivBlock.size() == 0 ){
 		//div_block.
@@ -192,17 +194,22 @@ function onTextChanged() {
 		nextDivBlock.children("h3:first").trigger("click");
 	}
 	focusOnInput(nextDivBlock);
+	clearSummaryBlock();
+	fillSummaryBlock();
+	return false;
 	
 }
 //sets focus on input
+//timeout added cuz focus fires twice on enter event (?webkit bug?)
 function focusOnInput(element){
-	textareaSelect = element.find("textarea");
+	var textareaSelect = element.find("textarea");
 	if (textareaSelect.length == 0 ){
-		textBlockSelect = element.find("input[type=text]:first").focus();
+		setTimeout(function(){element.find("input[type=text]:first").focus()}, 50);
 			
 	}
 	else{
-		textareaSelect.focus();
+		setTimeout(function(){textareaSelect.focus()}, 50);
+		
 	}
 }
 //формирует структуру json по текущей структуре
@@ -352,6 +359,7 @@ switch (type) {
 		case "editbutton":				objectSpecs = {class:"editbutton",content:content};break;
 		case "removebutton":			objectSpecs = {class:"removebutton",content:'"Удалить элемент"'};break;
 		case "addbutton":				objectSpecs = {class:"editbutton",content:'"Добавить ещё элемент"'};break;
+		case "input-block":				objectSpecs = {class:"input-block",id:undefined,content:undefined};break;
 		//checkbox
 		case "branchP":					objectSpecs = {class:undefined,content:undefined,id:"branch-block"};break;
 		case "checkboxBranch":			objectSpecs = {class:'checkBox',content:"Ветвление",id:"branch"};break;
@@ -370,7 +378,12 @@ switch (type) {
 		//edit buttons block
 		case "editbuttonAccordion":		objectSpecs = {class:"editbuttonAccordion",content:content};break;
 		case "editP":					objectSpecs = {class:"edit-block",content:undefined, id:undefined};break;
-		
+		//summary
+		case "summary-element":			objectSpecs = {class:'summary-element',content:undefined, id:undefined};break;
+		case "summary-element-name":	objectSpecs = {class:'summary-element-name',content:undefined, id:undefined};break;
+		case "summary-element-name-p":	objectSpecs = {class:'summary-element-name-p',content:content, id:undefined};break;
+		case "summary-element-value":	objectSpecs = {class:'summary-element-value',content:undefined, id:undefined};break;
+		case "summary-element-value-p":	objectSpecs = {class:'summary-element-value-p',content:content, id:undefined};break;
 		//case "radioInputTypesDiv"		objectSpecs = {class:"radioInputTypesDiv",id:undefined,content:undefined};break;
 		default:
 		return undefined;
@@ -418,6 +431,7 @@ function removeElement(element){
 //параметр type = show для создания блока для отображения
 //если show не указано - то создается блок для редактирования
 function createNewDivElement(type, contents, isEdited, first){
+	var newInput;
 	isEdited = (isEdited == undefined ? false : isEdited);
 	switch (type){
 	case "show":
@@ -425,7 +439,7 @@ function createNewDivElement(type, contents, isEdited, first){
 		newElement.data("branches", contents.branches);
 		newHeader 		= fabric("h3", 			getObjectSpecs("headerAccordion",isEdited?'<span>'+contents.header + '</span>' +'<span class="idSpan">id: '+ contents.id+'</span>': '<span>'+contents.header + '</span>')); 
 		newParagraph 	= fabric("p",  			getObjectSpecs("description",contents.description)); 
-		
+		newInputDiv 	= fabric('div', 		getObjectSpecs('input-block'));
 		
 		
 		
@@ -438,17 +452,21 @@ function createNewDivElement(type, contents, isEdited, first){
 		newLine = fabric("br", getObjectSpecs("br") ) ;
 		newLine.appendTo(newElement);
 		newLine.hide();
+		
+		newInputDiv.appendTo(newElement);
+		newInputDiv.hide();
 		switch(contents.inputType){
 			case "radio":
+			
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
 				newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
-				newRadio.appendTo( newElement );
+				newRadio.appendTo( newInputDiv );
 				
 				if (!( (contents.branches == undefined) || (contents.branches.length < 2 ) ) ){
 					newRadio.change(hideDivElements);
 				}
 				else{
-					newRadio.change(onTextChanged);
+					newRadio.live('change',onTextChanged);
 				}
 				if (first){
 					newRadio.change(TriggersOnFirstElement);
@@ -456,38 +474,41 @@ function createNewDivElement(type, contents, isEdited, first){
 				
 				
 			}
-			newRadio.hide();
+			//newInputDiv.hide();
 			break;
 			case "textarea":
 				
 				newInput		= fabric("text area",  	getObjectSpecs("accordiontextarea",contents.input)); 
-				newInput.appendTo( newElement );
+				newInput.appendTo( newInputDiv );
 				newInput.change(onTextChanged);
 				//по ctrl+enter переход на следующий вопрос
-				newInput.keydown(function(e){
+			/*	newInput.keydown(function(e){
 					if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey){
 						$(this).blur();
 					}
-				});
+				});*/
 				newInput.keyup(resizeTextArea);
-				newInput.hide();
+				
 				if (first){
 					newInput.change(TriggersOnFirstElement);
 				}
 			//}
 			break;
 			case "text":
+				
 				for(var i = 0; i < contents.fieldsList.length; i++){
 					newInput = newInput		= fabric("textinline",  	getObjectSpecs("textfield",contents.fieldsList[i])); 
-					newInput.appendTo( newElement );
-					newInput.hide();
+					newInput.appendTo( newInputDiv );
+					
 					if (first){
 						newInput.change(TriggersOnFirstElement);
 					}
 					
 				}
-				newInput.change(onTextChanged);
-				newInput.hide();
+				newInput.on('change',onTextChanged);
+	
+				
+				
 				
 				
 			break;
@@ -499,7 +520,7 @@ function createNewDivElement(type, contents, isEdited, first){
 		//в режиме конструктора отображается кнопка edit
 		if (isEdited){
 		//newElementIdField = fabric("p",			getObjectSpecs("p", "Id элемента:"+contents.id) );
-		newEditBlock    = fabric("h5", getObjectSpecs("editP"));
+		newEditBlock    = fabric("div", getObjectSpecs("editP"));
 		newButtonEdit	= fabric("buttoninline",  	getObjectSpecs("editbuttonAccordion"	,"Изменить"));
 		newButtonCopy	= fabric("buttoninline",  	getObjectSpecs("editbuttonAccordion"	,"Скопировать"));
 		//кнопка редактирования
@@ -831,7 +852,7 @@ function addElement(){
 			if ( !(branchesPrevElement == undefined) ) {
 				checkedDiv = lastDiv.find(':input[type=radio]:checked');
 					if (checkedDiv.length == 0 ){
-						showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last");
+						showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last>.input-block");
 						return;
 					}
 					radioValue = checkedDiv.val();
@@ -1248,7 +1269,8 @@ function moveDiv(value, id)
 	
 }
 function hideDivElements(){
-	divBlock = $(this).parent('div');
+	divBlock = $(this).parents('.divacc');
+	addSavedData(divBlock);
 	branches = divBlock.data("branches");
 	selectedValue = $(this).children(":input[type=radio]").val();
 	currBranch = branches[selectedValue];
@@ -1387,25 +1409,58 @@ function addHelpTriggers(){
 		showHelp('name');
 	});
 }
+function fillSummaryBlock(){
+	$('#container').children().each(function(index, value){
+			
+			var newBlock = fabric('div', getObjectSpecs('summary-element') );
+			//раскраска цветом
+			if ((index % 2) === 0 ){
+				newBlock.addClass('odd');
+			}
+			var newNameBlock = fabric('div', getObjectSpecs('summary-element-name') );
+			var newValueBlock = fabric('div', getObjectSpecs('summary-element-value') );
+			var newNameParagraph = fabric('p', getObjectSpecs('summary-element-name-p', $(this).children('h3').text()) );
+			newNameBlock.appendTo(newBlock);
+			newNameParagraph.appendTo(newNameBlock);
+			
+			newValueBlock.appendTo(newBlock);
+			
+			var values = getInputValue($(this));
+			for (var i=0; i< values.length; i++ ){
+				var newValueParagraph = fabric('p', getObjectSpecs('summary-element-value-p', values[i].value ) );
+				newValueParagraph.appendTo(newValueBlock);
+				
+			}
+			$('#summary').append(newBlock);
+		});
+}
+function clearSummaryBlock(){
+	$('.summary-element').each(function(){removeElement(this)});
+}
 function showSubmitBlock(){
+	
+	
 	$('#submit-block').slideDown({duration:"slow", complete:function(){
 		//$('#submit-block').toggleClass("dummy");
-		$('.tableRight').toggleClass("dummy");
+		//$('.tableRight').toggleClass("dummy");
+		$('#summary').slideDown('slow');
 		}
 	});
-	$('.tableRight').toggleClass("dummy");
+	//$('.tableRight').toggleClass("dummy");
 	//$('#submit-block').toggleClass("dummy");
 }
 function hideSubmitBlock(){
-	$('#submit-block').slideUp({duration:"slow", complete:function(){
-		//$('#submit-block').toggleClass("dummy");
-		$('.tableRight').toggleClass("dummy");
-		}
-	});
-	$('.tableRight').toggleClass("dummy");
+	$('#summary').slideUp({duration:"slow", complete:function(){
+			$('#submit-block').slideUp("slow");
+			clearSummaryBlock();
+		//$('.tableRight').toggleClass("dummy");
+			}
+		});
+	//$('.tableRight').toggleClass("dummy");
 	//$('#submit-block').toggleClass("dummy");
 }
 function reloadStructure(){
+	clearData();
 	$('#container:first').data('started', false);
 	divBlock = $('#container').children('div');
 	id = divBlock.first().attr('id');
@@ -1629,14 +1684,26 @@ function resizeTextArea(){
 //saving input data ----------------------------------------------------------------------------------------
 function saveData(element, value){
 	var savedData = getSavedData();
-	savedData.items.push({'id': element.attr('id'), 'value': value});
+	var elementAdded = false; //flag when to stop loop
+	//search for element
+	for (var i=0; (i< savedData.items.length) && !elementAdded; i++){
+		if (savedData.items[i].id === element.attr('id') ){
+			savedData.items[i].value = value;
+			elementAdded = true;
+		}
+	}
+	//new element
+	if (!elementAdded){
+		savedData.items.push({'id': element.attr('id'), 'value': value});
+	}
+	savedData.last = element.attr('id');
 	setCookie('savdata', JSON.stringify(savedData),{expires:24*60*60,path:'/'});
 	
 }
 function getSavedData(){
 	var savedData = getCookie('savdata');
 	if (savedData === undefined){
-		savedData = {'items':[]};
+		savedData = {'items':[],'last':undefined};
 	}
 	else{
 		savedData = JSON.parse(savedData);
@@ -1651,21 +1718,42 @@ function clearData(){
 function restoreData(){
 	var savedData = getSavedData();
 	for (var i = 0; i < savedData.items.length; i++){
-		var objDiv = createObjectFromDiv('#'+savedData.items[i].id);
+		var currElement = $('#'+savedData.items[i].id);
+		
+		var objDiv = createObjectFromDiv(currElement);
+		
 		switch (objDiv.inputType){
 		case "textarea":
-			$('#'+savedData.items[i].id).find('textarea').val(savedData.items[i].value[0].value);
+			currElement.find('textarea').val(savedData.items[i].value[0].value);
 		break;
 		case "radio":
-			$($('#'+savedData.items[i].id).find('input[type=radio]')[savedData.items[i].value[0].value]).prop('checked', true);
+			$(currElement.find('input[type=radio]')[savedData.items[i].value[0].value]).prop('checked', true);
+			if ( (objDiv.branches !== undefined ) && ( objDiv.branches.length > 1 ) ){
+				showBranch(objDiv.branches[savedData.items[i].value[0].value], true);
+			}
 		break;
 		case "text":
-			$('#'+savedData.items[i].id).find('input[type=text]').each(function(index, value){
+			currElement.find('input[type=text]').each(function(index, value){
 				$(value).val(savedData.items[i].value[index].value);
 			});
 		break;
 			
 		}
 	}
+	if ( !$('#'+savedData.last).children('h3').hasClass('active_header') ){
+		$('#'+savedData.last).children('h3').trigger('click');
+	}
+	/*$('#container').children().each(function(){
+		markHeaders($(this));
+	});*/
+	
+}
+//сохраняет данные текущего элемента
+function addSavedData(divBlock){
+	if (!$('#container').data("sstype")){
+		var inputValues = getInputValue(divBlock);
+		saveData(divBlock, inputValues);
+	}
+	
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=

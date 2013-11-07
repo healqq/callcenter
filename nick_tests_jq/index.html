@@ -20,7 +20,12 @@
 	<script src="js/bbParser.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	//checkSession();
+	$(window).bind('beforeunload',function(){
+		
+			return "Внимание! Вся несохранённая информация будет потеряна! ";
+		
+	});
+	checkSession();
 	createNewTempElement();
 
 
@@ -36,12 +41,8 @@
 	$('#toggle-state-btn').click(switchTables);
 	$('#scheeme-help-btn').click(showScheemeHelp);
 	$('#scheeme-basic-exit').click(hideScheemeHelp);
-	$(window).bind('beforeunload',function(){
-		
-			return "Внимание! Вся несохранённая информация будет потеряна! ";
-		
-	});
-	restoreData();
+	
+	
 	
 	
 

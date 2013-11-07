@@ -41,8 +41,12 @@ function loadStructure(type) {
 			first = importFromJSON( $( "#response" ).text(), "#imported", type);
 			showBranch(first,false);
 			redraw();
+			if (!type){
+				restoreData();
+			}
 			$('#btnLoadStructureClient').slideUp('Slow');
 			$('.waiting-layer').hide();
+			
 		});
 	request.fail(function( jqXHR, textStatus ) {
 		showError( "При попытке загрузить данные анкеты произошла ошибка: " + textStatus);
