@@ -140,6 +140,7 @@ function onHeaderClick(){
 		
 	
 	//div_block.find("textarea").focus();
+	markHeaders(that);
 	redraw();
 	/*if (that === $('#container').children(":last")[0]){
 		showSubmitBlock();
