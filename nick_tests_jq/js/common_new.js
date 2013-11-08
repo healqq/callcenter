@@ -351,6 +351,9 @@ switch (type) {
 		case "temp-title":				objectSpecs = {class:undefined,content:content,id:'temp-title'};break;
 		case "bb-block":				objectSpecs = {class:undefined,content:content,id:'bb-block'};break;
 		case "bb-button":				objectSpecs = {class:'line-button',content:content,id:name};break;
+		case 'blockname-block':			objectSpecs = {class:undefined,content:undefined,id:'blockname-block'};break;
+		case 'elementNameAutofill':		objectSpecs = {class:'checkBox',content:'Автозаполнение', id:'elementNameAutofill'};break;
+		case 'elementNameAutofillLabel':objectSpecs = {class:'checkBoxLabel',content:'Автозаполнение', id:'elementNameAutofill'};break;
 		//show
 		case "accordiontextarea":		objectSpecs = {class:"accordiontextarea",content:content,id:name};break;
 		case "textfield":				objectSpecs = {class:"accordiontext",content:content,id:name};break;	
@@ -630,7 +633,10 @@ function createNewDivElement(type, contents, isEdited, first){
 	default:
 			newElement 			= fabric("div", 			getObjectSpecs("divacc",undefined,undefined) );
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
+			newElementNameDiv   = fabric("div", 			getObjectSpecs('blockname-block') );
 			newElementName		= fabric("textinline", 			getObjectSpecs("elementName", "Введите имя элемента") );
+			newElementCheckbox	= fabric("checkbox", 			getObjectSpecs("elementNameAutofill") );
+			newElementCheckboxLabel = fabric('label', 		getObjectSpecs("elementNameAutofillLabel") );
 			newHeader 			= fabric("textinline", 		getObjectSpecs("temp-div-header", contents.header) );
 			newBBControls 		= addBBControls();
 			newParagraph    	= fabric("text area", 		getObjectSpecs("text area", contents.description, 'desc-block') );
@@ -652,7 +658,12 @@ function createNewDivElement(type, contents, isEdited, first){
 			newElement.removeData("branches");
 			addHelpTriggers();
 			newTitle.appendTo( newElement);
-			newElementName.appendTo( newElement);
+			
+			newElementNameDiv.appendTo( newElement);
+			newElementName.appendTo( newElementNameDiv);
+			newElementCheckbox.appendTo( newElementNameDiv);
+			newElementCheckboxLabel.appendTo( newElementNameDiv);
+			
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
 			newBBControls.appendTo(newElement);
@@ -765,14 +776,18 @@ function addElement(){
 	var input 			= undefined;
 	var radio 			= undefined;
 	var fieldsListArray = undefined;
-	if ($("#branch").is(":checked")){
+	if ($("#branch").prop("checked") == true){
 		branches = [];
 		$(".branchId").each(function(){
 			branches.push($(this).val());
 		});
 	}
 	else{
+		//если вдруг мы поменяли тип дива с ветвления на другой
 		branches = thisDiv.data('branches');
+		if ( (branches !== undefined) && (branches.length > 1) ){
+			branches = undefined;
+		}
 	}
 	//var position = undefined;
 	var position = thisDiv.children('#position').children(':input').val();
@@ -889,6 +904,10 @@ function addElement(){
 				branchesPrevElement[radioValue] = contents.id;
 				
 			}
+			else{
+				branchesPrevElement = [contents.id];
+			}
+			
 		}
 	}
 	if ( lastDiv !== undefined ){
@@ -1757,3 +1776,4 @@ function addSavedData(divBlock){
 	
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+

@@ -238,12 +238,24 @@
 			font-size: 16pt;
 			 
 		}
+		#blockname-block{
+		position: relative;
+		overflow: auto;
+		}
 		#newElementName{
 			width:30%;
 			margin-top:10px;
 	/*margin-bottom:10px;*/
 			margin-left: 5%;
+			position: relative;
+			float: left;
 }
+		#elementNameAutofill +label{
+			margin-top: 10px;
+			margin-left: 10px;
+			float: left;
+		}
+
 		.temp-div-header{
 			width: 90%;
 			margin-left: 5%; /* Расстояние от левого края до линии */
@@ -942,9 +954,11 @@ label:before{
 
 	width: 15px;
 	height: 15px;
-	/*position: relative;*/
+	position: relative;
 	margin-right: 0px;
 	position: absolute;
+	float: left;
+	margin-right: 10px;
 	left: 0;
 	/*top: 3px;*/
 	
@@ -971,7 +985,12 @@ label:not(.checkBoxLabel):before{
 label{
 	display: inline-block;
 	cursor: pointer;
-	margin-left: 25px;
+	position: relative;
+	padding-left: 25px;
+	/*margin-left: 25px;*/
+}
+label:before{
+	margin-right: 15px;
 }
 	
 input[type=radio],input[type=checkbox]{
