@@ -146,14 +146,13 @@ function confimSession(sessionID){
 	
 }
 function redirect(path){
-	var findString = '/Callcenter/';
-	var href  	   = String(window.location.href.toString());
-	index = href.search('/Callcenter/');
-	basePath = href.substring(0,index + findString.length);
-	if (!(window.location.href == basePath+path)){
-			$(window).off('beforeunload');
-			window.location.replace(path);
 	
+	var href  	   = String(window.location.href.toString());
+	var needRedirect = ( href.search( new RegExp( path, 'i') ) == -1 );
+	//alert(window.location.href);
+	if (needRedirect){
+		$(window).off('beforeunload');
+		window.location.href = path;
 	}
 }
 
