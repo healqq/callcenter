@@ -122,7 +122,7 @@
 			align-self: auto;		   
 		
 }
-	.active_header, .control-button, .editbutton, .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title{
+	.active_header, .control-button, .editbutton, .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
 		background: linear-gradient(to top, #7EC0EE, #6CA6CD);
 	}
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -543,6 +543,9 @@
 			
 			/*background-image: linear-gradient(to top, #999, #DFDFDF);*/
 }
+		.click{
+			background: linear-gradient(to top, #4169E1, #4682B4) !important;
+		}
 		.no-display-fix{
 			padding-top: 10px;
 			
@@ -845,7 +848,7 @@ display: inline;
 	
 	margin: 0;
 }
-#scheeme-exit, #goto-elem, #toggle-state-btn, #scheeme-help-btn{
+#scheeme-exit, #goto-elem, #toggle-state-btn, #scheeme-help-btn, #warning-exit-btn{
 	border: none;
 	/*background-image: url(images/exit_small.png);
 	background-position: 0px 0px;*/
@@ -1142,3 +1145,79 @@ input[type=checkbox]:checked + label:before {
 }
 
 /*SUBMIT BLOCK ------------------------------------------------------------------------*/
+
+
+#warning-block{
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	width: 40%;
+	margin-left: 30%;
+	margin-right: 30%;
+	display: none;
+	background-color: #BAEAFA; 
+	padding-left: 2%;
+}
+#warning-block-button{
+	width: 100px;
+	
+	height: 40px;
+	
+	
+	
+}
+#revert{
+	height:100%;
+	position: absolute;
+	
+	width: 100%;
+	height: 38px;
+	border: none;
+	font-weight: bold;
+	color: #000;
+	border-radius: 5px;
+	box-shadow: 0px 0px 1px #333;
+	cursor: pointer;
+	
+}
+#revert .click{
+	background: #000;
+}
+#revert:focus,#warning-exit-btn:focus{
+	outline: none;
+}
+#revert:hover{
+	box-shadow: 0px 0px 3px #333;
+	
+}
+#warning-paragraph, #warning-block-button{
+	margin-top: 4px;
+	float: left;
+	position: relative;
+	color: #fff;
+}
+#warning-paragraph{
+	
+	width: calc(100% - 120px);
+}
+#warning-exit{
+	
+	position:absolute;
+	top: 0;
+	left: 0;
+	width: 16px;
+	height: 16px;
+	
+	margin: 0;
+
+}
+#warning-exit-btn{
+	height: 16px;
+	width: 16px;
+	cursor: pointer;
+	background-image:url(images/exit_white.png);
+	background-position: 0px 0px;
+}
+#warning-exit-btn:hover{
+	background-position: 0px 16px;
+}

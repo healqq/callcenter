@@ -14,6 +14,7 @@
 	<script src="js/bbParser.js" type="text/javascript"></script>
 	<script src="js/model.js" type="text/javascript"></script>
 	<script src="js/controller.js" type="text/javascript"></script>
+		<script src="js/view.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
 	checkSession();
@@ -22,6 +23,7 @@
 	$("#btnLoadStructure").click(function(){loadStructure(false)});
 	$("#logout").click(logout);
 	$("#btnSendData").click(sendData);
+	view.getInstance().buttonsAnimation();
 	
 });
 	
@@ -68,6 +70,14 @@
 </div>
 <div class = "page_footer">
 	<a id = "credits" href="http://www.tabus.ru/" rel="author">Технологии автоматизации бизнеса 2013 г.</a>
+</div>
+<div id = "warning-block">
+	
+	<p id ="warning-paragraph"></p>
+	<p id ='warning-block-button'>
+		<input type="button" class="warning-button" id="revert" value="Отменить"></input>
+	</p>
+	<p id="warning-exit"><input type="button" id="warning-exit-btn" value=""</p>
 </div>
 <div class="waiting-layer"><div id="img-block"></div></div>
 <!-- <input type="button" id="import">build from json</input> -->

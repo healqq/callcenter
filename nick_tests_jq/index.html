@@ -20,6 +20,7 @@
 	<script src="js/bbParser.js" type="text/javascript"></script>
 	<script src="js/model.js" type="text/javascript"></script>
 	<script src="js/controller.js" type="text/javascript"></script>
+	<script src="js/view.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
 	$(window).bind('beforeunload',function(){
@@ -30,12 +31,11 @@
 	checkSession();
 	model.getInstance().loadSettings();
 	createNewTempElement();
-
-
+	var control = controller.getInstance();
 	
 
 	$("#container").data("sstype",true);
-	controller.getInstance().addEvent($("#btnSaveStructure"),'click', function(){
+	control.addEvent($("#btnSaveStructure"),'click', function(){
 			var r=confirm("Внимание! Старая версия анкеты будет заменена! Продолжить?");
 			if (r==true)
 			{
@@ -48,12 +48,23 @@
 			saveStructure();
 		});
 	
-	$("#btnLoadStructure").click(function(){loadStructure(true)});
-	controller.getInstance().addEvent($("#sendXML"),'click', sendData);
-	controller.getInstance().addEvent($("#logout"),'click', logout);
-	controller.getInstance().addEvent($("#toggle-state-btn"),'click', switchTables);
-	controller.getInstance().addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
-	controller.getInstance().addEvent($("#scheeme-basic-exit"),'click', hideScheemeHelp);
+	
+	control.addEvent($("#sendXML"),'click', sendData);
+	control.addEvent($("#logout"),'click', logout);
+	control.addEvent($("#toggle-state-btn"),'click', switchTables);
+	control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
+	control.addEvent($("#scheeme-basic-exit"),'click', hideScheemeHelp);
+	view.getInstance().buttonsAnimation();
+	control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
+/*	control.addEvent($("#btnLoadStructure"),'mousedown', function(){$(this).addClass('click')});
+	control.addEvent($("#btnLoadStructure"),'mouseup', function(){$(this).removeClass('click')});
+	control.addEvent($(document), 'mouseup', function(){
+		$('.control-button').each(function(){
+			$(this).removeClass('click');
+		})
+	});
+*/	
+	
 	
 
 	

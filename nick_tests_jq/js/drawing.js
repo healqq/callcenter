@@ -346,6 +346,7 @@ var drawerSingleton = (function(){
 			var divLeft 	= canvasLeft;
 			var helpDiv 	= $('#scheeme-help');
 			var idParagraph = $('#scheeme-id');
+			view.getInstance().buttonsAnimation(helpDiv);
 			idParagraph.empty();
 			if (id.search(':') !== -1 ){
 				idParagraph.append("У элемента <strong>" + id.substr(0,id.search(':'))  + 

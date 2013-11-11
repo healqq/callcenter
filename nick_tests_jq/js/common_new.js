@@ -323,7 +323,8 @@ function importFromJSON(stringJSON, container, isEdited)
 			firstElement = true;
 		}
 		objectJSON.blocks[i].description = bbCodeParserSingleton.getInstance().bbToHTML(objectJSON.blocks[i].description);
-		createNewDivElement("show", objectJSON.blocks[i], isEdited, firstElement).appendTo(container);
+		view.getInstance().buttonsAnimation(createNewDivElement(
+		"show", objectJSON.blocks[i], isEdited, firstElement).appendTo(container));
 		firstElement = false;
 		
 	}
@@ -773,6 +774,7 @@ function createNewTempElement(contents, edit){
 			}
 		});
 		$('input[name=inputType]','#temp_divs').trigger('change');
+		view.getInstance().buttonsAnimation('#temp_divs');
 }
 //добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
 function addElement(){
@@ -963,6 +965,7 @@ function addElement(){
 	if ((newDiv.data('branches') !== undefined) && ( newDiv.data('branches').length < 2) ){ 
 		showBranch(newDiv.data('branches')[0],true);
 	}
+	view.getInstance().buttonsAnimation(newDiv);
 }
 //нажатие на "редактировать"
 function onEditClick(){
@@ -1801,6 +1804,7 @@ function clearData(){
 }
 function restoreData(){
 	var savedData = getSavedData();
+	
 	for (var i = 0; i < savedData.items.length; i++){
 		var currElement = $('#'+savedData.items[i].id);
 		
@@ -1827,6 +1831,9 @@ function restoreData(){
 	}
 	if ( !$('#'+savedData.last).children('h3').hasClass('active_header') ){
 		$('#'+savedData.last).children('h3').trigger('click');
+	}
+	if (savedData.items.length > 0 ){
+		view.getInstance().showWarning('В прошлый раз анкета не была заполнена до конца, данные были восстановлены');
 	}
 	/*$('#container').children().each(function(){
 		markHeaders($(this));
