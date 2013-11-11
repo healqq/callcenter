@@ -4,11 +4,14 @@ var  controller = (function(){
     function controller() {
 	//private
 	var	events = [];
+	
 	var addEventToElement = ( function( eventsList, eventName, handler){
 		var notFound = true;
+		var event = undefined;
 		for( var i=0; i< eventsList.length && notFound; i++ ){
 			if (eventsList[i].eventName === eventName ){
 				notFound = false;
+				event = eventsList[i];
 				
 			}
 		}
@@ -20,7 +23,7 @@ var  controller = (function(){
 			eventsList.push(newEvent);
 		else{
 			
-			if (eventsList[i].handler !== handler ){
+			if (event .handler !== handler ){
 			
 				eventsList.push(newEvent);
 			}
@@ -45,16 +48,19 @@ var  controller = (function(){
 				if (element === undefined)
 					return;
 				var notFound = true;
+				var matchedElement = undefined;
 				for( var i=0; i< events.length && notFound; i++ ){
 					if (events[i].element === element ){
 						notFound = false;
+						matchedElement  = events[i];
 					}
 				}
 				//заносим в список новый элемент
 				if (notFound){
 					events.push({element:element,list:[]});
+					matchedElement = events[events.length-1];
 				}
-				if (addEventToElement( events[i].list, eventName, handler) ){
+				if (addEventToElement( matchedElement .list, eventName, handler) ){
 					$(element).on(eventName, handler);
 				}
 				
@@ -63,9 +69,11 @@ var  controller = (function(){
 				if (element === undefined)
 					return;
 				var notFound = true;
+				var matchedElement = undefined;
 				for( var i=0; i< events.length && notFound; i++ ){
 					if (events[i].element === element ){
 						notFound = false;
+						matchedElement  = events[i];
 					}
 				}
 				if (notFound){
@@ -73,7 +81,7 @@ var  controller = (function(){
 				else{
 					//если не передан список евентов - удаляем все
 					if (eventsName === undefined){
-						events[i].list = [];
+						matchedElement.list = [];
 					}
 					//todo удалить отдельный евент
 					else{

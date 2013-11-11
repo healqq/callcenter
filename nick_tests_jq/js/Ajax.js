@@ -36,6 +36,7 @@ function loadStructure(type) {
 			if (!type){
 				restoreData();
 			}
+			createNewTempElement();
 			$('#btnLoadStructureClient').slideUp('Slow');
 			$('.waiting-layer').hide();
 			

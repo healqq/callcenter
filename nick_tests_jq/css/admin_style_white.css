@@ -252,9 +252,10 @@
 			float: left;
 }
 		#elementNameAutofill +label{
-			margin-top: 10px;
+			margin-top: 12px;
 			margin-left: 10px;
 			float: left;
+			/*height: 22px;*/
 		}
 
 		.temp-div-header{
@@ -1092,18 +1093,24 @@ input[type=checkbox]:checked + label:before {
 	width: 100%;
 	overflow: auto;
 	border-top:1px solid #999;
+	opacity:0.6;
+	cursor: pointer;
 	
+	
+}
+.summary-element:hover{
+	opacity: 1.0;
 	
 }
 .summary-element-name{
 	
-	width: 40%;
+	width: 20%;
 
 }
 
 .summary-element-value{
 	/*border-left: 1px solid black;*/
-	width: 50%;
+	width: 75%;
 	/*border: 1px solid black;*/
 
 }
@@ -1116,10 +1123,19 @@ input[type=checkbox]:checked + label:before {
 }
 .summary-element-value-p, .summary-element-name-p{
 	
+	
 	padding-left: 2%;
 	text-align: center;
 	/*background-color: #D1EEEE; */
 	
+}
+.summary-element-valuename{
+	float: left;
+	width: 200px;
+	height: 100%
+}
+.summary-element-valuevalue{
+	font-weight: bold;
 }
 .odd{
 	background-color: #BFEFFF;

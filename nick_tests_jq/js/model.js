@@ -15,8 +15,11 @@ var model = (function(){
 				return 'block'+lastid;
 			},
 			autofillIDClick: function(){
-				
-			}
+				if ($(this).prop('checked') == true ){
+					$('#newElementName').val(instance.autofillID());
+					
+				}
+			},
 			//saves settings to cookies +
 			saveSettings: function(){
 				var autosave = $('#autosave').prop('checked');
@@ -54,6 +57,7 @@ var model = (function(){
 					if (autofillItem.length > 0 ){
 						autofillItem.prop('checked', savedSettingsObj.autofillID);
 						controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', instance.saveSettings);
+						controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change',  instance.autofillIDClick);
 					}
 					
 				}

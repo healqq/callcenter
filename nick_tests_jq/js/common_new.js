@@ -30,7 +30,7 @@ function fabric ( type,  options) {
 		case "br":
 			elementContent = '<br>'; break;
 		case "span":
-			elementContent = '<span></span>'; break;
+			elementContent = '<span>'+ elementInnerData +'</span>'; break;
 		case "a":
 			elementContent = '<a></a>'; break;
 		case "h5":
@@ -142,6 +142,14 @@ function onHeaderClick(){
 	//div_block.find("textarea").focus();
 	markHeaders(that);
 	redraw();
+	var values = getInputValue(div_block);
+	/*if ( values[values.length-1].val() !== '' ) */
+	if ( (div_block.data('branches') == undefined ) && ( values[values.length-1].value !== '' ) 
+	&& ( values[values.length-1].value !== undefined )	&& ( $('#submit-block').css('display') == 'none' ) ){
+		fillSummaryBlock();
+		showSubmitBlock();
+		
+	}
 	/*if (that === $('#container').children(":last")[0]){
 		showSubmitBlock();
 	}*/
@@ -388,6 +396,8 @@ switch (type) {
 		case "summary-element-name-p":	objectSpecs = {class:'summary-element-name-p',content:content, id:undefined};break;
 		case "summary-element-value":	objectSpecs = {class:'summary-element-value',content:undefined, id:undefined};break;
 		case "summary-element-value-p":	objectSpecs = {class:'summary-element-value-p',content:content, id:undefined};break;
+		case "summary-element-valuename": objectSpecs = {class:'summary-element-valuename',content:content, id:undefined};break; 
+		case "summary-element-valuevalue": objectSpecs = {class:'summary-element-valuevalue',content:content, id:undefined};break; 
 		//case "radioInputTypesDiv"		objectSpecs = {class:"radioInputTypesDiv",id:undefined,content:undefined};break;
 		default:
 		return undefined;
@@ -471,10 +481,11 @@ function createNewDivElement(type, contents, isEdited, first){
 					newRadio.change(hideDivElements);
 				}
 				else{
-					newRadio.live('change',onTextChanged);
+					controller.getInstance().addEvent(newRadio,'change',onTextChanged);
 				}
 				if (first){
-					newRadio.change(TriggersOnFirstElement);
+					controller.getInstance().addEvent(newRadio,'change',TriggersOnFirstElement);
+					
 				}
 				
 				
@@ -722,7 +733,8 @@ function createNewTempElement(contents, edit){
 	$('#temp_divs').empty();
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
-	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'click', model.getInstance().saveSettings);
+	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().saveSettings);
+	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().autofillIDClick);
 	$('#desc-block').keyup();
 	//newElement.hide();
 	
@@ -1267,7 +1279,7 @@ function removeFieldsListItem(){
 //---------------------------------------------------------------------------------------------		
 function moveDiv(value, id)
 {
-	
+	var that = undefined;
 	if (value == undefined){
 		that = this;
 	}
@@ -1436,6 +1448,32 @@ function addHelpTriggers(){
 		showHelp('name');
 	});
 }
+//возвращает ключ-значение без добавления id и пробелов
+function getInputValueArray(element){
+	value = undefined;
+	textAreaSelection 	= $(element).find("textarea");
+	if (! (textAreaSelection.length == 0 ) ){
+		value = {key:'текстовое поле', value:textAreaSelection.val()};
+	}
+	else{
+		textBlocksSelection = $(element).find("input[type=text]");
+		if (! (textBlocksSelection.length == 0 ) ){
+			value = [];
+			textBlocksSelection.each(function(){
+			value.push({key:$(this).attr('placeholder'), value:$(this).val()} );
+				});
+			}
+		else{
+			radioSelection 		= $(element).find("input[type=radio]:checked");
+			value = {key: 'выбранное значение', value:$('label[for='+$(radioSelection).attr('id')+']').text()};
+		}
+	}
+	return $.isArray(value)? value : [value];
+	
+	
+	
+	
+}
 function fillSummaryBlock(){
 	$('#container').children().each(function(index, value){
 			
@@ -1452,13 +1490,29 @@ function fillSummaryBlock(){
 			
 			newValueBlock.appendTo(newBlock);
 			
-			var values = getInputValue($(this));
+			var values = getInputValueArray($(this));
+			//todo
+			//change to normal code
 			for (var i=0; i< values.length; i++ ){
-				var newValueParagraph = fabric('p', getObjectSpecs('summary-element-value-p', values[i].value ) );
+				var newValueNameSpan = fabric('span', getObjectSpecs('summary-element-valuename', values[i].key + ': ') );
+				//var value = '<span style="float: left; width: 200px; height: 100%">'+values[i].key + ': </span>' ;
+				var newValueValueSpan = fabric('span', getObjectSpecs('summary-element-valuevalue', values[i].value) );
+				
+				var newValueParagraph = fabric('p', getObjectSpecs('summary-element-value-p') );
+				newValueNameSpan.appendTo( newValueParagraph);
+				newValueValueSpan.appendTo( newValueParagraph);
 				newValueParagraph.appendTo(newValueBlock);
 				
 			}
 			$('#summary').append(newBlock);
+			var that = this;
+			controller.getInstance().addEvent(newBlock, 'click', function(){
+				showElement($(that).attr('id'));
+			/*	$(newBlock).addClass('active-block');
+				$(newBlock).siblings().each(function(){
+					$(this).removeClass('active-block');
+				});*/
+			});
 		});
 }
 function clearSummaryBlock(){
@@ -1542,16 +1596,16 @@ function findPathToElement(element){
 	return path;
 	
 }
-function showElement( element ){
+function showElement( elementID ){
 	//он спрятан и нужно его найти
-	var symbolIndex = element.search(':');
-	var elementId  = element;
+	var symbolIndex = elementID.search(':');
+	var elementId  = elementID;
 	var branchIndex = undefined;
 	var elementBlock = undefined;
 	//если нашлось двоеточие - то это элемент такой, особенный, которого ещё нет.
 	if (symbolIndex !== -1 ){
-		elementId  = element.substring(0, symbolIndex);
-		branchIndex = element.substring(symbolIndex+1);
+		elementId  = elementID.substring(0, symbolIndex);
+		branchIndex = elementID.substring(symbolIndex+1);
 	}
 	if ($('#'+elementId, '#container').length == 0 ){
 		var path = findPathToElement(elementId);
@@ -1764,7 +1818,8 @@ function restoreData(){
 		break;
 		case "text":
 			currElement.find('input[type=text]').each(function(index, value){
-				$(value).val(savedData.items[i].value[index].value);
+				if ( index < savedData.items[i].value.length )
+					$(value).val(savedData.items[i].value[index].value);
 			});
 		break;
 			
