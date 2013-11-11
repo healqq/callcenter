@@ -397,6 +397,7 @@ switch (type) {
 }
 function showError(errString, element){
 	var errDiv = $('.error');
+	errDiv.empty();
 	errDiv.hide();
 	errDiv.addClass("active");
 	errDiv.slideDown('fast');
@@ -632,10 +633,13 @@ function createNewDivElement(type, contents, isEdited, first){
 	break;
 	//создаем новый temp_div
 	default:
+			var autofill = $('#temp_divs').data('autofillID') ;
 			newElement 			= fabric("div", 			getObjectSpecs("divacc",undefined,undefined) );
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
 			newElementNameDiv   = fabric("div", 			getObjectSpecs('blockname-block') );
-			newElementName		= fabric("textinline", 			getObjectSpecs("elementName", "Введите имя элемента") );
+			newElementName		= ( ( autofill ) ?
+				fabric("textinline edit", 			getObjectSpecs("elementName", model.getInstance().autofillID()) ) :
+				fabric("textinline", 			getObjectSpecs("elementName", "Введите имя элемента") )  );
 			newElementCheckbox	= fabric("checkbox", 			getObjectSpecs("elementNameAutofill") );
 			newElementCheckboxLabel = fabric('label', 		getObjectSpecs("elementNameAutofillLabel") );
 			newHeader 			= fabric("textinline", 		getObjectSpecs("temp-div-header", contents.header) );
@@ -664,6 +668,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			newElementName.appendTo( newElementNameDiv);
 			newElementCheckbox.appendTo( newElementNameDiv);
 			newElementCheckboxLabel.appendTo( newElementNameDiv);
+			newElementCheckbox.prop('checked', autofill);
 			
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
@@ -713,9 +718,11 @@ function createNewTempElement(contents, edit){
 			};
 		edit = false;
 		}
+	controller.getInstance().clearEvents($('#elementNameAutofill')[0]);
 	$('#temp_divs').empty();
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
+	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'click', model.getInstance().saveSettings);
 	$('#desc-block').keyup();
 	//newElement.hide();
 	
@@ -1656,9 +1663,12 @@ function showScheemeHelp(){
 	$('#scheeme-help-basic').slideDown('slow');
 }
 function hideScheemeHelp(){
-	$('#scheeme-basic-exit').hide();
-	$('#scheeme-help-layer').hide();
-	$('#scheeme-help-basic').slideUp('slow');
+	
+	$('#scheeme-help-basic').slideUp({duration:'slow', complete: function(){
+		$('#scheeme-basic-exit').hide();
+		$('#scheeme-help-layer').hide();
+		}
+	});
 }
 //перерисовка схемы
 function redraw(){

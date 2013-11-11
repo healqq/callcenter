@@ -18,6 +18,8 @@
 	<script src="js/drawing.js" type="text/javascript"></script>
 	<script src="js/common_new.js" type="text/javascript"></script>
 	<script src="js/bbParser.js" type="text/javascript"></script>
+	<script src="js/model.js" type="text/javascript"></script>
+	<script src="js/controller.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
 	$(window).bind('beforeunload',function(){
@@ -26,21 +28,35 @@
 		
 	});
 	checkSession();
+	model.getInstance().loadSettings();
 	createNewTempElement();
 
 
 	
 
 	$("#container").data("sstype",true);
-	$("#btnSaveStructure").click(saveStructure);
+	controller.getInstance().addEvent($("#btnSaveStructure"),'click', function(){
+			var r=confirm("Внимание! Старая версия анкеты будет заменена! Продолжить?");
+			if (r==true)
+			{
+				
+			}
+			else
+			{
+				return;
+			}
+			saveStructure();
+		});
+	
 	$("#btnLoadStructure").click(function(){loadStructure(true)});
-	$("#sendXML").click(sendData);
+	controller.getInstance().addEvent($("#sendXML"),'click', sendData);
+	controller.getInstance().addEvent($("#logout"),'click', logout);
+	controller.getInstance().addEvent($("#toggle-state-btn"),'click', switchTables);
+	controller.getInstance().addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
+	controller.getInstance().addEvent($("#scheeme-basic-exit"),'click', hideScheemeHelp);
+	
 
-	$("#logout").click(logout);
-	//$("#draw").click(draw);
-	$('#toggle-state-btn').click(switchTables);
-	$('#scheeme-help-btn').click(showScheemeHelp);
-	$('#scheeme-basic-exit').click(hideScheemeHelp);
+	
 	
 	
 	
