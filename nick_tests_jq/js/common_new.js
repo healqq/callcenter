@@ -101,7 +101,7 @@ function onHeaderClick(){
 	//var that = $(this);
 	var that  = this;
 	
-	
+
 	var div_block = $(that).parent("div");
 	var allDivBlocks = div_block.siblings().not(div_block);	
 	$(this).toggleClass("active_header");
@@ -140,7 +140,13 @@ function onHeaderClick(){
 		
 	
 	//div_block.find("textarea").focus();
-	markHeaders(that);
+	if ( ! $(that).hasClass('active_header') ){
+		markHeaders(that);
+	}
+	else{
+		$(that).removeClass('not-filled');
+	}
+	
 	redraw();
 	var values = getInputValue(div_block);
 	/*if ( values[values.length-1].val() !== '' ) */
@@ -205,7 +211,7 @@ function onTextChanged() {
 	focusOnInput(nextDivBlock);
 	clearSummaryBlock();
 	fillSummaryBlock();
-	return false;
+	
 	
 }
 //sets focus on input
@@ -409,7 +415,8 @@ switch (type) {
 function showError(errString, element){
 	var errDiv = $('.error');
 	errDiv.empty();
-	errDiv.hide();
+	clearUnfilled();
+//	errDiv.hide();
 	errDiv.addClass("active");
 	errDiv.slideDown('fast');
 	$('<p>'+errString+'</p>').appendTo(errDiv);
@@ -427,6 +434,7 @@ function focusElement(element, type){
 			jElement.focus();
 		
 	}
+	
 }
 //Функция для отчистки строки ошибок
 function clearErrors(){
@@ -434,7 +442,11 @@ function clearErrors(){
 		errorElem.slideUp('fast');
 		errorElem.empty();
 		errorElem.removeClass("active");
-		$('.not-filled').each(function(){
+		clearUnfilled();
+		
+}
+function clearUnfilled(){
+	$('.not-filled').each(function(){
 			$(this).removeClass('not-filled');
 		});
 }
@@ -778,7 +790,7 @@ function createNewTempElement(contents, edit){
 }
 //добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
 function addElement(){
-	clearErrors();
+	/*clearErrors();*/
 	
 	var name = $('#newElementName').val();
 	var namePattern = /^[a-z]+[a-z,0-9,\-,\_]*$/i;
@@ -966,6 +978,7 @@ function addElement(){
 		showBranch(newDiv.data('branches')[0],true);
 	}
 	view.getInstance().buttonsAnimation(newDiv);
+	clearErrors();
 }
 //нажатие на "редактировать"
 function onEditClick(){
@@ -1552,6 +1565,7 @@ function reloadStructure(){
 	divBlock.each( function(index, value){
 		moveDiv(value, id)
 	});
+	view.getInstance().hideWarning();
 	
 }
 function TriggersOnFirstElement(){
@@ -1717,10 +1731,14 @@ function computeTablesWidth(active){
 function showScheemeHelp(){
 	$('#scheeme-help-layer').show();
 	$('#scheeme-basic-exit').show();
-	$('#scheeme-help-basic').slideDown('slow');
+	
+	$('#scheeme-help-basic').slideDown({duration:'slow', complete: function(){
+		$('#scheeme-help-basic-exit').show();
+		}
+	});
 }
 function hideScheemeHelp(){
-	
+	$('#scheeme-help-basic-exit').hide();
 	$('#scheeme-help-basic').slideUp({duration:'slow', complete: function(){
 		$('#scheeme-basic-exit').hide();
 		$('#scheeme-help-layer').hide();
@@ -1760,8 +1778,8 @@ function addBBControls(){
 	
 	
 }
-function resizeTextArea(){
-	var element = $(this);
+function resizeTextArea(evt, textAreaElement){
+	var element = ( (textAreaElement == undefined) ? $(this) : $(textAreaElement));
 	//element.height = 'auto';
 	var diff = element[0].scrollHeight - element.height();
 	if ( (diff > 4    ) )
@@ -1812,7 +1830,9 @@ function restoreData(){
 		
 		switch (objDiv.inputType){
 		case "textarea":
+			//ресайзим текстарею после заполнения.
 			currElement.find('textarea').val(savedData.items[i].value[0].value);
+			resizeTextArea(undefined, currElement.find('textarea'));
 		break;
 		case "radio":
 			$(currElement.find('input[type=radio]')[savedData.items[i].value[0].value]).prop('checked', true);
