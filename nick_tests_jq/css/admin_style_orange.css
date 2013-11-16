@@ -1,0 +1,1223 @@
+﻿		body {
+			font-family: Calibri; /* Семейство шрифтов */
+			font-size: 11pt; /* Размер основного шрифта в пунктах  */
+		/*	background-image: url(images/FonBlack.png);  */
+		/*	background-color: #f0f0f0; /* Цвет фона веб-страницы */ 
+			background-color: #FAFAFA;
+			
+			color: #121310; /* Цвет основного текста */
+			width: 100%;
+			height: 100%;
+			margin: 0;
+}
+
+		html {
+			width: 100%;
+			height: 100%;
+			overflow-y: scroll;
+			/*overflow:  hidden;*/ 
+}
+		::-webkit-scrollbar:not (#draw-block) {
+			display: none; 
+}
+		.page_header, .page_footer{
+		height: 32px;
+		flex: 100%;
+		order: 0;
+		background-color: #D1D1D1;
+}
+		.page_footer{
+		height: 32px;
+		width: 100%;
+		flex: 100%;
+		order: 0;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		/*text-align: center;*/
+		
+}
+		
+		.tables{
+			/*transition: all 2s; 
+			box-sizing: border-box;*/
+			display: -webkit-box;
+			display: -moz-box;
+			display: -ms-flexbox;
+			display: -webkit-flex;
+			display: flex;
+			min-width: 100%;
+			min-height: calc(100% - 32px);
+			-webkit-box-direction: normal;
+			-moz-box-direction: normal;
+			-webkit-box-orient: horizontal;
+			-moz-box-orient: horizontal;
+			-webkit-flex-direction: row;
+			-ms-flex-direction: row;
+			flex-direction: row;
+			-webkit-flex-wrap: nowrap;
+			-ms-flex-wrap: nowrap;
+			flex-wrap: nowrap;
+			-webkit-box-pack: start;
+			-moz-box-pack: start;
+			-webkit-justify-content: flex-start;
+			-ms-flex-pack: start;
+			justify-content: flex-start;
+			-webkit-align-content: stretch;
+			-ms-flex-line-pack: stretch;
+			align-content: stretch;
+			-webkit-box-align: stretch;
+			-moz-box-align: stretch;
+			-webkit-align-items: stretch;
+			-ms-flex-align: stretch;
+			align-items: stretch;
+			
+}	
+		.tableRight {
+			margin-left: 2%;
+			margin-right: 2%;
+			/*height: 20000%;*/
+			margin-bottom: 2%;
+		/*	height: 99999%;*/
+			
+			width: 70%;
+			-webkit-flex:  0 1 60%;
+           flex: 60%;
+			-webkit-order: 0;
+           order: 0;
+		   align-self: auto;	
+			
+					
+}
+		.tableRight, .tableInfo{
+		background-color:#FAFAFA;
+		
+}
+		.tableInfo {
+		min-height: 100%;
+		margin-bottom: 2%;
+		-webkit-flex:  0 1 25%;
+           flex: 25%;
+			-webkit-order: 0;
+           order: 0;
+		   align-self: auto;	
+			
+					
+}
+		.tableLeft {
+	
+			
+			background-color:#666;
+	
+			width: 15%;
+			
+	
+			min-height: 90%
+		
+		/*	-webkit-flex:  0 1 15%;
+           flex: 15%;*/
+		   
+			-webkit-order: 0;
+           order: 0;
+			align-self: auto;		   
+		
+}
+	.active_header, .control-button, .editbutton, .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
+		background: #FF4F00;
+	}
+/*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		.error {
+		/*	color: #121310;*/
+			background-color:#FFCCCC;
+			/*background-image: url(images/error.png);
+			opacity: 0.7;*/
+			position: relative;
+			display: none;
+			width: 90%;
+			height: 25px;
+			/*padding-top: 2px;
+			height: 25pt;*/
+			margin-top: 5px;
+			font-size: 11pt;
+			/*height: 5%;*/
+			text-align: center;
+			margin-left: 5%; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+			background-repeat: no-repeat;
+			background-position: 10px center;
+}
+	
+		.active {
+			color: #121310;
+			/*background-color:#EEECBB;
+			background-image: url(images/error.png);
+			/*position: relative;
+			display: none;*/
+}
+	
+/*		.warning {
+			color: #121310;
+			background-color:#EEECBB;
+			background-image: url(images/warning.png);
+}
+
+		.warning, .error {
+			/* border: 1px solid; */
+/*			margin: 10px 0px;
+			padding:15px 10px 15px 50px;
+			background-repeat: no-repeat;
+			background-position: 10px center;
+}*/
+/*блок ошибки --------------------------------------------------------------------- */
+
+
+/*		.test {
+			width: 80%;
+			position: relative;
+			margin-left: 10px;
+}
+		.delete_div{
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			margin-left: 10px;
+				
+}
+
+		.button {
+			width: 60px;
+			height: 25px;
+			position: relative;
+			color: #121310;
+			background-color: white; /* Цвет фона кнопки */
+	/*		padding-left: 0.2%; /* Расстояние между линией и текстом */
+	/*		margin-left: 10px; /* Расстояние от левого края до линии */
+	/*		padding-bottom: 0.2%; 
+			margin-bottom: 10px; 
+			padding-right: 0.2%; 
+			margin-right: 10px;
+			padding-top: 0.2%; 
+			margin-top: 10px;
+					
+}
+		.control{
+			width: 100%;
+			height: 100px;
+			position: relative;
+}
+		.text{
+			color: #121310;
+			position: relative;
+			margin-left: 10px;
+			background-color: #white;
+			padding-left: 0.2%; /* Расстояние между линией и текстом */
+			
+/*}
+		
+
+		.input{
+			
+			width: 200px;
+			background-color: white;
+			padding-left: 0.2%; /* Расстояние между линией и текстом */	
+
+				
+		
+/*}*/
+/* temp divs block +++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
+		.temp-div{
+			background: #FAFAFA;
+			border: 1px solid #999; /* Параметры линии внизу */
+			width: 100%;
+			margin-left: auto; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+			display:table;
+			border-radius: 5px;
+}
+		#temp-title, #container-title, #scheeme-title, #summary-title{
+			text-align: center;
+			font-size: 16pt;
+			 
+		}
+		#blockname-block{
+		position: relative;
+		overflow: auto;
+		}
+		#newElementName{
+			width:30%;
+			margin-top:10px;
+	/*margin-bottom:10px;*/
+			margin-left: 5%;
+			position: relative;
+			float: left;
+}
+		#elementNameAutofill +label{
+			margin-top: 12px;
+			margin-left: 10px;
+			float: left;
+			/*height: 22px;*/
+		}
+
+		.temp-div-header{
+			width: 90%;
+			margin-left: 5%; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+			
+}
+		.select{
+				margin-left: 10px;
+}
+		.textarea{
+			position: relative;
+			display: block;
+			width: 90%;
+			height: 100px;
+			resize: none;	
+			margin-bottom: 10px; 
+			margin-top: 10px;
+			margin-right: 5%;
+			margin-left: 5%;
+			background-color: white;
+			font-family: Calibri;	
+			font-size: 11pt;	
+			overflow: hidden;
+}
+		.header {
+			display: block;
+			width: 100%;
+			/*margin: auto;*/
+			margin-top: 10px;
+			background-color: white;
+			 /* Расстояние между линией и текстом */			
+}
+		#radioInputTypesDiv > p{
+			margin-left: 5%;
+			margin-top: 0.2%;
+			margin-bottom: 0;
+			display:block;
+			position: relative;
+			
+		}
+		#radioInputTypesDiv {
+			margin-bottom: 5px;
+			
+		}
+/*BB BUTTONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		#bb-block{
+			/*width: 90%;
+			margin:auto;*/
+			padding-left: 5%;
+			
+			
+		}
+		
+		.line-button{
+			/*font-weight: bold;*/
+			/*line-height: 15px;*/
+			height: 20px;
+			width: 20px;
+			padding: 0;
+			color: #FFF;  
+    /*font-size: 28pt;*/  
+			text-align: center;  
+			display:inline-block;
+			content:"\2022";
+			background-image: url(images/bb-buttons.png);
+			margin-right: 2px;
+			border-radius: 3px;
+		}
+		
+		#bb-bold{
+		
+			background-image: url(images/bb-buttons.png);
+			background-position: 0px 0px;
+			
+			
+		}
+		#bb-bold:hover,#bb-italic:hover,#bb-underline:hover{
+			background-position-x: 20px;
+		}
+		#bb-italic{
+		
+			background-position: 0px 40px;
+			
+		}
+
+		#bb-underline{
+			
+			background-position: 0px 20px;
+		}
+/*BB BUTTONS --------------------------------------------------------------------------------*/
+/*RADIO OPTIONS ELEMENTS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		#radioOptions, #fieldsList{
+	
+			position: relative;
+			display: none;
+			width: 90%;
+			/*padding-left:5%;*/
+			margin-left: 5%;
+			margin-right: 5%;
+			
+	
+	
+}
+		
+		.radioOption > p{
+			position:relative;
+			height: 26px;
+			display: block;
+			width: 90%;
+		/*	margin-left: 5%;*/
+			
+}
+		.radioOptionInput, .fieldsListInput {
+			position:relative;
+			
+			height: 20px;
+			margin-left: 0px;
+			background-color: white;
+			padding-left: 0.2%; /* Расстояние между линией и текстом */	
+}
+		.fieldsListInput{
+		width: 35%;
+}
+		.radioOptionInput{
+			width: 70%;
+		}
+		.branchId{
+			width: 15%;
+			height: 20px;
+			position: relative;
+			margin-top: 2px;
+			margin-bottom : 2px;
+			margin-right: 10px;
+			margin-left: 10px;
+}
+		.checkBox{
+			display: none;
+			margin-left: 5%;
+	
+}
+		#branch-block, .radio-block, #autosave-p{
+			margin-left: 5%;
+			height: 20px;
+			display: block;
+			position: relative;
+		}
+		
+		
+/*RADIO OPTIONS ELEMENTS --------------------------------------------------------------------*/
+/*Поля  для многострочного текста*/
+		
+/*temp divs block ------------------------------------------------------*/
+/* ACCORIDON                  +++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		#container-title{
+			width: 100%;
+		}
+		.accordion{
+			background: #FAFAFA;
+			border: 1px solid #999; /* Параметры линии внизу */
+			width: 100%;
+			margin-left: auto; /* Расстояние от левого края до линии */
+			margin-right: auto; /* Расстояние от правого края до линии */
+		/*	display:table;*/
+			position:relative;
+			border-radius: 5px;
+}
+		 .accordiontextarea, .accordiontext, .editbutton, .removebutton, .header, .textarea, .branchId {
+			padding-left: 0.2%; /* Расстояние между линией и текстом */	
+			border: 1px solid #999;
+		}
+		
+		.accordionheader {
+		    margin: 0;
+			background-color: #DDD;
+		 /* Семейство шрифтов */
+			font-size: 13pt;
+			cursor: pointer;
+			width: 99%;
+			height:35px;
+			padding-left: 1%;
+			
+						
+		/*	margin-right: 2%;
+			margin-left: 2%;*/
+			opacity : 0.6;
+			
+}
+		.accordion h3:hover {
+			opacity : 0.8;
+}
+		.accordion h3.active {
+			/* background-position: right 5px; */
+}
+		.accordion p {
+	
+			margin: 0;
+			width: 90%;
+			position: relative;
+			margin-right: auto;
+			margin-left: auto;
+		
+}
+		.accordiontextarea,.accordiontext {
+			margin-right: 5%;
+			margin-left: 5%;
+		
+}
+		.accordiontextarea, .accordiontext {
+		  resize: none;
+		/*  border:none;*/
+}
+		.accordiontextarea {
+			margin-top: 1%;
+			margin-bottom: 1%;
+	        font-family: Calibri; /* Семейство шрифтов */
+			font-size: 11pt;
+			height: 100px;
+			width: 90%;
+			overflow: hidden;
+}
+
+
+		.accordiontext {
+			margin-bottom: 2%;
+	        width: 80%;
+			height: 20px;
+}
+
+
+		.divacc{
+			width: 100%;
+			position: relative;
+}
+		.active_header{
+			opacity: 1.0;
+		
+	
+}
+		
+/* чекбоксы  начало*/
+		.checkBoxLabel{
+			font-family: Calibri;
+	/*margin-left: 5%;*/
+	/*color:#828282;*/
+}
+
+/* чекбоксы  конец*/
+
+.idSpan{
+	float: right;
+	/*margin-top:0;
+	height: 35px;*/
+	margin-right: 1px;
+	
+}
+.not-filled{
+			background-image: url(images/warning_bg.png);
+			opacity: 0.7;
+		}
+/* ACCORIDON                  -----------------------------------------------------------*/
+/* BUTTONS                  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .editbuttonAccordion, .exit-button, .control-button, .line-button{
+		border:none;
+		color: #FFF;
+		
+}
+		
+		.control-button{
+			/*border: 1px solid #333;*/
+			/*color: #FFFFFF;*/
+			width: 100%;
+			/*background-image: url(images/buttons_bg.png);*/
+			/*background-color: #00EE00;*/
+			
+			height: 40px;
+			position: relative;
+			font-size: 16px;
+			/*margin: auto; */
+			opacity: 1.0;
+			vertical-align: middle;
+			/*font-size: 14pt;
+			border: 1px solid #999;*/
+			
+			/*background-image: linear-gradient(to top, #999, #DFDFDF);*/
+}
+		.click{
+			background: linear-gradient(to top, #4169E1, #4682B4) !important;
+		}
+		.no-display-fix{
+			padding-top: 10px;
+			
+		}
+		.editbutton, .removebutton,  .addbutton, .idSpan, .help, .editbuttonAccordion{
+		background-color: #FAFAFA;
+}
+		.control-button, .editbutton, .editbuttonAccordion{
+			border-radius: 5px;
+			color: #FFFFFF;
+			font-weight: bold;
+		}
+		.editbutton, .removebutton{
+		
+		
+		
+		
+	
+		/* margin-bottom: 10px; */ 
+		padding-right: 0.2%; 
+		
+		margin-right: 10px;
+		
+}
+		
+		.editbutton, .editbuttonAccordion  {
+			
+			height: 25px;
+			position: relative;
+			/*margin-left: 5%;*/ 
+			
+			/*margin-bottom: 5px;*/ 
+			margin-top: 5px;
+			padding-top: 0.2%;
+			padding-bottom: 0.2%;
+		
+}
+
+		.editbuttonAccordion {
+			
+			/*margin-left: 5%; */
+			/*width: 80px;*/
+			margin-bottom: 5px;
+		
+}
+		.edit-block, #scheeme-help > h4, #scheeme-help-basic>h3, #temp-title, #container-title, #scheeme-title, #help>h3, #bb-block{
+			background-color: #EEE;
+			margin-top: 2px;
+}
+		.edit-block{
+			/*margin-left: 5%;*/
+			
+			width: 95%;
+			margin-bottom: 1px;
+			padding-left :5%;
+			
+		}
+		.editbutton{
+			width: 32px;
+			height: 32px;
+			margin-left: 5px;
+			/*background: linear-gradient(to top, #00FF00, #00EE00);*/
+			background-position: 0px 0px;
+			background-image: url(images/add.png);
+}
+		.editbutton:hover{
+			background-position: 0px 33px;
+}
+		.removebutton:hover{
+			background-position: 0px 22px;
+}
+		.removebutton {
+	        width: 32px;
+			height: 22px;
+		
+			top: 5px;
+	
+			
+			background-image: url(images/minus.png);
+			background-position: 0px 0px;
+			position: relative;
+	
+			margin-left: 10px; 
+		
+		
+	
+}
+		.editbutton:hover, .removebutton:hover{
+			opacity: 1.0;
+		
+	}
+		  .addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover{
+		/*background-color: #8270B6;*/
+			font-weight: bold;
+			/*box-shadow: 0 0 15px #FA0;*/
+	}
+		.exit-button:focus, .addbutton:focus, .editbutton:focus{
+			outline:none;
+	}
+		
+	
+/*хочу такие кнопки ! */
+		.addbutton {
+			width: 100%;
+			background-image: url(images/add.png);
+			background-position: 0px, 0px;
+			/*background-color: #00EE00;*/
+			height: 40px;
+			position: relative;
+			font-size: 16px;
+			/*margin: auto; */
+			opacity: 1.0;
+		
+			
+					
+}
+		.addbutton:hover{ 
+		
+		/*opacity: 1.0;*/
+		font-weight:bold;
+		
+		/*box-shadow: 0 0 10px #FA0;
+		*/
+}
+		.addbuttonP {
+			width: 90%;
+			height: 40px;
+			position: relative;
+			float:left;
+			margin-left: 5%;
+			margin-right: auto;
+			margin-top: 10px !important;
+			margin-bottom : 10px !important;
+			opacity: 1.0;
+		
+			
+					
+}
+		
+		.exitP{
+			position: absolute;
+			
+			right: 0;
+			top: 0;
+			/*float: right;			
+			margin-right: 15px;*/
+			display: block;
+			width: 32px;
+			height: 32px;
+			margin: 0 !important;
+			/*margin: 0;*/
+		}
+		.exit-button{
+			background-color: #D1D1D1;
+			/*background-color: #D1D1D1;*/
+			width: 32px;
+			height: 32px;
+			margin: 0;
+			
+			background-image: url(images/exit.png);
+			background-position:0px 0px;
+		}
+		.exit-button:hover{
+			background-position:0px 32px;
+		}
+/* BUTTONS                  ------------------------------------------------------------*/
+
+
+		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
+			/*border: 2px solid;
+			border-color :#F00;*/
+			box-shadow: 0 0 10px #FA0;/*#DAA520;*/
+			
+}
+/*HELP BLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+		.help{
+			position:relative;
+			width: 90%;
+			display:none;
+			float: left;
+			/*opacity: 0;*/
+			/*float:right;*/
+			padding: 1%;
+			margin: 10px;
+			border-radius: 5px;
+		/*	border-left: solid 1px;
+			border-top: solid 1px;
+			border-bottom: solid 1px;*/
+	
+}
+		.help p{
+			text-align:center;
+			margin-top: 2px;
+}
+		.help h3{
+			text-align:center;
+			margin-top: 5px;
+			margin-bottom: 0px !important;
+}
+
+/*HELP BLOCK --------------------------------------------------------------------------*/
+
+.dummy{
+	font-family: Calibri; /* Семейство шрифтов */
+	/*padding-right:5px;
+	/*padding-left:-1px;*/
+}
+/*CONTROLS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+#controls-block{
+	height: inherit;
+	min-width: 50px;
+	position:relative;
+	float:left;
+	background: #666;
+}
+#toggle-state{
+	float: left;
+	position: absolute;
+	top: 50%;
+}
+#toggle-state-btn{
+	width: 50px;
+	height: 80px;
+	background-image: url(images/arrow.png);
+	background-position: 0px 160px;
+}
+#toggle-state-btn:hover{
+	background-position: 0px 80px;
+}
+.state-active{
+	background-image: url(images/arrow.png);
+	background-position: 0px 0px !important;
+}
+.state-active:hover{
+	background-position: 0px 240px !important;
+}
+#scheeme-help-p{
+	float: left;
+	position: absolute;
+	top: 0;
+	
+}
+#scheeme-help-btn{
+	width: 50px;
+	height: 50px;
+	background-image: url(images/help.png);
+	background-position: 0px 0px;
+	
+}
+#scheeme-help-btn:hover{
+	background-position: 0px 50px;
+}
+/*CONTROLS ------------------------------------------------------------------------------*/
+/* CANVAS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+#draw-block{
+	
+	overflow-y: hidden;
+	overflow-x: auto;
+	width: auto;
+	min-height: 100%;
+	height: 100%;
+}
+/*#draw-block::-webkit-scrollbar{
+display: inline;
+}*/
+#scheeme{
+/*height: 5000px;*/
+	/*width: 100%;*/
+	/*top: 50px;*/
+	position: relative;
+	/*border: 1px solid #999;*/
+}
+#scheeme-help{
+	position: fixed;
+	display: none;
+	background: #FAFAFA;
+	top: 0;
+	right: 100%;
+	width: 150px;
+	/*height: 80px;*/
+	border: 1px solid #999;
+	z-index: 10;
+	border-radius: 10px;
+	
+	
+}
+#scheeme-help > h4{
+	margin-top:2px !important;
+	margin-bottom: 5px !important;
+	padding-left: 5pt;
+	border-radius: 5px;
+	
+}
+#scheeme-help-exit{
+	position:absolute;
+	top: 0;
+	right: 6px;
+	width: 20px;
+	height: 20px;
+	
+	margin: 0;
+}
+#scheeme-exit, #goto-elem, #toggle-state-btn, #scheeme-help-btn, #warning-exit-btn{
+	border: none;
+	/*background-image: url(images/exit_small.png);
+	background-position: 0px 0px;*/
+	z-index: 10;
+	background-color: #FAFAFA;
+	
+	
+}
+#goto-elem,#scheeme-exit{
+	
+	height: 20px;
+	
+}
+#goto-elem{
+	margin-top: 10px;
+	margin-bottom: 5px;
+	float:right;
+	margin-right: 5px;
+	border-radius: 5px;
+	color: #FFFFFF;
+	font-weight: bold;
+	/*border: 1px solid #999;*/
+}
+ 
+#scheeme-exit{
+	height: 20px;
+	background-image: url(images/exit_small.png);
+	background-position: 0px 0px;
+	width: 20px;
+	background-color:  #EEE;
+}
+#scheeme-id{
+	/*text-align: center;*/
+	padding-left: 5pt;
+	margin: 0;
+	
+}
+#scheeme-exit:hover, #scheeme-basic-exit:hover{
+	background-position: 0px 20px;
+}
+#scheeme-exit:focus, #goto-elem:focus, #toggle-state-btn:focus, #scheeme-basic-exit:focus, #scheeme-help-btn:focus{
+	outline: none;
+}
+#scheeme-help-basic{
+	position: fixed;
+	top: 20%;
+	width : 40%;
+/*	margin: auto;*/
+	left:30%;
+	/*height: 40%;*/
+	margin: auto;
+	
+	opacity: 1.0;
+	background-color: #FAFAFA;
+	padding: 10px;
+	border-radius: 5px;
+	display: none;
+	
+}
+#scheeme-help-basic>h3{
+	text-align: center;
+	
+}
+#scheeme-help-basic>span{
+	padding: 5px;
+	float: right;
+}
+#scheeme-help-layer{
+	background-color: #999;
+	opacity: 0.5;
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	display: none;
+}
+#scheeme-help-basic-exit{
+	position:absolute;
+	top: 12px;
+	right: 6px;
+	width: 20px;
+	height: 20px;
+	margin: 0;
+	
+}
+#scheeme-basic-exit{
+	height: 20px;
+	background-image: url(images/exit_small.png);
+	background-position: 0px 0px;
+	width: 20px;
+	border: none;
+	background-color: #EEE;
+}
+#credits{
+	
+	margin-right: 10px;
+	font-size: 9pt;
+	bottom: 3px;
+	right: 0;
+	/*margin-top: 5px;*/
+	position: absolute;
+}
+/*CUSTOM CHECKBOXES++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+label:before{
+	content: "";
+	display: inline-block;
+
+	width: 15px;
+	height: 15px;
+	position: relative;
+	margin-right: 0px;
+	position: absolute;
+	float: left;
+	margin-right: 10px;
+	left: 0;
+	/*top: 3px;*/
+	
+	border: 1px solid #333;
+	/*box-shadow: inset 0px 2px 3px 0px #7EC0EE, 0px 1px 0px 0px rgba(255, 255, 255, .8);*/
+	
+}
+label:not(.checkBoxLabel):before{
+	
+	
+	border-radius: 8px;  
+}
+.checkBoxLabel:before{
+	border-radius: 3px;
+	
+}
+.active-checkBoxLabel{
+	
+	/*color:#C5AFCF;*/
+			font-weight:bold;
+	
+	
+}
+label{
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	padding-left: 25px;
+	/*margin-left: 25px;*/
+}
+label:before{
+	margin-right: 15px;
+}
+	
+input[type=radio],input[type=checkbox]{
+	display:none;
+}
+input[type=radio]:checked + label:before, input[type=checkbox]:checked + label:before {  
+      
+    color: #FFF;  
+    /*font-size: 28pt;*/  
+    text-align: center;  
+    line-height: 15px; 
+	
+} 
+input[type=checkbox]:checked + label{
+	font-weight: bold;
+}
+input[type=radio]:checked + label:before {  
+    content: "\2022";  
+    
+} 
+input[type=checkbox]:checked + label:before {  
+    content: "\2713";  
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);  
+    font-size: 10pt;  
+    
+} 
+
+/*CUSTOM CHECKBOXES------------------------------------------------------*/
+
+/*ajax wait++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+.waiting-layer{
+	width: 100%;
+	opacity: 0.8;
+	height: 100%;
+	background-color: #666;
+	position: absolute;
+	top: 0px;
+	display: none;
+	
+}
+#img-block{
+	top: 50%;
+	margin: auto;
+	width:32px;
+	height: 32px;
+	position: relative;
+	background-image: url(images/loader.gif);
+}
+#autosave-p{
+	color:#FFF;
+	float: left;
+	/*font-size: 11pt;*/
+	
+	
+}
+
+/*ajax wait--------------------------------------------------------------*/
+
+/*SUBMIT BLOCK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+
+#submit-block {
+	padding-right:1px;
+	padding-left:-1px;
+	/*background: #D6E68A;
+	border-bottom: 1px solid #121310; /* Параметры линии внизу */
+	/*border-left: 1px solid #121310; /* Линия слева от текста */
+	/*border-right: 1px solid #121310; /* Линия справа от текста */
+	/*border-top: 1px solid #121310; /* Линия сверху от текста */
+	width: 100%;
+	margin-left: auto; /* Расстояние от левого края до линии */
+	margin-right: auto; /* Расстояние от правого края до линии */
+	float:left;
+	position: relative;
+	display: none;
+	/*font-family: none;*/
+	
+}
+#submit-block > .addbuttonP{
+	margin-left: 5%;
+}
+#summary{
+	height: 100%;
+	position: relative;
+	width: 100%;
+	border-radius: 5px;
+	border: 1px solid #999;
+	display: none;
+	overflow: auto;
+	
+}
+#summary-title{
+	margin-top: 0px;
+	color: #fff;
+}
+.summary-element{
+	position: relative;
+	width: 100%;
+	overflow: auto;
+	border-top:1px solid #999;
+	opacity:0.6;
+	cursor: pointer;
+	
+	
+}
+.summary-element:hover{
+	opacity: 1.0;
+	
+}
+.summary-element-name{
+	
+	width: 20%;
+
+}
+
+.summary-element-value{
+	/*border-left: 1px solid black;*/
+	width: 75%;
+	/*border: 1px solid black;*/
+
+}
+.summary-element-value, .summary-element-name{
+	float: left;	
+	padding-left: 2%;
+	text-align: center;
+	/*background-color: #D1EEEE; */
+	
+}
+.summary-element-value-p, .summary-element-name-p{
+	
+	
+	padding-left: 2%;
+	text-align: center;
+	/*background-color: #D1EEEE; */
+	
+}
+.summary-element-valuename{
+	float: left;
+	width: 200px;
+	height: 100%
+}
+.summary-element-valuevalue{
+	font-weight: bold;
+}
+.odd{
+	background-color: #BFEFFF;
+}
+
+/*SUBMIT BLOCK ------------------------------------------------------------------------*/
+
+
+#warning-block{
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	width: 40%;
+	margin-left: 30%;
+	margin-right: 30%;
+	display: none;
+	background-color: #BAEAFA; 
+	padding-left: 2%;
+}
+#warning-block-button{
+	width: 100px;
+	
+	height: 40px;
+	
+	
+	
+}
+#revert{
+	height:100%;
+	position: absolute;
+	
+	width: 100%;
+	height: 38px;
+	border: none;
+	font-weight: bold;
+	color: #000;
+	border-radius: 5px;
+	box-shadow: 0px 0px 1px #333;
+	cursor: pointer;
+	
+}
+#revert .click{
+	background: #000;
+}
+#revert:focus,#warning-exit-btn:focus{
+	outline: none;
+}
+#revert:hover{
+	box-shadow: 0px 0px 3px #333;
+	
+}
+#warning-paragraph, #warning-block-button{
+	margin-top: 4px;
+	float: left;
+	position: relative;
+	color: #fff;
+}
+#warning-paragraph{
+	
+	width: calc(100% - 120px);
+}
+#warning-exit{
+	
+	position:absolute;
+	top: 0;
+	left: 0;
+	width: 16px;
+	height: 16px;
+	
+	margin: 0;
+
+}
+#warning-exit-btn{
+	height: 16px;
+	width: 16px;
+	cursor: pointer;
+	background-image:url(images/exit_white.png);
+	background-position: 0px 0px;
+}
+#warning-exit-btn:hover{
+	background-position: 0px 16px;
+}
