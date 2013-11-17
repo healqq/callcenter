@@ -232,7 +232,7 @@
 			margin-left: auto; /* Расстояние от левого края до линии */
 			margin-right: auto; /* Расстояние от правого края до линии */
 			display:table;
-			border-radius: 5px;
+			border-radius: 2px;
 }
 		#temp-title, #container-title, #scheeme-title, #summary-title{
 			text-align: center;
@@ -422,7 +422,7 @@
 			margin-right: auto; /* Расстояние от правого края до линии */
 		/*	display:table;*/
 			position:relative;
-			border-radius: 5px;
+			border-radius: 2px;
 }
 		 .accordiontextarea, .accordiontext, .editbutton, .removebutton, .header, .textarea, .branchId {
 			padding-left: 0.2%; /* Расстояние между линией и текстом */	
@@ -554,7 +554,7 @@
 		background-color: #FAFAFA;
 }
 		.control-button, .editbutton, .editbuttonAccordion{
-			border-radius: 5px;
+			border-radius: 2px;
 			color: #FFFFFF;
 			font-weight: bold;
 		}
@@ -730,7 +730,7 @@
 			/*float:right;*/
 			padding: 1%;
 			margin: 10px;
-			border-radius: 5px;
+			border-radius: 2px;
 		/*	border-left: solid 1px;
 			border-top: solid 1px;
 			border-bottom: solid 1px;*/
@@ -828,7 +828,7 @@ display: inline;
 	/*height: 80px;*/
 	border: 1px solid #999;
 	z-index: 10;
-	border-radius: 10px;
+	border-radius: 2px;
 	
 	
 }
@@ -867,7 +867,7 @@ display: inline;
 	margin-bottom: 5px;
 	float:right;
 	margin-right: 5px;
-	border-radius: 5px;
+	border-radius: 2px;
 	color: #FFFFFF;
 	font-weight: bold;
 	/*border: 1px solid #999;*/
@@ -904,7 +904,7 @@ display: inline;
 	opacity: 1.0;
 	background-color: #FAFAFA;
 	padding: 10px;
-	border-radius: 5px;
+	border-radius: 2px;
 	display: none;
 	
 }
