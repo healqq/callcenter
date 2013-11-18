@@ -3,7 +3,7 @@
 <head>
     <title>Гидровелл-коллцентр</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+    
 	<!-- <link rel="stylesheet" href="css/admin_style.css" type="text/css"> -->
 	<script src="js/admin.js" type="text/javascript"></script>
 	<script src="js/ajax.js" type="text/javascript"></script>
@@ -14,15 +14,32 @@
 	<script src="js/bbParser.js" type="text/javascript"></script>
 	<script src="js/model.js" type="text/javascript"></script>
 	<script src="js/controller.js" type="text/javascript"></script>
-		<script src="js/view.js" type="text/javascript"></script>
+	<script src="js/view.js" type="text/javascript"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
 	checkSession();
 	loadStructure(false);
+	
+	var control = controller.getInstance();
 	$("#container").data("sstype",false);
-	$("#btnLoadStructure").click(function(){loadStructure(false)});
-	$("#logout").click(logout);
-	$("#btnSendData").click(sendData);
+	control.addEvent($("#btnLoadStructure"),'click',function(){ loadStructure(false) });
+	control.addEvent($("#logout"), 'click', logout);
+	control.addEvent($("#btnSendData"),'click', sendData);
+	control.addEvent($("#btnReload"),'click', function(){
+		var r=confirm("Внимание! Все заполненные данные будут очищены! Продолжить?");
+			if (r==true)
+			{
+				
+			}
+			else
+			{
+				return;
+			}
+		reloadStructure();
+	});
+	//$("#btnSendData").click(sendData);
+	
 	view.getInstance().buttonsAnimation();
 	
 });
@@ -34,8 +51,10 @@
 <body>
 <div class = "page_header"></div>
 <div class = "tables">
-	<div class = "tableLeft">
+	<div class = "tableLeft" id="table-left-client">
+	
 		<p class = "addbuttonP" id="btnLoadStructureClient"><input id="btnLoadStructure" value="Загрузить cтруктуру" type="button" class = "control-button"></p>
+		<p class = "addbuttonP" id="btnReload"><input id="btnReload" value="Очистить" type="button" class = "control-button"></p>
 		<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
 		<!-- <p class = "addbuttonP"><input id="logout" value="Выйти" type="button" class = "control-button"> </p> -->
 		<p id="response" style="display:none"></p>

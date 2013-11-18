@@ -64,7 +64,7 @@ var  controller = (function(){
 					matchedElement = events[events.length-1];
 				}
 				if (addEventToElement( matchedElement.list, eventName, handler) ){
-					console.log($(element)[0] + ' ' + handler + ' + ');
+				//	console.log($(element)[0] + ' ' + handler + ' + ');
 					$(element).on(eventName, handler);
 				}
 				
@@ -87,7 +87,7 @@ var  controller = (function(){
 					if (eventsName === undefined){
 						matchedElement.list = [];
 						$(element).off();
-						console.log($(element)[0]  + ' - ');
+					//	console.log($(element)[0]  + ' - ');
 					}
 					//todo удалить отдельный евент
 					else{

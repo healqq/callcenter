@@ -1533,7 +1533,11 @@ function fillSummaryBlock(){
 				//var value = '<span style="float: left; width: 200px; height: 100%">'+values[i].key + ': </span>' ;
 				var newValueValueSpan = fabric('p', getObjectSpecs('summary-element-valuevalue', values[i].value) );
 				
+				
 				var newValueParagraph = fabric('div', getObjectSpecs('summary-element-value-p') );
+				if ( (values[i].value === undefined) || (values[i].value == '') ){
+					newValueParagraph.addClass('not-filled');
+				}
 				newValueNameSpan.appendTo( newValueParagraph);
 				newValueValueSpan.appendTo( newValueParagraph);
 				newValueParagraph.appendTo(newValueBlock);

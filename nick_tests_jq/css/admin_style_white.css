@@ -73,6 +73,10 @@
 			align-items: stretch;
 			
 }	
+		/*#table-left-client{
+			background-color: #FAFAFA;
+			
+		}*/
 		.tableRight {
 			margin-left: 2%;
 			margin-right: 2%;
@@ -710,10 +714,10 @@
 /* BUTTONS                  ------------------------------------------------------------*/
 
 
-		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
+		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover,  .line-button:hover{
 			/*border: 2px solid;
 			border-color :#F00;*/
-			box-shadow: 0 0 10px #FA0;/*#DAA520;*/
+			box-shadow: 0 0 3px #FA0;/*#DAA520;*/
 			
 }
 /*HELP BLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -867,6 +871,9 @@ display: inline;
 	color: #FFFFFF;
 	font-weight: bold;
 	/*border: 1px solid #999;*/
+}
+#goto-elem:hover{
+box-shadow: 0 0 3px #FA0;
 }
  
 #scheeme-exit{
@@ -1109,7 +1116,7 @@ input[type=checkbox]:checked + label:before {
 
 .summary-element-value{
 	/*border-left: 1px solid black;*/
-	width: 75%;
+	width: 76%;
 	/*border: 1px solid black;*/
 
 }
