@@ -36,7 +36,9 @@ var  controller = (function(){
 		
 		
 	});
-	var removeEventFromElement = ( function( eventsList, eventName){
+	var removeEventFromElement = ( function(element, eventElement){
+		//element.off(eventElement
+		
 			
 		
 	});
@@ -50,17 +52,19 @@ var  controller = (function(){
 				var notFound = true;
 				var matchedElement = undefined;
 				for( var i=0; i< events.length && notFound; i++ ){
-					if (events[i].element === element ){
+					if (events[i].element[0] === element[0] ){
 						notFound = false;
 						matchedElement  = events[i];
 					}
 				}
+				
 				//заносим в список новый элемент
 				if (notFound){
 					events.push({element:element,list:[]});
 					matchedElement = events[events.length-1];
 				}
-				if (addEventToElement( matchedElement .list, eventName, handler) ){
+				if (addEventToElement( matchedElement.list, eventName, handler) ){
+					console.log($(element)[0] + ' ' + handler + ' + ');
 					$(element).on(eventName, handler);
 				}
 				
@@ -71,7 +75,7 @@ var  controller = (function(){
 				var notFound = true;
 				var matchedElement = undefined;
 				for( var i=0; i< events.length && notFound; i++ ){
-					if (events[i].element === element ){
+					if (events[i].element[0] === element[0] ){
 						notFound = false;
 						matchedElement  = events[i];
 					}
@@ -82,6 +86,8 @@ var  controller = (function(){
 					//если не передан список евентов - удаляем все
 					if (eventsName === undefined){
 						matchedElement.list = [];
+						$(element).off();
+						console.log($(element)[0]  + ' - ');
 					}
 					//todo удалить отдельный евент
 					else{

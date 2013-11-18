@@ -97,14 +97,25 @@ function fabric ( type,  options) {
 }
 
 //сворачивание/разворачивание при клике на заголовок
-function onHeaderClick(){
+function onHeaderClick(evt, elem, state){
 	//var that = $(this);
-	var that  = this;
 	
-
+	/*if (evt.originalEvent === undefined){
+		console.log('heder-click-text-changed');
+	}
+	else{
+		console.log('heder-click-click');
+	}*/
+	/*console.table(evt);*/
+	/*var fixedState  = ( (state === undefined) ? this : elem );*/
+	var that  = ( (elem === undefined) ? this : elem );
+	
+	if ( state === $(that).hasClass('active_header') ){
+		return;
+	}
 	var div_block = $(that).parent("div");
 	var allDivBlocks = div_block.siblings().not(div_block);	
-	$(this).toggleClass("active_header");
+	$(that).toggleClass("active_header");
 	
 	
 	allDivBlocks.children('h3').each(function(){
@@ -156,6 +167,7 @@ function onHeaderClick(){
 		showSubmitBlock();
 		
 	}
+	//setTimeout(controller.getInstance().addEvent($(that), 'click', onHeaderClick ), 3000);
 	/*if (that === $('#container').children(":last")[0]){
 		showSubmitBlock();
 	}*/
@@ -192,9 +204,10 @@ function markHeaders(element){
 //событие при изменении инпута
 //переходит на следующее сообщение, если такое есть.
 //иначе просто сворачивает текущее	
-function onTextChanged() {
+function onTextChanged(evt) {
+	//console.log('text-change');
 	//var element =( (item === undefined)?this: item );
-	var element = this;
+	var element = evt.currentTarget;
 	var divBlock = $(element).parents(".divacc");
 	
 	addSavedData(divBlock);
@@ -206,7 +219,12 @@ function onTextChanged() {
 		focusElement('#btnSendData');
 	}
 	else{
-		nextDivBlock.children("h3:first").trigger("click");
+		//controller.getInstance().clearEvents(nextDivBlock.children("h3:first"));
+	//	nextDivBlock.children("h3:first").trigger('click');
+		
+		onHeaderClick(undefined, nextDivBlock.children("h3:first"), true);
+		
+		
 	}
 	focusOnInput(nextDivBlock);
 	clearSummaryBlock();
@@ -472,7 +490,7 @@ function createNewDivElement(type, contents, isEdited, first){
 		
 		
 		newHeader.appendTo( newElement );
-		newHeader.click( onHeaderClick );
+		controller.getInstance().addEvent(newHeader, 'click', onHeaderClick);
 		
 		
 		newParagraph.appendTo( newElement );
@@ -483,6 +501,7 @@ function createNewDivElement(type, contents, isEdited, first){
 		
 		newInputDiv.appendTo(newElement);
 		newInputDiv.hide();
+		
 		switch(contents.inputType){
 			case "radio":
 			
@@ -494,7 +513,7 @@ function createNewDivElement(type, contents, isEdited, first){
 					newRadio.change(hideDivElements);
 				}
 				else{
-					controller.getInstance().addEvent(newRadio,'change',onTextChanged);
+					controller.getInstance().addEvent(newRadio,'change',function(evt){setTimeout(function(){onTextChanged(evt)}, 100)});
 				}
 				if (first){
 					controller.getInstance().addEvent(newRadio,'change',TriggersOnFirstElement);
@@ -509,7 +528,7 @@ function createNewDivElement(type, contents, isEdited, first){
 				
 				newInput		= fabric("text area",  	getObjectSpecs("accordiontextarea",contents.input)); 
 				newInput.appendTo( newInputDiv );
-				newInput.change(onTextChanged);
+				newInput.change(function(evt){setTimeout(function(){onTextChanged(evt)}, 100)});
 				//по ctrl+enter переход на следующий вопрос
 			/*	newInput.keydown(function(e){
 					if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey){
@@ -534,7 +553,7 @@ function createNewDivElement(type, contents, isEdited, first){
 					}
 					
 				}
-				newInput.on('change',onTextChanged);
+				newInput.on('change',function(evt){setTimeout(function(){onTextChanged(evt)}, 100)});
 	
 				
 				
@@ -1510,11 +1529,11 @@ function fillSummaryBlock(){
 			//todo
 			//change to normal code
 			for (var i=0; i< values.length; i++ ){
-				var newValueNameSpan = fabric('span', getObjectSpecs('summary-element-valuename', values[i].key + ': ') );
+				var newValueNameSpan = fabric('p', getObjectSpecs('summary-element-valuename', values[i].key + ': ') );
 				//var value = '<span style="float: left; width: 200px; height: 100%">'+values[i].key + ': </span>' ;
-				var newValueValueSpan = fabric('span', getObjectSpecs('summary-element-valuevalue', values[i].value) );
+				var newValueValueSpan = fabric('p', getObjectSpecs('summary-element-valuevalue', values[i].value) );
 				
-				var newValueParagraph = fabric('p', getObjectSpecs('summary-element-value-p') );
+				var newValueParagraph = fabric('div', getObjectSpecs('summary-element-value-p') );
 				newValueNameSpan.appendTo( newValueParagraph);
 				newValueValueSpan.appendTo( newValueParagraph);
 				newValueParagraph.appendTo(newValueBlock);

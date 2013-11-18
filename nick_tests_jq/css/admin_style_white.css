@@ -377,13 +377,9 @@
 			margin-left: 0px;
 			background-color: white;
 			padding-left: 0.2%; /* Расстояние между линией и текстом */	
-}
-		.fieldsListInput{
-		width: 35%;
-}
-		.radioOptionInput{
 			width: 70%;
-		}
+}
+
 		.branchId{
 			width: 15%;
 			height: 20px;
@@ -1132,6 +1128,10 @@ input[type=checkbox]:checked + label:before {
 	/*background-color: #D1EEEE; */
 	
 }
+.summary-element-value-p{
+	overflow: auto;
+	position: relative;
+}
 .summary-element-valuename{
 	float: left;
 	width: 200px;
@@ -1139,6 +1139,10 @@ input[type=checkbox]:checked + label:before {
 }
 .summary-element-valuevalue{
 	font-weight: bold;
+	float: left;
+	width: calc(100% - 200px);
+	position: relative;
+	overflow-wrap: break-word;
 }
 .odd{
 	background-color: #BFEFFF;
