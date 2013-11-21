@@ -21,11 +21,15 @@
 			display: none; 
 }
 		.page_header, .page_footer{
-		height: 32px;
+		
 		flex: 100%;
 		order: 0;
 		background-color: #D1D1D1;
 }
+		.page_header{
+			overflow:auto;
+			
+		}
 		.page_footer{
 		height: 32px;
 		width: 100%;
