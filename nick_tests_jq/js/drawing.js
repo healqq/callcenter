@@ -233,19 +233,35 @@ var drawerSingleton = (function(){
 		
 		
 	});
+	//ищет блок по координатам 
+	var findBlock = ( function( pageX, pageY){
+		var mouseX 	= pageX - canvas.offsetLeft;
+		var mouseY 	= pageY - canvas.offsetTop;
+		var retValue = {rows:undefined, columns: undefined, found: true};
+		var rows 	= (mouseX  ) /( blockWidth*(1+spaceCoff) );
+		var columns = (mouseY  ) /( blockHeight*(1+spaceCoff) );
+		var blockSize = blockWidth / ( blockWidth*(1+spaceCoff) );
+		retValue.row 	= Math.floor( rows );
+		retValue.column 	= Math.floor( columns);
+		if ( ( (rows - Math.floor(rows) ) > blockSize ) || (columns - Math.floor(columns) > blockSize) )
+			retValue.found = false;
+		return retValue;
+		
+	});
 	var mouseclick = ( function(evt) {
 		var text = "";
-		var mouseX 	= evt.pageX - canvas.offsetLeft;
+		/*var mouseX 	= evt.pageX - canvas.offsetLeft;
 		var mouseY 	= evt.pageY - canvas.offsetTop;
 		var rows 	= (mouseX  ) /( blockWidth*(1+spaceCoff) );
 		var columns = (mouseY  ) /( blockHeight*(1+spaceCoff) );
 		var blockSize = blockWidth / ( blockWidth*(1+spaceCoff) );
 		var row 	= Math.floor( rows );
 		var nothing = false;
-		var column 	= Math.floor( columns);
-		if ( ( (rows - Math.floor(rows) ) > blockSize ) || (columns - Math.floor(columns) > blockSize) )
-			nothing = true;
-			//return;
+		var column 	= Math.floor( columns);*/
+		//if ( ( (rows - Math.floor(rows) ) > blockSize ) || (columns - Math.floor(columns) > blockSize) )
+		//	nothing = true;
+		var searchObj = findBlock( evt.pageX, evt.pageY);	
+			
 		
 		//if (columns - Math.floor(columns) > blockHeight)
 			//return;
@@ -253,18 +269,19 @@ var drawerSingleton = (function(){
 		var rowBot = Math.ceil( (mouseX  ) /( blockWidth*(2+2*spaceCoff) )  );
 		var columnTop = Math.floor( (mouseY  ) /( blockHeight*(1+2*spaceCoff) ) );
 		var columnBot = Math.ceil( (mouseY  ) /( blockHeight*(2+2*spaceCoff) )  );*/
-		if ( !nothing ){
-			text = "Координаты "+row+":"+column + "<br>"; 
+		if ( searchObj.found ){
+			//text = "Координаты "+row+":"+column + "<br>"; 
 			
 			for (var i = 0; i < itemsArray.length; i++ ){
-				if ( (itemsArray[i].column == column) && (itemsArray[i].row == row) ) {
+				if ( (itemsArray[i].column == searchObj.column) && (itemsArray[i].row == searchObj.row) ) {
 					text = "id: " + itemsArray[i].id;
 					id = itemsArray[i].id;
-					instance.showCanvasHelp( id , evt.clientX, evt.clientY);
+					showElement( id );
+				/*	instance.showCanvasHelp( id , evt.clientX, evt.clientY);
 					$("#scheeme-exit").off('click').on('click', hideCanvasHelp);
 					$("#goto-elem").off('click').on('click', function(){
 						showElement( id );
-						});
+						});*/
 					break;
 				}
 			}
@@ -280,6 +297,56 @@ var drawerSingleton = (function(){
 	//	$("#scheeme-id").append(text);
 		
 	});
+	var mousemove = ( function(evt) {
+		var id ;
+		var header;
+		var searchObj = findBlock( evt.pageX, evt.pageY);
+			//return;
+		
+		//if (columns - Math.floor(columns) > blockHeight)
+			//return;
+		/*var rowTop = Math.floor( (mouseX  ) /( blockWidth*(1+2*spaceCoff) )  );
+		var rowBot = Math.ceil( (mouseX  ) /( blockWidth*(2+2*spaceCoff) )  );
+		var columnTop = Math.floor( (mouseY  ) /( blockHeight*(1+2*spaceCoff) ) );
+		var columnBot = Math.ceil( (mouseY  ) /( blockHeight*(2+2*spaceCoff) )  );*/
+		if ( searchObj.found ){
+			//text = "Координаты "+row+":"+column + "<br>"; 
+			var notFound = true;
+			for (var i = 0; (i < itemsArray.length) && notFound; i++ ){
+				if ( (itemsArray[i].column == searchObj.column) && (itemsArray[i].row == searchObj.row) ) {
+					id = itemsArray[i].id;
+					
+					notFound = false;
+					
+				}
+					
+			}
+				
+		}
+		var idText = '<strong>id элемента:</strong> ' + id;
+		var nameText; //= '<strong>заголовок:</strong> ' + header;
+		//обработка красных блоков
+		if ( (id !== undefined) && (id.search(':') !== -1 ) ){
+						idText = "У элемента <strong>" + id.substr(0,id.search(':'))  + 
+						"</strong> не заполнена ветвь номер <strong>" +
+						( parseInt(id.substr(id.search(':')+1 ) ) + 1) +'</strong>.' ;
+						nameText = undefined;
+		}
+		else{
+			header = $('#'+id).find('h3').children('span:first').text(); 
+			nameText = '<strong>заголовок:</strong> ' + header;
+		}
+		
+		
+		model.getInstance().setHTML($('#block-info-id'),( (id === undefined)?undefined : idText  ) );
+		model.getInstance().setHTML($('#block-info-name'),( (id === undefined)?undefined : nameText  ) );
+		/*$('#test-output').empty();
+		$('#test-output').append(text);
+	//	$("#scheeme-id").empty();
+	//	$("#scheeme-id").append(text);
+		*/
+	});
+	
 	//public
 	return{
 		//adding info about div block
@@ -315,11 +382,13 @@ var drawerSingleton = (function(){
 				canvas.height = 240;
 				canvas.width = 240;
 				canvas.addEventListener("click",mouseclick);
+				canvas.addEventListener("mousemove",mousemove);
 				
 				
 				return this;
 			}
 		return undefined;
+		
 		},
 		clear: function(){
 			canvas.width = canvas.width;

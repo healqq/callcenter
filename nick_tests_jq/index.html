@@ -3,15 +3,8 @@
 <head>
     <title>Гидровелл-коллцентр администратор</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-
-
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
-
-
-
 	<link rel="stylesheet" href="css/admin_style_white.css" type="text/css">
-	
 	<script src="js/ajax.js" type="text/javascript"></script>
 	<script src="js/Auth.js" type="text/javascript"></script>
 	<script src="js/datatransfer.js" type="text/javascript"></script>
@@ -23,158 +16,127 @@
 	<script src="js/view.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	$(window).bind('beforeunload',function(){
-		
-			return "Внимание! Вся несохранённая информация будет потеряна! ";
-		
+		model.getInstance().onStart();
 	});
-	checkSession();
-	model.getInstance().loadSettings();
-	createNewTempElement();
-	var control = controller.getInstance();
-	
-
-	$("#container").data("sstype",true);
-	control.addEvent($("#btnSaveStructure"),'click', function(){
-			var r=confirm("Внимание! Старая версия анкеты будет заменена! Продолжить?");
-			if (r==true)
-			{
-				
-			}
-			else
-			{
-				return;
-			}
-			saveStructure();
-		});
-	
-	
-	control.addEvent($("#sendXML"),'click', sendData);
-	control.addEvent($("#logout"),'click', logout);
-	control.addEvent($("#toggle-state-btn"),'click', switchTables);
-	control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
-	control.addEvent($("#scheeme-basic-exit"),'click', hideScheemeHelp);
-	view.getInstance().buttonsAnimation();
-	control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
-/*	control.addEvent($("#btnLoadStructure"),'mousedown', function(){$(this).addClass('click')});
-	control.addEvent($("#btnLoadStructure"),'mouseup', function(){$(this).removeClass('click')});
-	control.addEvent($(document), 'mouseup', function(){
-		$('.control-button').each(function(){
-			$(this).removeClass('click');
-		})
-	});
-*/	
-	
-	
-
-	
-	
-	
-	
-	
-
-});
-	
 	</script>
 
 </head>
 
 <body>
 
-<div class = "page_header">
-</div>
+	<div class = "page_header">
+	</div>
 
-<div class = "tables">
-	<div class = "tableLeft">
-		<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить скрипт" type="button" class = "control-button"></p>
-		<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить cкрипт" type="button" class = "control-button"></p>
-		<p id="autosave-p">
-		<input id="autosave" value="" type="checkbox">
-		<label for="autosave" class="checkBoxLabel">автосохранение</label>
-		<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
+	<div class = "tables">
+		<div class = "tableLeft">
+			<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить скрипт" type="button" class = "control-button"></p>
+			<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить cкрипт" type="button" class = "control-button"></p>
+			<p id="autosave-p">
+			<input id="autosave" value="" type="checkbox">
+			<label for="autosave" class="checkBoxLabel">автосохранение</label>
+			<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
+			</p>
+			<p id="response" style="display:none"></p>
+			<br>
+			<div id= "help" class = "help">
+				<h3>Подсказка</h3>
+				<p></p>
+			</div>
+		</div>
+
+		<div class = "tableRight">
+			<div class="error"></div>
+			
+				
+				
+
+			<div id="temp_divs" class="temp-div" style="margin-top:10px" >
+				
+
+			</div>
+
+			<div id="imported" class= "accordion" style = "display:none">
+			</div>
+			</br>
+
+
+
+			
+			<h2 id="container-title">Предварительный просмотр</h2>
+			<div class="accordion" id = "container" ></div>
+			</br>
+
+
+		</div>
+		<div id="controls-block">
+			<p id="scheeme-help-p"><input type="button" id="scheeme-help-btn" value=""></p>
+			<p id="toggle-state"><input type="button" id="toggle-state-btn" value=""></p>
+		</div>
+		
+		<div class = "tableInfo">
+			<h2 id="scheeme-title">Схема скрипта</h2>
+			<div id="block-info">
+				<p id="block-info-id"></p>
+				<p id="block-info-name"></p>
+			</div>
+			<div id="draw-block">
+				<!-- <p class = "addbuttonP" id="drawP"><input type = button class = "control-button" id="draw" value="draw"></p> -->
+				<canvas id="scheeme"></canvas>
+				<!-- <p id="test-output"></p> -->
+			</div>
+			
+			
+		</div>
+	</div>
+	<p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>
+	<div id ="scheeme-help" class = "focused">
+		<h4>Информация</h4>
+		<p id ="scheeme-id"></p>
+		<input type="button" id="goto-elem" value="Перейти">
+		<p id="scheeme-help-exit" >
+			<input type="button" id="scheeme-exit" value="">
 		</p>
-		<p id="response" style="display:none"></p>
-		<br>
-		<div id= "help" class = "help">
-			<h3>Подсказка</h3>
-			<p></p>
-		</div>
 	</div>
-
-	<div class = "tableRight">
-		<div class="error"></div>
+	<div id= "scheeme-help-layer">
 		
+	</div>
+	<div id = "scheeme-help-basic" class = "focused">
+			<h3>Обозначения на схеме</h3>
+			<ul>
+			<li>
+				<img src = "css/images/round-black.png" alt="черный круг"><span>Круги в схеме означают элементы - ветвления. Цифра в
+				центре круга - количество веток.</span><br>
+			</li>
+			<li>
+				<img src = "css/images/square-black.png" alt="черный квадрат"><span>Квадраты - все остальные элементы.</span><br>
+			</li>
+			<li>
+				<img src = "css/images/round-red.png" alt="красный круг"><span>Красный круг означает, что не все ветви заполнены.</span><br>
+			</li>
+			<li>
+				<img src = "css/images/square-red.png" alt="красный квадрат"><span>Дозаполнить ветви можно, нажав на красный квадрат,
+				соответсвующий нужной ветви.</span><br>
+			</li>
+			<li>
+				<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><span>Закрашенный синим элемент отображает текущее местоположение.</span>
+				<span> Для перехода на другой элемент нужно нажать на него.</span>
+			</li>
+			</ul>
+			<p id="scheeme-help-basic-exit" >
+			<input type="button" id="scheeme-basic-exit" value="">
 			
+		</p>
 			
-
-		<div id="temp_divs" class="temp-div" style="margin-top:10px" >
-			
-
 		</div>
-
-		<div id="imported" class= "accordion" style = "display:none">
+	<div class = "page_footer">
+	<!-- <p id='test'></p> -->
+	<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2013 Табус — Технологии автоматизации бизнеса</a>
+	</div>
+	<!-- <input type="button" id="import">build from json</input> -->
+	<div class="waiting-layer">
+		<div id="img-block">
 		</div>
-		</br>
-
-
-
-		
-		<h2 id="container-title">Предварительный просмотр</h2>
-		<div class="accordion" id = "container" ></div>
-		</br>
-
-
 	</div>
-	<div id="controls-block">
-		<p id="scheeme-help-p"><input type="button" id="scheeme-help-btn" value=""></p>
-		<p id="toggle-state"><input type="button" id="toggle-state-btn" value=""></p>
-	</div>
-	
-	<div class = "tableInfo">
-		<h2 id="scheeme-title">Схема скрипта</h2>
-		<div id="draw-block">
-			<!-- <p class = "addbuttonP" id="drawP"><input type = button class = "control-button" id="draw" value="draw"></p> -->
-			<canvas id="scheeme"></canvas>
-			<!-- <p id="test-output"></p> -->
-		</div>
-		
-		
-	</div>
-</div>
-<p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>
-<div id ="scheeme-help" class = "focused">
-	<h4>Информация</h4>
-	<p id ="scheeme-id"></p>
-	<input type="button" id="goto-elem" value="Перейти">
-	<p id="scheeme-help-exit" >
-		<input type="button" id="scheeme-exit" value="">
-	</p>
-</div>
-<div id= "scheeme-help-layer">
-	
-</div>
-<div id = "scheeme-help-basic" class = "focused">
-		<h3>Обозначения на схеме</h3>
-		<img src = "css/images/round-black.png" alt="черный круг"><span>Круги в схеме означают элементы - ветвления. Цифра в
-		центре круга - количество веток.</span><br>
-		<img src = "css/images/square-black.png" alt="черный квадрат"><span>Квадраты - все остальные элементы.</span><br>
-		<img src = "css/images/round-red.png" alt="красный круг"><span>Красный круг означает, что не все ветви заполнены.</span><br>
-		<img src = "css/images/square-red.png" alt="красный квадрат"><span>Дозаполнить ветви можно, нажав на красный квадрат,
-		соответсвующий нужной ветви.</span><br>
-		<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><span>Закрашенный синим элемент отображает текущее местоположение.</span>
-		<span> Для перехода на другой элемент нужно
-		нажать на него и на кнопку "перейти".</span>
-		<p id="scheeme-help-basic-exit" >
-		<input type="button" id="scheeme-basic-exit" value="">
-	</p>
-		
-	</div>
-<div class = "page_footer">
-<!-- <p id='test'></p> -->
-<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2013 Табус — Технологии автоматизации бизнеса</a>
-</div>
-<!-- <input type="button" id="import">build from json</input> -->
-<div class="waiting-layer"><div id="img-block"></div></div>
 </body>
 
 </html>

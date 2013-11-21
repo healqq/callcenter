@@ -129,14 +129,14 @@ function onHeaderClick(evt, elem, state){
 		$(this).find('h3').removeClass('active_header');
 	});
 	if (allDivBlocks.length === 0)
-		$(that).siblings().slideToggle({duration:"slow"});
+		$(that).siblings().slideToggle({duration:400});
 	else{
 		
 		var myEvent = function(){
-			allDivBlocks.children().not("h3").animate({height:"hide",opacity:"hide"},{duration:"slow"});
+			allDivBlocks.children().not("h3").animate({height:"hide",opacity:"hide"},{duration:400});
 		};
 		$.when(myEvent() ).done(function(){
-			$(that).siblings().slideToggle({duration:"slow"});
+			$(that).siblings().slideToggle({duration:400});
 		});
 		
 		
@@ -996,18 +996,27 @@ function addElement(){
 	if ((newDiv.data('branches') !== undefined) && ( newDiv.data('branches').length < 2) ){ 
 		showBranch(newDiv.data('branches')[0],true);
 	}
+	model.getInstance().setState('new');
 	view.getInstance().buttonsAnimation(newDiv);
 	clearErrors();
+	showHelp();
 }
 //нажатие на "редактировать"
 function onEditClick(){
-var position;
+	if (model.getInstance().isEdited() ){
+		showError('Сначала закончите редактирование текущего элемента');
+		return;
+	}
+	model.getInstance().setState('edit');
+	var position;
 	var parentBlock = $(this).parent().parent('div');
 	//	var previousBlock = parentBlock.prevAll('div:first');
 		//if (previousBlock.length == 0){
 			//	position = 0;
 		//}
 		//else{
+	
+	
 	position = parentBlock.index();
 	objectDiv = createObjectFromDiv(parentBlock, false);
 	objectDiv.position = position;
@@ -1399,7 +1408,7 @@ function showBranch(currBranch,hide){
 	}
 }
 //отображение помощи при заполнении редактора
-function showHelp(elemType){
+function showHelp(elemType, timeout){
 	helpDivSelection = $('#help');
 	//helpDivSelection.stop();
 	prevType = helpDivSelection.data('type') || undefined;
@@ -1457,6 +1466,9 @@ function showHelp(elemType){
 	helpDivSelection.data('type', ((elemType === undefined)?"null": elemType ) );
 	if ( ( (helpDivSelection.css('opacity') == '0') ||(helpDivSelection.css('display') == 'none') )  && (elemType !== undefined) ){
 		helpDivSelection.slideDown('fast');
+	}
+	if (timeout !== undefined){
+		setTimeout(function(){showHelp()}, timeout);
 	}
 }
 

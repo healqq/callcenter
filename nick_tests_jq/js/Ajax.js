@@ -52,10 +52,13 @@ function sendRequest(action, params){
 	var wsUrl = 'ws/ws/callcenterexchange';
     var soapRequest = combineSoapRequest(action, params) ;
    // showError(soapRequest);
+   
     $('.waiting-layer').show();
     var request = $.ajax({
                     type: "POST",
                     url: wsUrl,
+					username: 'test',//auth-data for 1c(wtf???/)
+					password: 'qweqwe',
                     contentType: "text/xml",
                     dataType: "html",
                     data: soapRequest

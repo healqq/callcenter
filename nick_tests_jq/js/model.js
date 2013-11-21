@@ -4,6 +4,8 @@ var model = (function(){
     function model() {
 	//private
 		var lastid = 0;
+		var state = 'new';	// state используется для контроля пользователя и получения данных
+							// о текущем состоянии ( варианты 'new', 'edit' )
 		
 		//public
 		return{
@@ -61,6 +63,64 @@ var model = (function(){
 					}
 					
 				}
+			},
+			setHTML: function(element, text){
+				if ( ( element === undefined ) || ($(element).length === 0) )
+					return;
+				//очистка
+				
+				if (text === undefined){
+					$(element).empty();
+				}
+				else{
+					$(element).html(text);
+				}
+				
+			},
+			setState: function(type){
+				state = type;
+				
+			},
+			getState: function(){
+				return state;
+			},
+			isEdited: function(){
+				return (state === 'edit');
+			},
+			onStart: function(){
+				var control = controller.getInstance();
+				control.addEvent($(window),'beforeunload',function(){
+		
+					return "Внимание! Вся несохранённая информация будет потеряна! ";
+			
+				});
+				checkSession();
+				instance.loadSettings();
+				createNewTempElement();
+				
+			
+				$("#container").data("sstype",true);
+				control.addEvent($("#btnSaveStructure"),'click', function(){
+						var r=confirm("Внимание! Старая версия анкеты будет заменена! Продолжить?");
+						if (r==true)
+						{
+							
+						}
+						else
+						{
+							return;
+						}
+						saveStructure();
+					});
+				
+				
+				control.addEvent($("#sendXML"),'click', sendData);
+				control.addEvent($("#logout"),'click', logout);
+				control.addEvent($("#toggle-state-btn"),'click', switchTables);
+				control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
+				control.addEvent($("#scheeme-basic-exit"),'click', hideScheemeHelp);
+				view.getInstance().buttonsAnimation();
+				control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
 			}
 		}
 	}

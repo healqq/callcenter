@@ -56,14 +56,14 @@ function sendData(){
 			else{
 				if ( $.parseJSON($("#response").find("m\\:return").html() ) == true ){
 					//showError("Анкета отправлена!");
-					showHelp("send");
+					showHelp("send", 15*1000);
 					reloadStructure();
 				}
 			}
 			$('.waiting-layer').hide();
 				});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "Request failed: " + textStatus );
+		showError( "Request failed: " + textStatus);
 		});
 		$('.waiting-layer').hide();
 }

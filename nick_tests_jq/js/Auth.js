@@ -159,7 +159,8 @@ function redirect(path){
 function logout(){
 	//var sessionID = getCookie('PHPSESSID');
 	//params = [{key:'Token',value:sessionID}];
-	$(window).off('beforeunload');
+	//отключаем эвент при закрытии
+	controller.getInstance().clearEvents($(window),'beforeunload');
 	var r=confirm("Вы действительно хотите выйти?");
 		if (r==true)
 	{
@@ -167,7 +168,7 @@ function logout(){
 	}
 	else
 	{
-		$(window).on('beforeunload',function(){
+		controller.getInstance().addEvent($(window),'beforeunload',function(){
 		
 			return "Внимание! Вся несохранённая информация будет потеряна! ";
 		
@@ -180,7 +181,7 @@ function logout(){
 			redirect("auth.html");
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		//alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		$('.waiting-layer').hide();
 		});
 		//showBranch(first,false);
