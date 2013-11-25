@@ -1,14 +1,19 @@
 ﻿		body {
-			font-family: Calibri; /* Семейство шрифтов */
+			font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; /* Семейство шрифтов */
 			font-size: 11pt; /* Размер основного шрифта в пунктах  */
+			
 		/*	background-image: url(images/FonBlack.png);  */
 		/*	background-color: #f0f0f0; /* Цвет фона веб-страницы */ 
-			background-color: #FAFAFA;
+			/*background-color: #FAFAFA;*/
+			background-color: #fff;
 			
 			color: #121310; /* Цвет основного текста */
 			width: 100%;
 			height: 100%;
 			margin: 0;
+}
+		.admin-body{
+			background-color: #FAFAFA;
 }
 
 		html {
@@ -21,16 +26,13 @@
 			display: none; 
 }
 		.page_header, .page_footer{
-		
+		/*height: 32px;*/
 		flex: 100%;
 		order: 0;
-		background-color: #D1D1D1;
+		
 }
-		.page_header{
-			overflow:auto;
-			
-		}
 		.page_footer{
+		background-color: #D1D1D1;
 		height: 32px;
 		width: 100%;
 		flex: 100%;
@@ -41,6 +43,11 @@
 		/*text-align: center;*/
 		
 }
+		.page_header{
+		flex: 15%;
+		order: 0;
+		/*background-color: #fafafa;*/
+		}
 		
 		.tables{
 			/*transition: all 2s; 
@@ -78,12 +85,13 @@
 			
 }	
 		.tableRight {
+			margin-top: 10px;
 			margin-left: 2%;
 			margin-right: 2%;
 			/*height: 20000%;*/
 			margin-bottom: 2%;
 		/*	height: 99999%;*/
-			
+			background-color:#FAFAFA;
 			width: 70%;
 			-webkit-flex:  0 1 60%;
            flex: 60%;
@@ -93,8 +101,11 @@
 			
 					
 }
+		.admin-right{
+			margin-top: 0px;
+}
 		.tableRight, .tableInfo{
-		background-color:#FAFAFA;
+		/**/
 		
 }
 		.tableInfo {
@@ -111,14 +122,14 @@
 		.tableLeft {
 	
 			
-			background-color:#666;
+			 
 	
-			width: 15%;
+			width: 10%;
 			
-	
-			min-height: 90%
+			
+		/*	min-height: 90%
 		
-		/*	-webkit-flex:  0 1 15%;
+			-webkit-flex:  0 1 15%;
            flex: 15%;*/
 		   
 			-webkit-order: 0;
@@ -126,27 +137,42 @@
 			align-self: auto;		   
 		
 }
-	.active_header, .control-button,  .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
-		background-color: #FF4F00 !important;
+				.admin {
+	
+			
+			 
+			background-color: #666;
+				   
+		
+}
+	.controls-block{
+		overflow: auto;
+		position: relative;
+	}
+	 .control-button,  .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
+		background-color: #FF5F33;
 	}
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		.error {
 		/*	color: #121310;*/
-			background-color:#FFCCCC;
+			background-color:#ff8888;
 			/*background-image: url(images/error.png);
 			opacity: 0.7;*/
 			position: relative;
 			display: none;
-			width: 90%;
-			height: 25px;
+			/*margin-bottom: 2px;*/
+			/*margin-top: 2px;*/
+			padding-top: 5px;
+			width: 100%;
+			height: 30px;
 			/*padding-top: 2px;
 			height: 25pt;*/
-			margin-top: 5px;
+			/*margin-top: 5px;*/
 			font-size: 11pt;
 			/*height: 5%;*/
 			text-align: center;
-			margin-left: 5%; /* Расстояние от левого края до линии */
-			margin-right: auto; /* Расстояние от правого края до линии */
+			/*margin-left: 5%; /* Расстояние от левого края до линии */
+			/*margin-right: auto; /* Расстояние от правого края до линии */
 			background-repeat: no-repeat;
 			background-position: 10px center;
 }
@@ -236,7 +262,7 @@
 			margin-left: auto; /* Расстояние от левого края до линии */
 			margin-right: auto; /* Расстояние от правого края до линии */
 			display:table;
-			border-radius: 5px;
+			border-radius: 2px;
 }
 		#temp-title, #container-title, #scheeme-title, #summary-title{
 			text-align: center;
@@ -305,6 +331,21 @@
 		#radioInputTypesDiv {
 			margin-bottom: 5px;
 			
+		}
+		.add-block{
+			overflow: auto;
+			margin-bottom: 10px;
+		}
+		.add-block-position__div{
+			overflow: auto;
+			margin: auto;
+			width: 80%;
+		}
+		.position-type{
+			/*float: left;
+			margin-left: 15px;*/
+			margin-left: 15px;
+			float: left;
 		}
 /*BB BUTTONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		#bb-block{
@@ -449,6 +490,9 @@
 			opacity : 0.6;
 			
 }
+		.accordionheader>span{
+			margin-left: 15px;
+		}
 		.accordion h3:hover {
 			opacity : 0.8;
 }
@@ -481,8 +525,13 @@
 			height: 100px;
 			width: 90%;
 			overflow: hidden;
+			border-radius: 4px;
+			
 }
-
+		.accordiontextarea:focus{
+			border: 2px solid #999;
+			outline: none;
+		}
 
 		.accordiontext {
 			margin-bottom: 2%;
@@ -497,6 +546,9 @@
 }
 		.active_header{
 			opacity: 1.0;
+			background-color: #aaa;
+			background-image: url(images/active_header.png);
+			background-repeat: repeat-y;
 		
 	
 }
@@ -519,6 +571,7 @@
 }
 .not-filled{
 			background-image: url(images/warning_bg.png);
+			background-color: transparent;
 			opacity: 1.0;
 		}
 /* ACCORIDON                  -----------------------------------------------------------*/
@@ -536,7 +589,7 @@
 			/*background-image: url(images/buttons_bg.png);*/
 			/*background-color: #00EE00;*/
 			
-			height: 40px;
+			height: 26px;
 			position: relative;
 			font-size: 16px;
 			/*margin: auto; */
@@ -544,23 +597,27 @@
 			vertical-align: middle;
 			/*font-size: 14pt;
 			border: 1px solid #999;*/
+			font-size: 11pt;
+			font-weight: 400;
+			/*padding-bottom: 5px;*/
 			
 			/*background-image: linear-gradient(to top, #999, #DFDFDF);*/
 }
 		.click{
-			background: linear-gradient(to top, #4169E1, #4682B4) !important;
+			/*background: linear-gradient(to top, #4169E1, #4682B4) !important;*/
+			background-color: #F03F00 !important;
 		}
 		.no-display-fix{
 			padding-top: 10px;
 			
 		}
-		.editbutton, .removebutton,  .addbutton, .idSpan, .help, .editbuttonAccordion{
+		.editbutton, .removebutton,  .addbutton, .idSpan, .help{
 		background-color: #FAFAFA;
 }
 		.control-button, .editbutton, .editbuttonAccordion{
 			border-radius: 2px;
 			color: #FFFFFF;
-			font-weight: bold;
+			/*font-weight: bold;*/
 		}
 		.editbutton, .removebutton{
 		
@@ -643,10 +700,10 @@
 	}
 		  .addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover{
 		/*background-color: #8270B6;*/
-			font-weight: bold;
+			/*font-weight: bold;*/
 			/*box-shadow: 0 0 15px #FA0;*/
 	}
-		.exit-button:focus, .addbutton:focus, .editbutton:focus, .control-button:focus{
+		.exit-button:focus, .addbutton:focus, .editbutton:focus, .control-button:focus, .line-button:focus{
 			outline:none;
 	}
 		
@@ -676,19 +733,21 @@
 }
 		.addbuttonP {
 			width: 90%;
-			height: 40px;
+			height: 30px;
 			position: relative;
 			float:left;
 			margin-left: 5%;
 			margin-right: auto;
-			margin-top: 10px !important;
-			margin-bottom : 10px !important;
+			margin-top: 10px ;
+			margin-bottom : 0px;/* !important;*/
 			opacity: 1.0;
 		
 			
 					
 }
-		
+			.add-block{
+				width: auto;
+			}
 		.exitP{
 			position: absolute;
 			
@@ -703,7 +762,7 @@
 			/*margin: 0;*/
 		}
 		.exit-button{
-			background-color: #D1D1D1;
+			background-color: transparent;
 			/*background-color: #D1D1D1;*/
 			width: 32px;
 			height: 32px;
@@ -718,10 +777,11 @@
 /* BUTTONS                  ------------------------------------------------------------*/
 
 
-		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
+		.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
 			/*border: 2px solid;
 			border-color :#F00;*/
-			box-shadow: 0 0 10px #FA0;/*#DAA520;*/
+			/*box-shadow: 0 0 10px #FA0;/*#DAA520;*/
+			background-color: #F15F33;
 			
 }
 /*HELP BLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -734,12 +794,22 @@
 			/*float:right;*/
 			padding: 1%;
 			margin: 10px;
-			border-radius: 5px;
+			border-radius: 2px;
+			font-size: 9pt;
 		/*	border-left: solid 1px;
 			border-top: solid 1px;
 			border-bottom: solid 1px;*/
 	
 }
+			.client{
+				width: 100%;
+				background-color: #ffAA66;
+				height: 40px;
+				padding: 0;
+				margin: 0;
+				font-size: 11pt;
+				margin-top: 5px;
+			}
 		.help p{
 			text-align:center;
 			margin-top: 2px;
@@ -768,7 +838,7 @@
 #toggle-state{
 	float: left;
 	position: absolute;
-	top: 50%;
+	top: 30%;
 }
 #toggle-state-btn{
 	width: 50px;
@@ -778,9 +848,10 @@
 }
 #toggle-state-btn:hover{
 	background-position: 0px 80px;
+	
 }
 .state-active{
-	background-image: url(images/arrow.png);
+	/*background-image: url(images/arrow.png);*/
 	background-position: 0px 0px !important;
 }
 .state-active:hover{
@@ -811,6 +882,25 @@
 	width: auto;
 	min-height: 100%;
 	height: 100%;
+	
+	/*padding-top: 40px;*/
+	
+}
+#block-info{
+	height: 60px;
+	width: 90%;
+	margin-left:5%;
+	border: 1px solid #aaa;
+	padding-bottom: 5px;
+	border-radius: 2px;
+	/*background-color: #eee;*/
+}
+#block-info-id, #block-info-name{
+	/*text-align: center;*/
+	margin-left: 5%;
+	width: 90%;
+	margin-top: 2px;
+	margin-bottom: 0px;
 }
 /*#draw-block::-webkit-scrollbar{
 display: inline;
@@ -832,7 +922,7 @@ display: inline;
 	/*height: 80px;*/
 	border: 1px solid #999;
 	z-index: 10;
-	border-radius: 10px;
+	border-radius: 2px;
 	
 	
 }
@@ -840,7 +930,7 @@ display: inline;
 	margin-top:2px !important;
 	margin-bottom: 5px !important;
 	padding-left: 5pt;
-	border-radius: 5px;
+	border-radius: 2px;
 	
 }
 #scheeme-help-exit{
@@ -871,7 +961,7 @@ display: inline;
 	margin-bottom: 5px;
 	float:right;
 	margin-right: 5px;
-	border-radius: 5px;
+	border-radius: 2px;
 	color: #FFFFFF;
 	font-weight: bold;
 	/*border: 1px solid #999;*/
@@ -908,7 +998,7 @@ display: inline;
 	opacity: 1.0;
 	background-color: #FAFAFA;
 	padding: 10px;
-	border-radius: 5px;
+	border-radius: 2px;
 	display: none;
 	
 }
@@ -1117,7 +1207,7 @@ input[type=checkbox]:checked + label:before {
 
 .summary-element-value{
 	/*border-left: 1px solid black;*/
-	width: 75%;
+	width: 76%;
 	/*border: 1px solid black;*/
 
 }
@@ -1136,6 +1226,10 @@ input[type=checkbox]:checked + label:before {
 	/*background-color: #D1EEEE; */
 	
 }
+.summary-element-value-p{
+	overflow: auto;
+	position: relative;
+}
 .summary-element-valuename{
 	float: left;
 	width: 200px;
@@ -1143,9 +1237,13 @@ input[type=checkbox]:checked + label:before {
 }
 .summary-element-valuevalue{
 	font-weight: bold;
+	float: left;
+	width: calc(100% - 200px);
+	position: relative;
+	overflow-wrap: break-word;
 }
 .odd{
-	background-color: #BFEFFF;
+	background-color: #FFBB66;
 }
 
 /*SUBMIT BLOCK ------------------------------------------------------------------------*/
@@ -1159,7 +1257,7 @@ input[type=checkbox]:checked + label:before {
 	margin-left: 30%;
 	margin-right: 30%;
 	display: none;
-	background-color: #BAEAFA; 
+	/*background-color: #BAEAFA;*/ 
 	padding-left: 2%;
 }
 #warning-block-button{
@@ -1179,7 +1277,7 @@ input[type=checkbox]:checked + label:before {
 	border: none;
 	font-weight: bold;
 	color: #000;
-	border-radius: 5px;
+	border-radius: 2px;
 	box-shadow: 0px 0px 1px #333;
 	cursor: pointer;
 	

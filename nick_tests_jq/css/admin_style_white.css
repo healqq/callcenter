@@ -1,6 +1,5 @@
 ﻿		body {
-			 /*Calibri; /* Семейство шрифтов */ 
-			font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+			font-family: Calibri; /* Семейство шрифтов */
 			font-size: 11pt; /* Размер основного шрифта в пунктах  */
 		/*	background-image: url(images/FonBlack.png);  */
 		/*	background-color: #f0f0f0; /* Цвет фона веб-страницы */ 
@@ -74,10 +73,6 @@
 			align-items: stretch;
 			
 }	
-		/*#table-left-client{
-			background-color: #FAFAFA;
-			
-		}*/
 		.tableRight {
 			margin-left: 2%;
 			margin-right: 2%;
@@ -242,7 +237,6 @@
 		#temp-title, #container-title, #scheeme-title, #summary-title{
 			text-align: center;
 			font-size: 16pt;
-			font-weight: normal;
 			 
 		}
 		#blockname-block{
@@ -383,9 +377,13 @@
 			margin-left: 0px;
 			background-color: white;
 			padding-left: 0.2%; /* Расстояние между линией и текстом */	
-			width: 70%;
 }
-
+		.fieldsListInput{
+		width: 35%;
+}
+		.radioOptionInput{
+			width: 70%;
+		}
 		.branchId{
 			width: 15%;
 			height: 20px;
@@ -558,7 +556,7 @@
 		.control-button, .editbutton, .editbuttonAccordion{
 			border-radius: 2px;
 			color: #FFFFFF;
-			font-weight: 500;
+			font-weight: bold;
 		}
 		.editbutton, .removebutton{
 		
@@ -641,8 +639,8 @@
 	}
 		  .addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover{
 		/*background-color: #8270B6;*/
-			/*font-weight: bold;
-			box-shadow: 0 0 15px #FA0;*/
+			font-weight: bold;
+			/*box-shadow: 0 0 15px #FA0;*/
 	}
 		.exit-button:focus, .addbutton:focus, .editbutton:focus, .control-button:focus{
 			outline:none;
@@ -716,10 +714,10 @@
 /* BUTTONS                  ------------------------------------------------------------*/
 
 
-		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover,  .line-button:hover{
+		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
 			/*border: 2px solid;
 			border-color :#F00;*/
-			box-shadow: 0 0 3px #FA0;/*#DAA520;*/
+			box-shadow: 0 0 10px #FA0;/*#DAA520;*/
 			
 }
 /*HELP BLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -809,27 +807,7 @@
 	width: auto;
 	min-height: 100%;
 	height: 100%;
-	
-	/*padding-top: 40px;*/
-	
 }
-#block-info{
-	height: 60px;
-	width: 90%;
-	margin-left:5%;
-	border: 1px solid #aaa;
-	padding-bottom: 5px;
-	border-radius: 2px;
-	/*background-color: #eee;*/
-}
-#block-info-id, #block-info-name{
-	/*text-align: center;*/
-	margin-left: 5%;
-	width: 90%;
-	margin-top: 2px;
-	margin-bottom: 0px;
-}
-
 /*#draw-block::-webkit-scrollbar{
 display: inline;
 }*/
@@ -839,13 +817,6 @@ display: inline;
 	/*top: 50px;*/
 	position: relative;
 	/*border: 1px solid #999;*/
-}
-li{
-	list-style-type: none;
-}
-ul {
-    margin-left: 0; /* Отступ слева в браузере IE и Opera */
-    padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
 }
 #scheeme-help{
 	position: fixed;
@@ -901,9 +872,6 @@ ul {
 	font-weight: bold;
 	/*border: 1px solid #999;*/
 }
-#goto-elem:hover{
-box-shadow: 0 0 3px #FA0;
-}
  
 #scheeme-exit{
 	height: 20px;
@@ -944,10 +912,9 @@ box-shadow: 0 0 3px #FA0;
 	text-align: center;
 	
 }
-li>span{
+#scheeme-help-basic>span{
 	padding: 5px;
 	float: right;
-	margin-top: 10px;
 }
 #scheeme-help-layer{
 	background-color: #999;
@@ -1146,7 +1113,7 @@ input[type=checkbox]:checked + label:before {
 
 .summary-element-value{
 	/*border-left: 1px solid black;*/
-	width: 76%;
+	width: 75%;
 	/*border: 1px solid black;*/
 
 }
@@ -1165,10 +1132,6 @@ input[type=checkbox]:checked + label:before {
 	/*background-color: #D1EEEE; */
 	
 }
-.summary-element-value-p{
-	overflow: auto;
-	position: relative;
-}
 .summary-element-valuename{
 	float: left;
 	width: 200px;
@@ -1176,10 +1139,6 @@ input[type=checkbox]:checked + label:before {
 }
 .summary-element-valuevalue{
 	font-weight: bold;
-	float: left;
-	width: calc(100% - 200px);
-	position: relative;
-	overflow-wrap: break-word;
 }
 .odd{
 	background-color: #BFEFFF;

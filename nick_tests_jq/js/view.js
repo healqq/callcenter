@@ -50,6 +50,13 @@ var  view = (function(){
 					}
 				
 				});
+			},
+			addLabelsAnimation: function(element, index){
+				$(element).find(':input').each(function(){
+					$('label[for='+$(this).attr('id')+']').removeClass("active-checkBoxLabel");
+				});
+				$('label[for='+$($(element).find(':checked')).attr('id')+']').addClass("active-checkBoxLabel");
+				
 			}
 		
 		

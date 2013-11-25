@@ -1,4 +1,4 @@
-//сохраняет структуру сценария в 1С
+﻿//сохраняет структуру сценария в 1С
 function saveStructure() {
    
 	
@@ -57,11 +57,11 @@ function sendRequest(action, params){
     var request = $.ajax({
                     type: "POST",
                     url: wsUrl,
-					username: 'test',//auth-data for 1c(wtf???/)
-					password: 'qweqwe',
-                    contentType: "text/xml",
+					contentType: "text/xml",
                     dataType: "html",
-                    data: soapRequest
+                    data: soapRequest,
+					username: 'test',
+					password: 'qweqwe'
                 });
 	
 	return  request;

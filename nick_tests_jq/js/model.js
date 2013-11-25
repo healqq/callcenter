@@ -121,6 +121,28 @@ var model = (function(){
 				control.addEvent($("#scheeme-basic-exit"),'click', hideScheemeHelp);
 				view.getInstance().buttonsAnimation();
 				control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
+			},
+			setRadioValue: function(element, index){
+				var indexedElement = $($(element).find(':input[type=radio]')[index]);
+				indexedElement.trigger('click');
+			},
+			getElementInsertPosition: function(){
+				var positionType =  $('input[name=positionType]:checked').val();
+				var retValue = undefined;
+				switch (positionType){
+					case '0': retValue = ""; break;
+					case '1': retValue = 0; break;
+					case '2': var activeBlock = $('.active_header').parent('div').index();
+							if (activeBlock === -1 ){
+							throw	'Выберите блок, после которого хотите вставить элемент';
+							}
+							else{
+								retValue = activeBlock;
+							}
+					break;
+					
+				}
+				return retValue;
 			}
 		}
 	}

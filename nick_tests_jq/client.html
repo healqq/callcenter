@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Гидровелл-коллцентр</title>
@@ -9,7 +9,7 @@
 	<script src="js/ajax.js" type="text/javascript"></script>
 	<script src="js/common_new.js" type="text/javascript"></script>
 	<script src="js/Auth.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="css/admin_style_white.css" type="text/css">
+	<link rel="stylesheet" href="css/admin_style_orange.css" type="text/css">
 	<script src="js/datatransfer.js" type="text/javascript"></script>
 	<script src="js/bbParser.js" type="text/javascript"></script>
 	<script src="js/model.js" type="text/javascript"></script>
@@ -49,7 +49,10 @@
 </head>
 
 <body>
-<div class = "page_header"></div>
+<div class = "page_header">
+	<a id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
+	<div id= "help" class = "help client"><p></p></div>
+</div>
 <div class = "tables">
 	<div class = "tableLeft" id="table-left-client">
 	
@@ -58,27 +61,28 @@
 		<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
 		<!-- <p class = "addbuttonP"><input id="logout" value="Выйти" type="button" class = "control-button"> </p> -->
 		<p id="response" style="display:none"></p>
-		<div id= "help" class = "help focused"><p></p></div>
+		
 	</div>
 
 	<div class = "tableRight">
 		<div class="error"></div>
 		<div id="imported" class= "accordion" style = "display:none">
 		</div>
-		</br>
+		
 
 
 
 			
 
-		<div class="accordion" id = "container" ></div>
+		<div class="accordion" id = "container" >
+		</div>
 		
 		<br>
 		<div id ="submit-block">
 			<div id="summary" class="focused"><h3 id="summary-title">Проверка анкеты</h3></div>
-			<p class = "addbuttonP">
-				<button id="btnSendData" value="Отправить" type="button" class = "control-button no-display-fix">
-				<span>Отправить</span>
+			<p class = "addbuttonP add-block">
+				<input id="btnSendData" type="button" value="Отправить"  class = "control-button">
+				
 			</p>
 	 
 		</div>

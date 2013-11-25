@@ -379,7 +379,7 @@ switch (type) {
 		case "text area":				objectSpecs = {class:"textarea",content:content,id:name};break;
 		case "description":				objectSpecs = {class:"description",content:content};break;
 		case "header":					objectSpecs = {class:"header",content:content};break;
-		case "radioOptionP": 			objectSpecs = {class:"radioOption"};break;
+		case "radioOptionP": 			objectSpecs = {class:"radioОption"};break;
 		case "radioInputTypes":			objectSpecs = {class:undefined,content:["Многострочное поле","Выбор из нескольких элементов","Однострочные поля"],name:"inputType"};break;
 		case "radio":					objectSpecs = {class:undefined,content:content,name:name};break;
 		case "temp-title":				objectSpecs = {class:undefined,content:content,id:'temp-title'};break;
@@ -388,6 +388,10 @@ switch (type) {
 		case 'blockname-block':			objectSpecs = {class:undefined,content:undefined,id:'blockname-block'};break;
 		case 'elementNameAutofill':		objectSpecs = {class:'checkBox',content:'Автозаполнение', id:'elementNameAutofill'};break;
 		case 'elementNameAutofillLabel':objectSpecs = {class:'checkBoxLabel',content:'Автозаполнение', id:'elementNameAutofill'};break;
+		case 'add-block':				objectSpecs = {class:'add-block', content: undefined, id: undefined};break;
+		case 'add-block-button':		objectSpecs = {class:'addbuttonP add-block',content: undefined, id: undefined};break;
+		case 'add-block-position__div':	objectSpecs = {class:'add-block-position__div', content: undefined, id: undefined};break;
+		case 'add-block-position__radio': objectSpecs = {class:'position-type',content:["В конец","В начало","После элемента"],name:"positionType"};break;
 		//show
 		case "accordiontextarea":		objectSpecs = {class:"accordiontextarea",content:content,id:name};break;
 		case "textfield":				objectSpecs = {class:"accordiontext",content:content,id:name};break;	
@@ -506,7 +510,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			case "radio":
 			
 			if ( !(contents.radio == undefined) && !(contents.radioName == undefined) ){
-				newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
+				var	newRadio		= fabric("radio",  		getObjectSpecs("radio",contents.radio,contents.radioName));
 				newRadio.appendTo( newInputDiv );
 				
 				if (!( (contents.branches == undefined) || (contents.branches.length < 2 ) ) ){
@@ -519,6 +523,9 @@ function createNewDivElement(type, contents, isEdited, first){
 					controller.getInstance().addEvent(newRadio,'change',TriggersOnFirstElement);
 					
 				}
+				controller.getInstance().addEvent(newRadio, 'change', function(){
+					view.getInstance().addLabelsAnimation(newRadio);
+				});
 				
 				
 			}
@@ -602,7 +609,8 @@ function createNewDivElement(type, contents, isEdited, first){
 			newPosition   		= fabric("text edit", 		getObjectSpecs("text area", contents.position ,"position" ) );
 			//newInputFieldsCount = fabric("textinline edit",   getObjectSpecs("text area", contents.inputFieldsCount, "inputFieldsCount") );
 			newInputFields      = createTextInputField(contents.fieldsList||undefined);
-			newAddElementButtonP = fabric("p", 		getObjectSpecs("addElementButtonP") );
+			newAddElementDiv    = fabric('div', getObjectSpecs('add-block') );
+			newAddElementButtonP = fabric("p", 		getObjectSpecs("add-block-button") );
 			newAddElementButton = fabric("buttoninline", 		getObjectSpecs("addElementButton") );
 			
 			
@@ -631,7 +639,9 @@ function createNewDivElement(type, contents, isEdited, first){
 		//	newInputRadio.hide();
 			newInputFields.hide();
 			newInputFields.appendTo( newElement );
-			newAddElementButtonP.appendTo ( newElement)
+			
+			newAddElementDiv.appendTo (newElement);
+			newAddElementButtonP.appendTo ( newAddElementDiv);
 			newAddElementButton.appendTo ( newAddElementButtonP);
 			newAddElementButton.click(addElement);
 		//	newInputFieldsCount.appendTo(newElement);
@@ -699,8 +709,11 @@ function createNewDivElement(type, contents, isEdited, first){
 			newPosition   		= fabric("text"	    , 	getObjectSpecs("text area", undefined ,"position" ) );
 			//newInputFieldsCount = fabric("textinline edit",   getObjectSpecs("text area", 1, "inputFieldsCount") );
 			newInputFields      = createTextInputField();
+			newAddElementDiv    = fabric('div', getObjectSpecs('add-block') );
 			newAddElementButton = fabric("buttoninline", 		getObjectSpecs("addElementButton") );
-			newAddElementButtonP = fabric("p", 		getObjectSpecs("addElementButtonP") );
+			newAddElementButtonP = fabric("p", 		getObjectSpecs("add-block-button") );
+			newAddElementPositionDiv  = fabric('div', getObjectSpecs('add-block-position__div') );
+			var newAddElementPositionRadio = fabric('radio', getObjectSpecs('add-block-position__radio') );
 			
 			//очищаем ветви
 			newElement.removeData("branches");
@@ -737,8 +750,17 @@ function createNewDivElement(type, contents, isEdited, first){
 			
 			newInputFields.hide();
 			newInputFields.appendTo( newElement );
-			newAddElementButtonP.appendTo ( newElement)
+			newAddElementDiv.appendTo (newElement);
+			newAddElementButtonP.appendTo ( newAddElementDiv);
 			newAddElementButton.appendTo ( newAddElementButtonP);
+			newAddElementPositionDiv.appendTo( newAddElementDiv );
+			newAddElementPositionRadio.appendTo( newAddElementPositionDiv );
+			
+			
+			controller.getInstance().addEvent(newAddElementPositionRadio, 'change', function(){
+				view.getInstance().addLabelsAnimation(newAddElementPositionRadio);
+			});
+			
 			newAddElementButton.click(addElement);
 	}
 	return newElement;
@@ -806,6 +828,7 @@ function createNewTempElement(contents, edit){
 		});
 		$('input[name=inputType]','#temp_divs').trigger('change');
 		view.getInstance().buttonsAnimation('#temp_divs');
+		model.getInstance().setRadioValue( $('.add-block-position__div'), 0);
 }
 //добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
 function addElement(){
@@ -829,6 +852,7 @@ function addElement(){
 	var input 			= undefined;
 	var radio 			= undefined;
 	var fieldsListArray = undefined;
+	var insert 			= false;
 	if ($("#branch").prop("checked") == true){
 		branches = [];
 		$(".branchId").each(function(){
@@ -843,7 +867,22 @@ function addElement(){
 		}
 	}
 	//var position = undefined;
-	var position = thisDiv.children('#position').children(':input').val();
+//	var positionType = 
+	try{
+		var position = model.getInstance().getElementInsertPosition();
+	}
+	catch(ex){
+		showError(ex);
+		return;
+	}
+	if (position === undefined ){
+		var position = thisDiv.children('#position').children(':input').val();
+	}
+	else 
+		if ( (position !== '') && (position !=='0' ) ){
+			insert = true;
+		}
+			
 	var inputType = $('input[name=' + 'inputType' + ']:checked','#temp_divs');
 	if (inputType.length == 0) {
 		showError("Не выбран тип ввода информации", '#radioInputTypesDiv');
@@ -943,22 +982,24 @@ function addElement(){
 			
 		}
 		else{
-			lastDiv = $("#container").children(':nth-child('+position+')');
-			branchesPrevElement = lastDiv.data("branches");
-			
-			if (branchesPrevElement.length > 1) {
-			checkedDiv = lastDiv.find(':input[type=radio]:checked');
-				if (checkedDiv.length == 0 ){
-					showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last");
-					return;
-				}
-			
-				radioValue = checkedDiv.val();
-				branchesPrevElement[radioValue] = contents.id;
+			if (!insert){
+				lastDiv = $("#container").children(':nth-child('+position+')');
+				branchesPrevElement = lastDiv.data("branches");
 				
-			}
-			else{
-				branchesPrevElement = [contents.id];
+				if (branchesPrevElement.length > 1) {
+				checkedDiv = lastDiv.find(':input[type=radio]:checked');
+					if (checkedDiv.length == 0 ){
+						showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last");
+						return;
+					}
+				
+					radioValue = checkedDiv.val();
+					branchesPrevElement[radioValue] = contents.id;
+					
+				}
+				else{
+					branchesPrevElement = [contents.id];
+				}
 			}
 			
 		}
@@ -977,12 +1018,22 @@ function addElement(){
 	//элемент с edita, и он первый
 	else{
 		if (position == 0) {
+			newDiv.data('branches', [$('#container').children(":first").attr('id')] );
 			newDiv.prependTo( $("#container") );
+			
 			
 		}
 		else{
-			lastDiv = $("#container").children(':nth-child('+position+')');
-			newDiv.insertAfter(lastDiv );
+			
+			if (insert){
+				insertElement(newDiv, position, branches);
+			}
+			else{
+			//newDiv.data('branches', [$('#container').children(":first").attr('id')] );
+				lastDiv = $("#container").children(':nth-child('+position+')');
+				newDiv.insertAfter(lastDiv );
+			}
+			
 		
 		}
 	}
@@ -996,8 +1047,9 @@ function addElement(){
 	if ((newDiv.data('branches') !== undefined) && ( newDiv.data('branches').length < 2) ){ 
 		showBranch(newDiv.data('branches')[0],true);
 	}
-	model.getInstance().setState('new');
 	view.getInstance().buttonsAnimation(newDiv);
+	model.getInstance().setState('new');
+	
 	clearErrors();
 	showHelp();
 }
@@ -1368,6 +1420,7 @@ function hideDivElements(){
 function showBranch(currBranch,hide){
 	if (currBranch == ""){
 		if (!hide){
+			fillSummaryBlock();
 			showSubmitBlock();
 		}
 		return;
@@ -1395,6 +1448,7 @@ function showBranch(currBranch,hide){
 			if ( (branches == undefined) || (branches.length > 1) ) {
 				if (branches == undefined){
 					if (!hide){
+						fillSummaryBlock();
 						showSubmitBlock();
 					}
 				}
@@ -1548,7 +1602,7 @@ function fillSummaryBlock(){
 				
 				var newValueParagraph = fabric('div', getObjectSpecs('summary-element-value-p') );
 				if ( (values[i].value === undefined) || (values[i].value == '') ){
-					newValueParagraph.addClass('not-filled');
+					newValueBlock.addClass('not-filled');
 				}
 				newValueNameSpan.appendTo( newValueParagraph);
 				newValueValueSpan.appendTo( newValueParagraph);
@@ -1645,6 +1699,7 @@ function findPathToElement(element){
 	var start = $('#container').children().first();
 	var path = undefined;
 	path = findPathToElementStep(element, start.attr('id'));
+	if (path !== undefined ) path.push({id:start.attr('id')});
 	return path;
 	
 }
@@ -1905,3 +1960,38 @@ function addSavedData(divBlock){
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
+function insertElement(element, position, branches){
+	var pos = position + 1;
+	var elementToInsertAfter =  $("#container").children(':nth-child('+pos+')');
+	//устанавливаем новому элементу ветви предыдущего
+	var branchesOldElement 	 =  elementToInsertAfter.data('branches');
+	if ( (branchesOldElement !== undefined) && (branchesOldElement.length > 1) ){
+		checkedDiv = elementToInsertAfter.find(':input[type=radio]:checked');
+		if (checkedDiv.length == 0 ){
+			showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last>.input-block");
+			return;
+		}
+		radioValue = checkedDiv.val();
+		var nextElementId = [branchesOldElement[radioValue]];
+		branchesOldElement[radioValue] = $(element).attr('id');
+			
+			
+	}
+	else{
+		nextElementId = branchesOldElement;
+		branchesOldElement = [$(element).attr('id')];
+	}
+	//если вставляется ветвление
+	if ( (branches !== undefined) && (branches.length > 1) ){
+		var branchIndex = 0;
+		branches[branchIndex] = nextElementId[0];
+		nextElementId = branches;
+	}
+	//устанавливаем элементу за которым вставляем в ветви новый элемент
+	elementToInsertAfter.data('branches', branchesOldElement );
+	$(element).data('branches', nextElementId);
+	$(element).insertAfter( elementToInsertAfter );
+	
+	
+	
+}

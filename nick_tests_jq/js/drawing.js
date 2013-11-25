@@ -138,8 +138,8 @@ var drawerSingleton = (function(){
 					options.row*(1+options.spaceCoff) * options.blockWidth,	/*outer*/
 					options.column*(1+options.spaceCoff) * options.blockWidth,
 					50);
-				grd.addColorStop(0,"#63B8FF");	/*inner FFD700 blue: #4F94CD, #1874CD green: #00DF7A, #32CD32*/
-				grd.addColorStop(1,'#4F94CD');
+				grd.addColorStop(0,"#4F94CD");	/*inner FFD700 blue: #4F94CD, #1874CD green: #00DF7A, #32CD32*/
+				grd.addColorStop(1,'#1874CD');
 		
 		switch (type){
 			case "circle":
