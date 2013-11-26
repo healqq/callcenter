@@ -118,9 +118,10 @@ var model = (function(){
 				control.addEvent($("#logout"),'click', logout);
 				control.addEvent($("#toggle-state-btn"),'click', switchTables);
 				control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
-				control.addEvent($("#scheeme-basic-exit"),'click', hideScheemeHelp);
+				control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
 				view.getInstance().buttonsAnimation();
 				control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
+				control.addEvent($('#close-errors'), 'click', clearErrors);
 			},
 			setRadioValue: function(element, index){
 				var indexedElement = $($(element).find(':input[type=radio]')[index]);

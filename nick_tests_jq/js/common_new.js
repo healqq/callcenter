@@ -382,7 +382,7 @@ switch (type) {
 		case "radioOptionP": 			objectSpecs = {class:"radioОption"};break;
 		case "radioInputTypes":			objectSpecs = {class:undefined,content:["Многострочное поле","Выбор из нескольких элементов","Однострочные поля"],name:"inputType"};break;
 		case "radio":					objectSpecs = {class:undefined,content:content,name:name};break;
-		case "temp-title":				objectSpecs = {class:undefined,content:content,id:'temp-title'};break;
+		case "temp-title":				objectSpecs = {class:"title",content:content,id:'temp-title'};break;
 		case "bb-block":				objectSpecs = {class:undefined,content:content,id:'bb-block'};break;
 		case "bb-button":				objectSpecs = {class:'line-button',content:content,id:name};break;
 		case 'blockname-block':			objectSpecs = {class:undefined,content:undefined,id:'blockname-block'};break;
@@ -436,12 +436,12 @@ switch (type) {
 }
 function showError(errString, element){
 	var errDiv = $('.error');
-	errDiv.empty();
+	errDiv.children('.error-text').empty();
 	clearUnfilled();
 //	errDiv.hide();
 	errDiv.addClass("active");
 	errDiv.slideDown('fast');
-	$('<p>'+errString+'</p>').appendTo(errDiv);
+	$('.error-text').text(errString);
 	focusElement(element);
 	
 	
@@ -462,7 +462,7 @@ function focusElement(element, type){
 function clearErrors(){
 		errorElem = $('.error');
 		errorElem.slideUp('fast');
-		errorElem.empty();
+		errorElem.children('.error-text').empty();
 		errorElem.removeClass("active");
 		clearUnfilled();
 		
@@ -1602,7 +1602,8 @@ function fillSummaryBlock(){
 				
 				var newValueParagraph = fabric('div', getObjectSpecs('summary-element-value-p') );
 				if ( (values[i].value === undefined) || (values[i].value == '') ){
-					newValueBlock.addClass('not-filled');
+					//todo indication unfilled
+					//newValueBlock.addClass('not-filled');
 				}
 				newValueNameSpan.appendTo( newValueParagraph);
 				newValueValueSpan.appendTo( newValueParagraph);

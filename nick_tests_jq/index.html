@@ -26,7 +26,7 @@
 
 	<div class = "page_header">
 		<a id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
-		<div class="error"></div>
+		<div class="error"><p class="error-text"></p><div class="exit-small__div"><input  class="exit-btn-small" type="button" id="close-errors" value = "&#160;"> </div></div>
 	</div>
 
 	<div class = "tables">
@@ -43,7 +43,7 @@
 			<p id="response" style="display:none"></p>
 			<br>
 			<div id= "help" class = "help">
-				<h3>Подсказка</h3>
+				<h3 class="title">Подсказка</h3>
 				<p></p>
 			</div>
 		</div>
@@ -66,7 +66,7 @@
 
 
 			
-			<h2 id="container-title">Предварительный просмотр</h2>
+			<h2 id="container-title" class="title out">Предварительный просмотр</h2>
 			<div class="accordion" id = "container" ></div>
 			</br>
 
@@ -78,7 +78,7 @@
 		</div>
 		
 		<div class = "tableInfo">
-			<h2 id="scheeme-title">Схема скрипта</h2>
+			<h2 id="scheeme-title" class="title">Схема скрипта</h2>
 			<div id="block-info">
 				<p id="block-info-id"></p>
 				<p id="block-info-name"></p>
@@ -93,19 +93,19 @@
 		</div>
 	</div>
 	<p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>
-	<div id ="scheeme-help" class = "focused">
+	<!-- <div id ="scheeme-help" class = "focused">
 		<h4>Информация</h4>
 		<p id ="scheeme-id"></p>
 		<input type="button" id="goto-elem" value="Перейти">
 		<p id="scheeme-help-exit" >
 			<input type="button" id="scheeme-exit" value="">
 		</p>
-	</div>
+	</div> -->
 	<div id= "scheeme-help-layer">
 		
 	</div>
 	<div id = "scheeme-help-basic" class = "focused">
-			<h3>Обозначения на схеме</h3>
+			<h3 class="title">Обозначения на схеме</h3>
 			<ul>
 			<li>
 				<img src = "css/images/round-black.png" alt="черный круг"><span>Круги в схеме означают элементы - ветвления. Цифра в
@@ -126,10 +126,10 @@
 				<span> Для перехода на другой элемент нужно нажать на него.</span>
 			</li>
 			</ul>
-			<p id="scheeme-help-basic-exit" >
-			<input type="button" id="scheeme-basic-exit" value="">
+			<div class="exit-small__div scheeme"  >
+			<input type="button" class="exit-btn-small" id="scheeme-help-exit" value="">
 			
-		</p>
+			</div>
 			
 		</div>
 	<div class = "page_footer">
