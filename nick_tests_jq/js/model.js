@@ -4,9 +4,13 @@ var model = (function(){
     function model() {
 	//private
 		var lastid = 0;
-		var state = 'new';	// state используется для контроля пользователя и получения данных
-							// о текущем состоянии ( варианты 'new', 'edit' )
-		
+		var state ={ element_edit:'new',
+					display_view:'controls'// state используется для контроля пользователя и получения данных
+					};						// о текущем состоянии ( варианты 'new', 'edit' )
+		var statesList = {
+			element_edit:['new', 'edit'],
+			display_view:['controls', 'scheeme']
+		}
 		//public
 		return{
 			//функция возвращает id элемента для автозаполнения
@@ -82,14 +86,14 @@ var model = (function(){
 				
 			},
 			setState: function(type){
-				state = type;
+				state.element_edit = type;
 				
 			},
 			getState: function(){
-				return state;
+				return state.element_edit;
 			},
 			isEdited: function(){
-				return (state === 'edit');
+				return (state.element_edit === 'edit');
 			},
 			onStart: function(){
 				var control = controller.getInstance();
@@ -98,34 +102,56 @@ var model = (function(){
 					return "Внимание! Вся несохранённая информация будет потеряна! ";
 			
 				});
-				checkSession();
-				instance.api.loadSettings();
-				createNewTempElement();
+				//checkSession();
+				//дальше в зависимости от страницы делаем что-то
+				if ( $('#container').data('sstype') ){
+					instance.api.loadSettings();
+					createNewTempElement();
+					control.addEvent($("#btnSaveStructure"),'click', function(){
+							var r=confirm("Внимание! Старая версия анкеты будет заменена! Продолжить?");
+							if (r==true)
+							{
+								saveStructure();
+							}
+							else
+							{
+								//return;
+							}
+							
+						});
+					
+					control.addEvent($("#sendXML"),'click', sendData);
+					control.addEvent($("#logout"),'click', logout);
+					control.addEvent($("#toggle-state-btn"),'click', switchTables);
+					control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
+					control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
+					view.getInstance().buttonsAnimation();
+					control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
+					control.addEvent($('#close-errors'), 'click', clearErrors);
+				}
+				else{
 				
-			
-				$("#container").data("sstype",true);
-				control.addEvent($("#btnSaveStructure"),'click', function(){
-						var r=confirm("Внимание! Старая версия анкеты будет заменена! Продолжить?");
-						if (r==true)
-						{
+				
+					
+					loadStructure(false);
+					control.addEvent($("#btnLoadStructure"),'click',function(){ loadStructure(false) });
+					control.addEvent($("#btnSendData"),'click', sendData);
+					control.addEvent($("#btnReload"),'click', function(){
+						var r=confirm("Внимание! Все заполненные данные будут очищены! Продолжить?");
+						if ( r ){
+							reloadStructure();
+						}
+						else{
 							
 						}
-						else
-						{
-							return;
-						}
-						saveStructure();
+						
 					});
-				
-				
-				control.addEvent($("#sendXML"),'click', sendData);
-				control.addEvent($("#logout"),'click', logout);
-				control.addEvent($("#toggle-state-btn"),'click', switchTables);
-				control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
-				control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
+				}
+		
+		//$("#btnSendData").click(sendData);
+				control.addEvent($("#logout"), 'click', logout);
 				view.getInstance().buttonsAnimation();
-				control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
-				control.addEvent($('#close-errors'), 'click', clearErrors);
+	
 			},
 			setRadioValue: function(element, index){
 				var indexedElement = $($(element).find(':input[type=radio]')[index]);
@@ -148,6 +174,18 @@ var model = (function(){
 					
 				}
 				return retValue;
+			},
+			//Функция для смены подсказок 
+			//messages = array[2];
+			toggleTooltipMessage: function(element, messages){
+				var index = statesList.display_view.indexOf(state.display_view);
+				index = (index+1)%2;
+				$(element).attr('title', messages[ index ] );
+				state.display_view = statesList.display_view[index];
+				
+				
+				
+				
 			}
 		}
 	}

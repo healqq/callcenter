@@ -439,9 +439,10 @@ function showError(errString, element){
 	errDiv.children('.error-text').empty();
 	clearUnfilled();
 //	errDiv.hide();
+	model.getInstance().setHTML($('.error-text'),errString);
 	errDiv.addClass("active");
 	errDiv.slideDown('fast');
-	$('.error-text').text(errString);
+	
 	focusElement(element);
 	
 	
@@ -1786,6 +1787,7 @@ function switchTables(event, isRedraw){
 		
 	}
 	$('#toggle-state-btn').toggleClass('state-active');
+	model.getInstance().toggleTooltipMessage($('#toggle-state-btn'), ['развернуть схему', 'свернуть схему']);
 	$('.tableLeft').animate({width: 'toggle'}, "fast");
 }
 function computeTablesWidth(active){
@@ -1824,13 +1826,13 @@ function showScheemeHelp(){
 	$('#scheeme-basic-exit').show();
 	
 	$('#scheeme-help-basic').slideDown({duration:'slow', complete: function(){
-		$('#scheeme-help-basic-exit').show();
+		$('.exit-small__div.scheeme').show();
 		}
 	});
 }
 function hideScheemeHelp(){
-	$('#scheeme-help-basic-exit').hide();
-	$('#scheeme-help-basic').slideUp({duration:'slow', complete: function(){
+		$('.exit-small__div.scheeme').hide();
+		$('#scheeme-help-basic').slideUp({duration:'slow', complete: function(){
 		$('#scheeme-basic-exit').hide();
 		$('#scheeme-help-layer').hide();
 		}

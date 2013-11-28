@@ -16,7 +16,7 @@
 	<script src="js/view.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-		model.getInstance().onStart();
+		checkSession();
 	});
 	</script>
 
@@ -25,8 +25,8 @@
 <body class="admin-body">
 
 	<div class = "page_header">
-		<a id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
-		<div class="error"><p class="error-text"></p><div class="exit-small__div"><input  class="exit-btn-small" type="button" id="close-errors" value = "&#160;"> </div></div>
+		<a tabindex='-1' id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
+		<div class="error"><p class="error-text"></p><div class="exit-small__div"><input  class="warning-exit-btn" type="button" id="close-errors" value = "&#160;"> </div></div>
 	</div>
 
 	<div class = "tables">
@@ -73,8 +73,8 @@
 
 		</div>
 		<div id="controls-block">
-			<p id="scheeme-help-p"><input type="button" id="scheeme-help-btn" value=""></p>
-			<p id="toggle-state"><input type="button" id="toggle-state-btn" value=""></p>
+			<p id="scheeme-help-p"><input type="button" id="scheeme-help-btn" title="Помощь по схеме" value="&#160;"></p>
+			<p id="toggle-state"><input type="button" id="toggle-state-btn" value="&#160;" title="развернуть схему"></p>
 		</div>
 		
 		<div class = "tableInfo">
@@ -93,7 +93,7 @@
 			
 		</div>
 	</div>
-	<p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>
+	<p class = "exitP"><input id="logout" value="&#160;" type="button" class = "exit-button"> </p>
 	<!-- <div id ="scheeme-help" class = "focused">
 		<h4>Информация</h4>
 		<p id ="scheeme-id"></p>
@@ -109,26 +109,26 @@
 			<h3 class="title">Обозначения на схеме</h3>
 			<ul>
 			<li>
-				<img src = "css/images/round-black.png" alt="черный круг"><span>Круги в схеме означают элементы - ветвления. Цифра в
-				центре круга - количество веток.</span><br>
+				<img src = "css/images/round-black.png" alt="черный круг"><p><span>Круги в схеме означают элементы - ветвления. Цифра в
+				центре круга - количество веток.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/square-black.png" alt="черный квадрат"><span>Квадраты - все остальные элементы.</span><br>
+				<img src = "css/images/square-black.png" alt="черный квадрат"><p><span>Квадраты - все остальные элементы.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/round-red.png" alt="красный круг"><span>Красный круг означает, что не все ветви заполнены.</span><br>
+				<img src = "css/images/round-red.png" alt="красный круг"><p><span>Красный круг означает, что не все ветви заполнены.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/square-red.png" alt="красный квадрат"><span>Дозаполнить ветви можно, нажав на красный квадрат,
-				соответсвующий нужной ветви.</span><br>
+				<img src = "css/images/square-red.png" alt="красный квадрат"><p><span>Дозаполнить ветви можно, нажав на красный квадрат,
+				соответсвующий нужной ветви.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><span>Закрашенный синим элемент отображает текущее местоположение.</span>
-				<span> Для перехода на другой элемент нужно нажать на него.</span>
+				<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><p><span>Закрашенный синим элемент отображает текущее местоположение.</span></p>
+				<p><span> Для перехода на другой элемент нужно нажать на него.</span></p>
 			</li>
 			</ul>
 			<div class="exit-small__div scheeme"  >
-			<input type="button" class="exit-btn-small" id="scheeme-help-exit" value="">
+			<input type="button" class="exit-btn-small" id="scheeme-help-exit" value="&#160;">
 			
 			</div>
 			

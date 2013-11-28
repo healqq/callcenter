@@ -59,7 +59,9 @@
 		order: 0;
 		/*background-color: #fafafa;*/
 		}
-		
+		#logo{
+			
+		}
 		.tables{
 			/*transition: all 2s; 
 			box-sizing: border-box;*/
@@ -93,6 +95,7 @@
 			-webkit-align-items: stretch;
 			-ms-flex-align: stretch;
 			align-items: stretch;
+			margin-bottom: 32px;
 			
 }	
 		.tableRight {
@@ -157,7 +160,8 @@
 		
 }
 	.controls-block{
-		overflow: auto;
+		overflow-x: hidden;
+		overflow-y: auto;
 		position: relative;
 	}
 	 .control-button,  .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
@@ -166,6 +170,7 @@
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		.error {
 		/*	color: #121310;*/
+			border: 1px solid transparent;
 			background-color:#ff8888;
 			/*background-image: url(images/error.png);
 			opacity: 0.7;*/
@@ -624,6 +629,7 @@
 		text-transform: uppercase;
 		font-size: 8pt;
 		font-weight: bold;
+		cursor: pointer;
 		
 		
 }
@@ -696,7 +702,7 @@
 			/*margin-left: 5%; */
 			/*width: 80px;*/
 			margin-bottom: 5px;
-			width: 70pt;
+			width: 75pt;
 			margin-left: 5px;
 		
 }
@@ -859,6 +865,9 @@
 				font-size: 11pt;
 				margin-top: 5px;
 			}
+			.client p{
+				margin-top: 10px !important;
+			}
 		.help p{
 			text-align:center;
 			margin-top: 2px;
@@ -925,8 +934,8 @@
 	overflow-y: hidden;
 	overflow-x: auto;
 	width: auto;
-	min-height: 100%;
-	height: 100%;
+/*	min-height: 100%;
+	height: 100%;*/
 	
 	/*padding-top: 40px;*/
 	
@@ -989,7 +998,7 @@ display: inline;
 	
 	margin: 0;
 }
-#scheeme-exit, #goto-elem, #toggle-state-btn, #scheeme-help-btn, #warning-exit-btn{
+#scheeme-exit, #goto-elem, #toggle-state-btn, #scheeme-help-btn, .warning-exit-btn{
 	border: none;
 	/*background-image: url(images/exit_small.png);
 	background-position: 0px 0px;*/
@@ -1047,13 +1056,33 @@ display: inline;
 	padding: 10px;
 	border-radius: 2px;
 	display: none;
-	
+		
 }
+	li{
+		list-style-type: none;
+		overflow: auto;
+	}
+	ul {
+		margin-left: 0; /* Отступ слева в браузере IE и Opera */
+		padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+	}
+	li>p{
+		padding: 5px 5px 5px 25px;
+		
+		/*float: left;*/
+		margin-top: 5px;
+		margin-left: 10px;
+		margin-bottom: auto;
+		overflow-wrap: break-word;
+		overflow: auto;
+	}
+	li> img{
+		float: left;
+	}
+	li> span{
+		float: right;
+	}
 
-#scheeme-help-basic>span{
-	padding: 5px;
-	float: right;
-}
 #scheeme-help-layer{
 	background-color: #999;
 	opacity: 0.5;
@@ -1075,6 +1104,7 @@ display: inline;
 	.scheeme{
 		top: 12px;
 		right: 6px;
+		display: none;
 	}
 .exit-btn-small{
 	height: 20px;
@@ -1366,13 +1396,14 @@ input[type=checkbox]:checked + label:before {
 	margin: 0;
 
 }
-#warning-exit-btn{
+.warning-exit-btn{
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
 	background-image:url(images/exit_white.png);
 	background-position: 0px 0px;
+	background-color: transparent;
 }
-#warning-exit-btn:hover{
+.warning-exit-btn:hover{
 	background-position: 0px 16px;
 }

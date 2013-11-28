@@ -51,7 +51,7 @@ function checkSession(){
 		//start new session ( send request login, pwd )
 	}
 	else{
-		confimSession(cookieSESSID);
+		confirmSession(cookieSESSID);
 		//send request with sessid
 	}
 }
@@ -107,7 +107,9 @@ function auth(login, pwd){
 		});
 }
 //проверка, что текущая сессия существует на сервере
-function confimSession(sessionID){
+function confirmSession(sessionID){
+	var redirectDone;
+	var adminType = undefined;
 	//params = [{key:'Token',value:sessionID}];
 	request = sendRequest("CheckSession");
 	request.done(function (msg){
@@ -121,22 +123,20 @@ function confimSession(sessionID){
 			}		
 		sessionType =  $.trim($( "#response" ).text());
 		//alert(SESSID);
-		if ( sessionType == "admin" ) {
+		
+		adminType = ( sessionType == "admin" );
+		
 			//all ok
 			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/'});
-			redirect("index.html");
+			$('#container').data('sstype', adminType);
+			redirectDone = redirect(adminType?"index.html":"client.html");
 			//return true;
-		}
-		else{
 		
 		
-			//alert("Неправильная пара логин пароль!");
-			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/'});
-			redirect("client.html");
-			//window.location.replace("auth.html");
-			//return false;
-		}
+		if ( !redirectDone ){
+		model.getInstance().onStart();
 		$('.waiting-layer').hide();
+		}
 		//showBranch(first,false);
 	});
 	request.fail(function( jqXHR, textStatus ) {
@@ -154,6 +154,7 @@ function redirect(path){
 		$(window).off('beforeunload');
 		window.location.href = path;
 	}
+	return needRedirect;
 }
 
 function logout(){

@@ -18,29 +18,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-	checkSession();
-	loadStructure(false);
-	
-	var control = controller.getInstance();
-	$("#container").data("sstype",false);
-	control.addEvent($("#btnLoadStructure"),'click',function(){ loadStructure(false) });
-	control.addEvent($("#logout"), 'click', logout);
-	control.addEvent($("#btnSendData"),'click', sendData);
-	control.addEvent($("#btnReload"),'click', function(){
-		var r=confirm("Внимание! Все заполненные данные будут очищены! Продолжить?");
-			if (r==true)
-			{
-				
-			}
-			else
-			{
-				return;
-			}
-		reloadStructure();
-	});
-	//$("#btnSendData").click(sendData);
-	
-	view.getInstance().buttonsAnimation();
+		checkSession();
 	
 });
 	
@@ -50,7 +28,7 @@
 
 <body>
 <div class = "page_header">
-	<a id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
+	<a tabindex='-1' id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
 	<div id= "help" class = "help client"><p></p></div>
 </div>
 <div class = "tables">
@@ -88,7 +66,7 @@
 		</div>
 	</div>
 	<div class = "tableInfo">
-		<p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>
+		<p class = "exitP"><input id="logout" value="&#160;" type="button" class = "exit-button"> </p>
 	</div>
 </div>
 <div class = "page_footer">
@@ -100,7 +78,7 @@
 	<p id ='warning-block-button'>
 		<input type="button" class="warning-button" id="revert" value="Отменить"></input>
 	</p>
-	<p id="warning-exit"><input type="button" id="warning-exit-btn" value=""</p>
+	<p id="warning-exit"><input type="button" class='warning-exit-btn' id="warning-exit-btn" value="&#160;"</p>
 </div>
 <div class="waiting-layer"><div id="img-block"></div></div>
 <!-- <input type="button" id="import">build from json</input> -->
