@@ -932,12 +932,14 @@
 	
 }
 #block-info{
-	height: 60px;
+	min-height: 60px;
 	width: 90%;
 	margin-left:5%;
 	border: 1px solid #aaa;
 	padding-bottom: 5px;
 	border-radius: 4px;
+	overflow: auto;
+	overflow-wrap: break-word;
 	/*background-color: #eee;*/
 }
 #block-info-id, #block-info-name{
