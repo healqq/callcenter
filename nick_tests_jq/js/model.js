@@ -22,8 +22,10 @@ var model = (function(){
 					
 				}
 			},
-			//saves settings to cookies +
-			saveSettings: function(){
+			//функции для работы основные
+			api:{
+				//saves settings to cookies +
+				saveSettings: function(){
 				var autosave = $('#autosave').prop('checked');
 				var autofillID = $('#elementNameAutofill').prop('checked');
 				var settings = {'autosave': autosave,
@@ -32,9 +34,9 @@ var model = (function(){
 				setCookie('settings', JSON.stringify(settings), {expires:24*60*60*365,path:'/'});
 				$('#temp_divs').data('autofillID', settings.autofillID);
 				
-			},
+				},
 			//loading settings +
-			loadSettings: function(){
+				loadSettings: function(){
 				var savedSettings  =	getCookie('settings');
 				if (savedSettings !== undefined){
 					try{
@@ -54,15 +56,17 @@ var model = (function(){
 					autosaveItem.prop('checked', savedSettingsObj.autosave);
 					//записываем параметр для использования чтобы не дергать печеньки
 					$('#temp_divs').data('autofillID', savedSettingsObj.autofillID);
-					controller.getInstance().addEvent($('#autosave')[0], 'change', instance.saveSettings);
+					controller.getInstance().addEvent($('#autosave')[0], 'change', instance.api.saveSettings);
 					
 					if (autofillItem.length > 0 ){
 						autofillItem.prop('checked', savedSettingsObj.autofillID);
-						controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', instance.saveSettings);
+						controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', instance.api.saveSettings);
 						controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change',  instance.autofillIDClick);
 					}
 					
 				}
+				}
+			
 			},
 			setHTML: function(element, text){
 				if ( ( element === undefined ) || ($(element).length === 0) )
@@ -95,7 +99,7 @@ var model = (function(){
 			
 				});
 				checkSession();
-				instance.loadSettings();
+				instance.api.loadSettings();
 				createNewTempElement();
 				
 			

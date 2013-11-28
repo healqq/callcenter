@@ -51,8 +51,9 @@ var  controller = (function(){
 					return;
 				var notFound = true;
 				var matchedElement = undefined;
+				var $element = $(element)[0];
 				for( var i=0; i< events.length && notFound; i++ ){
-					if (events[i].element[0] === element[0] ){
+					if (events[i].element[0] === $element ){
 						notFound = false;
 						matchedElement  = events[i];
 					}
@@ -73,9 +74,10 @@ var  controller = (function(){
 				if (element === undefined)
 					return;
 				var notFound = true;
+				var $element = $(element)[0];
 				var matchedElement = undefined;
 				for( var i=0; i< events.length && notFound; i++ ){
-					if (events[i].element[0] === element[0] ){
+					if (events[i].element[0] === $element ){
 						notFound = false;
 						matchedElement  = events[i];
 					}

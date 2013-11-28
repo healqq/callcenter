@@ -787,7 +787,7 @@ function createNewTempElement(contents, edit){
 	$('#temp_divs').empty();
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
-	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().saveSettings);
+	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().api.saveSettings);
 	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().autofillIDClick);
 	$('#desc-block').keyup();
 	//newElement.hide();

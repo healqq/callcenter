@@ -597,6 +597,7 @@
 /* чекбоксы  начало*/
 		.checkBoxLabel{
 			font-family: Calibri;
+			text-transform: capitalize;
 	/*margin-left: 5%;*/
 	/*color:#828282;*/
 }
