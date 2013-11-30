@@ -1,7 +1,7 @@
 ﻿		body {
 			font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; /* Семейство шрифтов */
 			font-size: 11pt; /* Размер основного шрифта в пунктах  */
-			
+			overflow-wrap: break-word;
 		/*	background-image: url(images/FonBlack.png);  */
 		/*	background-color: #f0f0f0; /* Цвет фона веб-страницы */ 
 			/*background-color: #FAFAFA;*/
@@ -489,7 +489,7 @@
 }
 		#branch-block, .radio-block, #autosave-p{
 			margin-left: 5%;
-			height: 20px;
+			/*height: 20px;*/
 			display: block;
 			position: relative;
 		}
@@ -1164,7 +1164,7 @@ label:not(.checkBoxLabel):before{
 	
 }
 label{
-	display: inline-block;
+	/*display: inline-block;*/
 	cursor: pointer;
 	position: relative;
 	padding-left: 25px;

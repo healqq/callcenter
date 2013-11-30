@@ -595,6 +595,7 @@ function createNewDivElement(type, contents, isEdited, first){
 	case "edit":
 			newElement 			= fabric("div", 			getObjectSpecs("div",undefined,undefined) );
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
+			newElementNameDiv   = fabric("div", 			getObjectSpecs('blockname-block') );
 			newElementName		= fabric("textinline edit", getObjectSpecs("elementName", contents.id) );
 			newHeader 			= fabric("textinline edit", getObjectSpecs("temp-div-header", contents.header) );
 			newBBControls 		= addBBControls();
@@ -611,17 +612,26 @@ function createNewDivElement(type, contents, isEdited, first){
 			//newInputFieldsCount = fabric("textinline edit",   getObjectSpecs("text area", contents.inputFieldsCount, "inputFieldsCount") );
 			newInputFields      = createTextInputField(contents.fieldsList||undefined);
 			newAddElementDiv    = fabric('div', getObjectSpecs('add-block') );
-			newAddElementButtonP = fabric("p", 		getObjectSpecs("add-block-button") );
 			newAddElementButton = fabric("buttoninline", 		getObjectSpecs("addElementButton") );
+			newAddElementButtonP = fabric("p", 		getObjectSpecs("add-block-button") );
+			newAddElementPositionDiv  = fabric('div', getObjectSpecs('add-block-position__div') );
+			var newAddElementPositionRadio = fabric('radio', getObjectSpecs('add-block-position__radio') );
 			
 			
 			
 			addHelpTriggers();
 			newTitle.appendTo( newElement);
-			newElementName.appendTo( newElement);
-			newHeader.appendTo (newHeaderParagraph);
+			
+		/*	newElementName.appendTo( newElementNameDiv);
+			
+			newElementCheckboxLabel.appendTo( newElementNameDiv);
+			newElementCheckbox.prop('checked', autofill);*/
 			//записываем ветки
+			newElementName.appendTo( newElementNameDiv);
+			newElementNameDiv.appendTo( newElement);
+			
 			newElement.data("branches", contents.branches);
+			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
 			newBBControls.appendTo(newElement);
 			//newHeader.children(':input').val(contents.header);
@@ -644,6 +654,14 @@ function createNewDivElement(type, contents, isEdited, first){
 			newAddElementDiv.appendTo (newElement);
 			newAddElementButtonP.appendTo ( newAddElementDiv);
 			newAddElementButton.appendTo ( newAddElementButtonP);
+			newAddElementPositionDiv.appendTo( newAddElementDiv );
+			newAddElementPositionRadio.appendTo( newAddElementPositionDiv );
+			
+			
+			controller.getInstance().addEvent(newAddElementPositionRadio, 'change', function(){
+				view.getInstance().addLabelsAnimation(newAddElementPositionRadio);
+			});
+			
 			newAddElementButton.click(addElement);
 		//	newInputFieldsCount.appendTo(newElement);
 		//	newInputFieldsCount.hide();
@@ -836,6 +854,10 @@ function addElement(){
 	/*clearErrors();*/
 	
 	var name = $('#newElementName').val();
+	if (model.getInstance().isEdited() ){
+		var removedBlockID = $('#temp_divs').data('removedBlockID');
+		removeElement($('#'+removedBlockID) );
+	}	
 	var namePattern = /^[a-z]+[a-z,0-9,\-,\_]*$/i;
 	
 	if ( (name == "") || !(namePattern.test(name) ) ){
@@ -1019,7 +1041,13 @@ function addElement(){
 	//элемент с edita, и он первый
 	else{
 		if (position == 0) {
-			newDiv.data('branches', [$('#container').children(":first").attr('id')] );
+			if (branches === undefined){
+				branches = [$('#container').children(":first").attr('id')];
+			}
+			else{
+				branches[0] = $('#container').children(":first").attr('id');
+			}
+			newDiv.data('branches', branches );
 			newDiv.prependTo( $("#container") );
 			
 			
@@ -1074,7 +1102,8 @@ function onEditClick(){
 	objectDiv = createObjectFromDiv(parentBlock, false);
 	objectDiv.position = position;
 	parentBlock.animate({opacity: 'hide',height:0+'px'},{duration:'slow',easing: 'swing',complete:function(){
-		removeElement(parentBlock);
+		$('#temp_divs').data('removedBlockID', parentBlock.attr('id') );
+		/*removeElement(parentBlock);*/
 		}
 	});
 	objectDiv.title = "Редактирование блока";
@@ -1091,6 +1120,9 @@ function onEditClick(){
 		//var branches = prevBlock
 		prevBlock.find('h3').trigger('click');
 	
+	//для эдита такую возможность уберем
+	$('.add-block-position__div').hide();
+	model.getInstance().setRadioValue( $('.add-block-position__div'), undefined);
 	
 	
 }
@@ -1105,6 +1137,11 @@ function onCopyClick(){
 	
 	
 	createNewTempElement(objectDiv, true);
+	var autofill = $('#temp_divs').data('autofillID') ;
+	if (autofill){
+		$('#newElementName').val(model.getInstance().autofillID());
+	}
+	
 	
 }
 //если есть ветвление - то тип по дефолту радио

@@ -154,6 +154,9 @@ var model = (function(){
 	
 			},
 			setRadioValue: function(element, index){
+				if (index === undefined){
+					$(element).find(':input[type=radio]').prop('checked', false);
+				}
 				var indexedElement = $($(element).find(':input[type=radio]')[index]);
 				indexedElement.trigger('click');
 			},

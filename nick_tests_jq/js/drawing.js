@@ -28,8 +28,11 @@ var drawerSingleton = (function(){
 			"rowComputed": undefined,
 			"branchesSize": undefined,
 			"notFilled": false,
-			"currentElement": false
+			"currentElement": false,
+			"editedElement": false 
 		};
+	/*	options.editedElement = ( model.getInstance().isEdited() ? 
+			($('#temp_divs').data('removedBlockID')  === element) : false );*/
 		var pseudoElement = (element.search(':') !== -1);
 		var nextElements = undefined;
 		var activeID = undefined;
@@ -236,7 +239,7 @@ var drawerSingleton = (function(){
 	});
 	//ищет блок по координатам 
 	var findBlock = ( function( pageX, pageY){
-		var mouseX 	= pageX - canvas.offsetLeft;
+		var mouseX 	= pageX - canvas.offsetLeft + $('#draw-block')[0].scrollLeft;
 		var mouseY 	= pageY - canvas.offsetTop - initialShift;
 		var retValue = {rows:undefined, columns: undefined, found: true};
 		var rows 	= (mouseX  ) /( blockWidth*(1+spaceCoff) );
