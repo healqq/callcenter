@@ -58,14 +58,17 @@ function sendData(){
 					//showError("Анкета отправлена!");
 					showHelp("send", 15*1000);
 					reloadStructure();
+					view.getInstance().toggleElementState($("#btnSendData"));
 				}
 			}
 			$('.waiting-layer').hide();
 				});
 	request.fail(function( jqXHR, textStatus ) {
 		showError( "Request failed: " + textStatus);
-		});
+		view.getInstance().toggleElementState($("#btnSendData"));
 		$('.waiting-layer').hide();
+		});
+		
 }
 
 var escapeHTML = (function () {
@@ -79,7 +82,7 @@ var escapeHTML = (function () {
 
 function fillingStarted() {
     
-    request = sendRequest("ScriptFillingStarted");
+    request = sendRequest("ScriptFillingStarted",undefined,true);
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );
 			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');

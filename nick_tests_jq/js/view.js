@@ -57,7 +57,30 @@ var  view = (function(){
 				});
 				$('label[for='+$($(element).find(':checked')).attr('id')+']').addClass("active-checkBoxLabel");
 				
+			},
+			//active-unactive
+			toggleElementState: function( element, state){
+				if (state === undefined){
+					$(element).toggleClass('inactive');
+					return;
+				}
+				if (state){
+					$(element).removeClass('inactive');
+					$(element).add
+				}
+				
+			},
+			//Скроллим вверх при нажатии на edit/copy(+animation)
+			scrollToTop: function(){
+				$('body').animate({scrollTop:137},{duration:'fast'});
+			},
+			toggleControlButtonsState: function(state){
+				$('.editbuttonAccordion').each( function(){
+					instance.toggleElementState($(this), state);
+				});
 			}
+			
+			
 		
 		
 		}

@@ -135,7 +135,10 @@ var model = (function(){
 					
 					loadStructure(false);
 					control.addEvent($("#btnLoadStructure"),'click',function(){ loadStructure(false) });
-					control.addEvent($("#btnSendData"),'click', sendData);
+					control.addEvent($("#btnSendData"),'click',function(){
+						view.getInstance().toggleElementState($("#btnSendData"));
+						sendData();
+					});
 					control.addEvent($("#btnReload"),'click', function(){
 						var r=confirm("Внимание! Все заполненные данные будут очищены! Продолжить?");
 						if ( r ){
@@ -189,6 +192,92 @@ var model = (function(){
 				
 				
 				
+			},
+			blockActions:{
+				deleteBlock: function(element ){
+					if (instance.isEdited() ){
+						showError('Сначала закончите редактирование текущего элемента');
+						return;
+					}
+					var $element = $(element);
+					console.log(element);
+					var branches = $element.data('branches');
+					console.log(instance.blockActions.hasBranches(branches));
+					if (instance.blockActions.hasBranches(branches)){
+						//нельзя удалить элемент с ветвями 
+						return false;
+					}
+					else{
+						var prevElem = $element.prev();
+						var nextElem = $element.next();
+						var prevElemBranches = prevElem.data('branches');
+						//var nextElemBranches = nextElem.data('branches');
+						
+						//варианты
+						//первый элемент:
+						//просто удаляем его, изменений в других элементах не будет,
+						//но нужна перерисовка
+						if (prevElem.length === 0 ){
+							firstElement = ( branches === undefined?undefined:branches[0]);
+							removeElement($element);
+							showBranch(firstElement, false);
+							
+							
+							
+						}
+						else
+							//последний элемент
+							//очищаем ветвь у предыдущего элемента и всё
+							if (nextElem.length === 0){
+								prevElemBranches[prevElemBranches.indexOf($element.attr('id'))] = '';
+								//prevElemBranches = ( (prevElemBranches.length === 1) ? undefined : prevElemBranches);
+								removeElement(element);
+								if (prevElemBranches.length === 1){
+									prevElem.removeData('branches');
+									
+								}
+								else{
+									prevElem.data('branches', prevElemBranches);
+								}
+								
+							}
+							//элемент в серединке.
+							//предыдущему вставляем в ветвь следующий
+							else{
+								prevElemBranches[prevElemBranches.indexOf($element.attr('id'))] = branches[0];
+								removeElement(element);
+								prevElem.data('branches', prevElemBranches);
+								
+								
+							}
+						
+						
+						redraw();
+					}
+					
+				},
+				hasBranches: function(branches){
+					//var branches = $(element).data('branches');
+					if ( (branches !== undefined) && (branches.length > 1) ){
+						for(var i=0; i < branches.length; i++ ){
+							if (branches[i] != "")
+								return true;
+						}
+					}
+					else{
+						return false;
+					}
+				},
+				saveStructure:function(){
+					var JSONstructure = exportToJSON(["#container","#imported"]);
+					setCookie('structure', JSONstructure,{expires:60*60*60, path:'/'});
+				},
+				restoreStructure: function(){
+					first = importFromJSON( $( "#response" ).text(), "#imported", type);
+					showBranch(first,false);
+					redraw();
+			//		createNewTempElement();
+				}
 			}
 		}
 	}

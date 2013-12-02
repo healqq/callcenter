@@ -48,12 +48,14 @@ function loadStructure(type) {
 }
 //отправляет реквест с заданным экшеном и параметрами. возвращает объект request, 
 //для которого нужно определить .done и .fail после вызова функции
-function sendRequest(action, params){
+function sendRequest(action, params, async){
+	async = (async === undefined? false : async);
 	var wsUrl = 'ws/ws/callcenterexchange';
     var soapRequest = combineSoapRequest(action, params) ;
    // showError(soapRequest);
-   
-    $('.waiting-layer').show();
+	if (!async){
+		$('.waiting-layer').show();
+	}
     var request = $.ajax({
                     type: "POST",
                     url: wsUrl,

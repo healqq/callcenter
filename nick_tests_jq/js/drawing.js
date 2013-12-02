@@ -370,7 +370,9 @@ var drawerSingleton = (function(){
 		//layer =( layer == undefined? 1, layer);
 			element = $("#container").children().first().attr('id');
 			//ctx.scale(0.25, 0.25);
-			drawNext(element, 1, 0);
+			if (element !== undefined){
+				drawNext(element, 1, 0);
+			}
 			//ctx.scale(0.5, 0.5);
 			
 			//do stuff

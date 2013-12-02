@@ -1,4 +1,7 @@
-﻿		body {
+﻿		/*
+			-1px 0 0 0 #d2d2d2,-1px 0 0 0 #e6e6e6,1px 0 0 0 #d2d2d2,2px 0 0 0 #e6e6e6,0 -1px 0 0 #e8e8e8,0 2px 0 0 rgba(241,241,241,0.3),0 1px 0 0 #b1b1b1
+		*/
+		body {
 			font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; /* Семейство шрифтов */
 			font-size: 11pt; /* Размер основного шрифта в пунктах  */
 			overflow-wrap: break-word;
@@ -167,6 +170,9 @@
 	 .control-button,  .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
 		background-color: #FF5F33;
 	}
+		.inactive{
+			background-color: #999 !important;
+		}
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		.error {
 		/*	color: #121310;*/
@@ -1207,7 +1213,7 @@ input[type=checkbox]:checked + label:before {
 	opacity: 0.8;
 	height: 100%;
 	background-color: #666;
-	position: absolute;
+	position: fixed;
 	top: 0px;
 	display: none;
 	

@@ -4,6 +4,7 @@ var  controller = (function(){
     function controller() {
 	//private
 	var	events = [];
+	var disabledEvents = [];
 	
 	var addEventToElement = ( function( eventsList, eventName, handler){
 		var notFound = true;
@@ -42,6 +43,7 @@ var  controller = (function(){
 			
 		
 	});
+	
 		
 		//public
 		return{
@@ -97,6 +99,8 @@ var  controller = (function(){
 				}
 				
 			}
+			
+			
 		
 		
 		}

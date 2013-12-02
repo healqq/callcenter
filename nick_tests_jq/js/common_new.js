@@ -486,7 +486,7 @@ function createNewDivElement(type, contents, isEdited, first){
 	isEdited = (isEdited == undefined ? false : isEdited);
 	switch (type){
 	case "show":
-		newElement 		= fabric("div", 		getObjectSpecs("divacc",undefined,contents.id));
+	var	newElement 		= fabric("div", 		getObjectSpecs("divacc",undefined,contents.id));
 		newElement.data("branches", contents.branches);
 		newHeader 		= fabric("h3", 			getObjectSpecs("headerAccordion",isEdited?'<span>'+contents.header + '</span>' +'<span class="idSpan">id: '+ contents.id+'</span>': '<span>'+contents.header + '</span>')); 
 		newParagraph 	= fabric("p",  			getObjectSpecs("description",contents.description)); 
@@ -576,9 +576,10 @@ function createNewDivElement(type, contents, isEdited, first){
 		//в режиме конструктора отображается кнопка edit
 		if (isEdited){
 		//newElementIdField = fabric("p",			getObjectSpecs("p", "Id элемента:"+contents.id) );
-		newEditBlock    = fabric("div", getObjectSpecs("editP"));
-		newButtonEdit	= fabric("buttoninline",  	getObjectSpecs("editbuttonAccordion"	,"Изменить"));
-		newButtonCopy	= fabric("buttoninline",  	getObjectSpecs("editbuttonAccordion"	,"Скопировать"));
+		newEditBlock    	= fabric("div", getObjectSpecs("editP"));
+		newButtonEdit		= fabric("buttoninline",  	getObjectSpecs("editbuttonAccordion"	,"Изменить"));
+		newButtonCopy		= fabric("buttoninline",  	getObjectSpecs("editbuttonAccordion"	,"Скопировать"));
+		var newButtonDelete	= fabric("buttoninline",  	getObjectSpecs("editbuttonAccordion"	,"удалить"));
 		//кнопка редактирования
 		//	newElementIdField.appendTo( newElement );
 			newButtonEdit.click(onEditClick);
@@ -587,6 +588,10 @@ function createNewDivElement(type, contents, isEdited, first){
 			newButtonCopy.click(onCopyClick);
 			newButtonCopy.appendTo( newEditBlock);
 			//newButtonCopy.hide();
+			controller.getInstance().addEvent(newButtonDelete, 'click', function(){
+				model.getInstance().blockActions.deleteBlock(newElement);
+			});
+			newButtonDelete.appendTo( newEditBlock);
 			newEditBlock.appendTo ( newElement );
 			newEditBlock.hide();
 		}
@@ -851,8 +856,29 @@ function createNewTempElement(contents, edit){
 }
 //добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
 function addElement(){
+	view.getInstance().toggleControlButtonsState();
 	/*clearErrors();*/
+	var thisDiv 		= $("#temp_divs").children().first();
+	var input 			= undefined;
+	var radio 			= undefined;
+	var fieldsListArray = undefined;
+	var insert 			= false;
 	
+	if ($("#branch").prop("checked") == true){
+		branches = [];
+		$(".branchId").each(function(){
+			branches.push($(this).val());
+		});
+	}
+	else{
+		//если вдруг мы поменяли тип дива с ветвления на другой
+		branches = thisDiv.data('branches');
+		if (model.getInstance().blockActions.hasBranches(branches) ){
+			showError('У данного ветвления есть зависимые элементы! Удалите их перед тем, как менять тип данного элемента!');
+			$("#branch").trigger('click');
+			return;
+		}
+	}
 	var name = $('#newElementName').val();
 	if (model.getInstance().isEdited() ){
 		var removedBlockID = $('#temp_divs').data('removedBlockID');
@@ -871,24 +897,9 @@ function addElement(){
 		return;
 		
 	}
-	var thisDiv 		= $("#temp_divs").children().first();
-	var input 			= undefined;
-	var radio 			= undefined;
-	var fieldsListArray = undefined;
-	var insert 			= false;
-	if ($("#branch").prop("checked") == true){
-		branches = [];
-		$(".branchId").each(function(){
-			branches.push($(this).val());
-		});
-	}
-	else{
-		//если вдруг мы поменяли тип дива с ветвления на другой
-		branches = thisDiv.data('branches');
-		if ( (branches !== undefined) && (branches.length > 1) ){
-			branches = undefined;
-		}
-	}
+	
+	
+	
 	//var position = undefined;
 //	var positionType = 
 	try{
@@ -1088,6 +1099,7 @@ function onEditClick(){
 		showError('Сначала закончите редактирование текущего элемента');
 		return;
 	}
+	view.getInstance().toggleControlButtonsState();
 	model.getInstance().setState('edit');
 	var position;
 	var parentBlock = $(this).parent().parent('div');
@@ -1123,11 +1135,16 @@ function onEditClick(){
 	//для эдита такую возможность уберем
 	$('.add-block-position__div').hide();
 	model.getInstance().setRadioValue( $('.add-block-position__div'), undefined);
+	view.getInstance().scrollToTop();
 	
 	
 }
 //нажатие на "скопировать"
 function onCopyClick(){
+	if (model.getInstance().isEdited() ){
+		showError('Сначала закончите редактирование текущего элемента');
+		return;
+	}
 	var parentBlock = $(this).parent().parent('div');
 	
 	objectDiv = createObjectFromDiv(parentBlock);
@@ -1141,6 +1158,7 @@ function onCopyClick(){
 	if (autofill){
 		$('#newElementName').val(model.getInstance().autofillID());
 	}
+	view.getInstance().scrollToTop();
 	
 	
 }
