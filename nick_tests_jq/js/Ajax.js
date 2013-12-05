@@ -60,10 +60,10 @@ function sendRequest(action, params, async){
                     type: "POST",
                     url: wsUrl,
 					contentType: "text/xml",
-                    dataType: "html",
+                    dataType: "text",
                     data: soapRequest,
-					username: 'test',
-					password: 'qweqwe'
+				//	username: 'test',
+				//	password: 'qweqwe'
                 });
 	
 	return  request;

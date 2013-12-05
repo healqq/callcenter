@@ -18,6 +18,9 @@
 		.admin-body{
 		/*	background-color: #FAFAFA;*/
 }
+		.hidden{
+		display: none;
+		}
 
 		html {
 			width: 100%;

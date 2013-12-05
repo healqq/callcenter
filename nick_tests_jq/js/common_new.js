@@ -1694,7 +1694,9 @@ function showSubmitBlock(){
 	$('#submit-block').slideDown({duration:"slow", complete:function(){
 		//$('#submit-block').toggleClass("dummy");
 		//$('.tableRight').toggleClass("dummy");
-		$('#summary').slideDown('slow');
+		$('#summary').slideDown({duration:'slow', complete:function(){
+			$('#btnSendData').parent().slideDown('slow');}
+		});
 		}
 	});
 	//$('.tableRight').toggleClass("dummy");
@@ -1703,6 +1705,7 @@ function showSubmitBlock(){
 function hideSubmitBlock(){
 	$('#summary').slideUp({duration:"slow", complete:function(){
 			$('#submit-block').slideUp("slow");
+			$('#btnSendData').parent().slideUp('slow');
 			clearSummaryBlock();
 		//$('.tableRight').toggleClass("dummy");
 			}

@@ -104,6 +104,7 @@ function auth(login, pwd){
 		$('.waiting-layer').hide();
 		$('#error').append( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		$('#error').slideDown('fast');
+		console.log(jqXHR.statusCode());
 		});
 }
 //проверка, что текущая сессия существует на сервере
