@@ -161,8 +161,8 @@ function onHeaderClick(evt, elem, state){
 	redraw();
 	var values = getInputValue(div_block);
 	/*if ( values[values.length-1].val() !== '' ) */
-	if ( (div_block.data('branches') == undefined ) && ( values[values.length-1].value !== '' ) 
-	&& ( values[values.length-1].value !== undefined )	&& ( $('#submit-block').css('display') == 'none' ) ){
+	if ( (div_block.data('branches') == undefined )/* && ( values[values.length-1].value !== '' ) 
+	&& ( values[values.length-1].value !== undefined )*/	&& ( $('#submit-block').css('display') == 'none' ) ){
 		fillSummaryBlock();
 		showSubmitBlock();
 		
@@ -711,7 +711,7 @@ function createNewDivElement(type, contents, isEdited, first){
 	//создаем новый temp_div
 	default:
 			var autofill = $('#temp_divs').data('autofillID') ;
-			newElement 			= fabric("div", 			getObjectSpecs("divacc",undefined,undefined) );
+			newElement 			= fabric("div", 			getObjectSpecs("div",undefined,undefined) );
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
 			newElementNameDiv   = fabric("div", 			getObjectSpecs('blockname-block') );
 			newElementName		= ( ( autofill ) ?
@@ -1052,12 +1052,18 @@ function addElement(){
 	//элемент с edita, и он первый
 	else{
 		if (position == 0) {
+			var firstElem = $('#container').children(".divacc:first");
+				
+			
 			if (branches === undefined){
-				branches = [$('#container').children(":first").attr('id')];
+						
+				branches = ( (firstElem.length === 0) ? undefined: [firstElem.attr('id')] );
+				
 			}
 			else{
-				branches[0] = $('#container').children(":first").attr('id');
+				branches[0] =firstElem.attr('id');
 			}
+			
 			newDiv.data('branches', branches );
 			newDiv.prependTo( $("#container") );
 			
@@ -1100,6 +1106,7 @@ function onEditClick(){
 		return;
 	}
 	view.getInstance().toggleControlButtonsState();
+	view.getInstance().hideWarning();
 	model.getInstance().setState('edit');
 	var position;
 	var parentBlock = $(this).parent().parent('div');
@@ -1145,6 +1152,7 @@ function onCopyClick(){
 		showError('Сначала закончите редактирование текущего элемента');
 		return;
 	}
+	view.getInstance().hideWarning();
 	var parentBlock = $(this).parent().parent('div');
 	
 	objectDiv = createObjectFromDiv(parentBlock);
@@ -2001,7 +2009,7 @@ function restoreData(){
 		$('#'+savedData.last).children('h3').trigger('click');
 	}
 	if (savedData.items.length > 0 ){
-		view.getInstance().showWarning('В прошлый раз анкета не была заполнена до конца, данные были восстановлены');
+		view.getInstance().showWarning('В прошлый раз анкета не была заполнена до конца, данные были восстановлены', reloadStructure);
 	}
 	/*$('#container').children().each(function(){
 		markHeaders($(this));

@@ -32,12 +32,12 @@ var  view = (function(){
 				});
 				
 			},
-			showWarning: function(warningString){
+			showWarning: function(warningString, clickEvent){
 				$('#warning-paragraph').text(warningString);
 				$('#warning-block').slideDown({duration: 'slow', complete:function(){
 					controller.getInstance().addEvent($('#revert'),'click',function(){
 						instance.hideWarning();
-						reloadStructure();
+						clickEvent();
 						});
 				controller.getInstance().addEvent($('#warning-exit-btn'), 'click', instance.hideWarning);
 					
@@ -46,7 +46,7 @@ var  view = (function(){
 			},
 			hideWarning: function(){
 				$('#warning-block').slideUp({duration: 'slow', complete:function(){
-						$('#warning-paragraph').empty();
+						//$('#warning-paragraph').empty();
 					}
 				
 				});

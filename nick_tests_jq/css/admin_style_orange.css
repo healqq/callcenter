@@ -16,7 +16,7 @@
 			margin: 0;
 }
 		.admin-body{
-			background-color: #FAFAFA;
+		/*	background-color: #FAFAFA;*/
 }
 
 		html {
@@ -108,7 +108,7 @@
 			/*height: 20000%;*/
 			margin-bottom: 2%;
 		/*	height: 99999%;*/
-			background-color:#FAFAFA;
+	/*		background-color:#FAFAFA;*/
 			width: 70%;
 			-webkit-flex:  0 1 60%;
            flex: 60%;
@@ -289,15 +289,24 @@
 				
 		
 /*}*/
+		.temp-div, .sample-view{
+			border-radius: 2px;
+			box-shadow: -1px 0 0 0 #d2d2d2,-1px 0 0 0 #e6e6e6,1px 0 0 0 #d2d2d2,2px 0 0 0 #e6e6e6,0 -1px 0 0 #e8e8e8,0 2px 0 0 rgba(241,241,241,0.3),0 1px 0 0 #b1b1b1;
+			margin-bottom: 10px;
+			background: #FAFAFA;
+			padding-top: 10px;
+		}
 /* temp divs block +++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 		.temp-div{
-			background: #FAFAFA;
+			
 		/*	border: 1px solid #999; /* Параметры линии внизу */
 			width: 100%;
 			margin-left: auto; /* Расстояние от левого края до линии */
 			margin-right: auto; /* Расстояние от правого края до линии */
 			display:table;
-			border-radius: 2px;
+			
+		/*	border-radius: 2px;
+			box-shadow: -1px 0 0 0 #d2d2d2,-1px 0 0 0 #e6e6e6,1px 0 0 0 #d2d2d2,2px 0 0 0 #e6e6e6,0 -1px 0 0 #e8e8e8,0 2px 0 0 rgba(241,241,241,0.3),0 1px 0 0 #b1b1b1;*/
 }
 		#temp-title, #container-title, #scheeme-title, #summary-title{
 			/*text-align: center;*/
@@ -509,12 +518,24 @@
 	/*	#container-title{
 			width: 100%;
 		}*/
+		#container{
+			margin-bottom: 30px;
+		}
+		.sample-view{
+			overflow-y:auto;
+			overflow-x: hidden;
+			margin-bottom: 10px;
+		}
+			.client-container{
+				padding: 10px 0;
+			}
 		.accordion{
 			background: #FAFAFA;
-			border: 1px solid #999; /* Параметры линии внизу */
-			width: 90%;
-			margin-left: 5%; /* Расстояние от левого края до линии */
-			margin-right: auto; /* Расстояние от правого края до линии */
+		/*	border: 1px solid #999; /* Параметры линии внизу */
+			width: 100%;
+			
+		/*	margin-left: 5%; /* Расстояние от левого края до линии */
+		/*	margin-right: auto; /* Расстояние от правого края до линии */
 		/*	display:table;*/
 			position:relative;
 			border-radius: 2px;
@@ -526,8 +547,8 @@
 		
 		.accordionheader {
 		    margin: 0;
-			background-color: #eee;
-		 /* Семейство шрифтов */
+		/*	background-color: #eee;
+		  Семейство шрифтов */
 			font-size: 13pt;
 			cursor: pointer;
 			width: 99%;
@@ -595,7 +616,12 @@
 		.divacc{
 			width: 100%;
 			position: relative;
+			border-top: 1px solid #ccc;
+			 
 }
+		.divacc:last-of-type{
+				border-bottom: 1px solid #ccc;
+		}
 		.active_header{
 			opacity: 1.0;
 			background-color: #aaa;
@@ -669,7 +695,7 @@
 			padding-top: 10px;
 			
 		}
-		.editbutton, .removebutton,  .addbutton, .idSpan, .help{
+		.editbutton, .removebutton,  .addbutton, .help{
 		background-color: #FAFAFA;
 }
 		.control-button, .editbutton, .editbuttonAccordion{

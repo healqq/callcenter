@@ -126,7 +126,10 @@ var model = (function(){
 					control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
 					control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
 					view.getInstance().buttonsAnimation();
-					control.addEvent($("#btnLoadStructure"),'click', function(){loadStructure(true)});
+					control.addEvent($("#btnLoadStructure"),'click', function(){
+						loadStructure(true);
+						instance.setState('new');
+					});
 					control.addEvent($('#close-errors'), 'click', clearErrors);
 				}
 				else{
@@ -199,6 +202,8 @@ var model = (function(){
 						showError('Сначала закончите редактирование текущего элемента');
 						return;
 					}
+					view.getInstance().hideWarning();
+					instance.blockActions.saveStructure();
 					var $element = $(element);
 					console.log(element);
 					var branches = $element.data('branches');
@@ -253,7 +258,9 @@ var model = (function(){
 						
 						
 						redraw();
+						view.getInstance().showWarning('Элемент был удален. Нажмите, чтобы отменить удаление.', instance.blockActions.restoreStructure);
 					}
+					
 					
 				},
 				hasBranches: function(branches){
@@ -273,9 +280,12 @@ var model = (function(){
 					setCookie('structure', JSONstructure,{expires:60*60*60, path:'/'});
 				},
 				restoreStructure: function(){
-					first = importFromJSON( $( "#response" ).text(), "#imported", type);
-					showBranch(first,false);
-					redraw();
+					var savedStruct = getCookie('structure');
+					if (savedStruct !== undefined){
+						first = importFromJSON( savedStruct, "#imported", true);
+						showBranch(first,false);
+						redraw();
+					}
 			//		createNewTempElement();
 				}
 			}
