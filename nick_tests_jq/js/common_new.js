@@ -214,7 +214,7 @@ function onTextChanged(evt) {
 	var nextDivBlock = divBlock.next();
 	if (nextDivBlock.size() == 0 ){
 		//div_block.
-		divBlock.children().not("h3").slideUp("slow");
+		onHeaderClick(undefined,divBlock.children("h3:first"));
 		showSubmitBlock();
 		focusElement('#btnSendData');
 	}
