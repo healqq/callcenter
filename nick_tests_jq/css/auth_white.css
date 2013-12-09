@@ -135,7 +135,7 @@ body{
 #error, #login-button, #login-form{
 	border-radius: 5px;
 }
-#error {
+.error {
 		/*	color: #121310;*/
 	top: 25%;
 	background-color:#FFAAAA;

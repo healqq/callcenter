@@ -64,7 +64,8 @@ function sendData(){
 			$('.waiting-layer').hide();
 				});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "Request failed: " + textStatus);
+		model.getInstance().api.onRequestFail("При отправке анкеты произошла ошибка, попробуйте ещё раз!", jqXHR);
+		//model.getInstance().api.showError( "Request failed: " + textStatus);
 		view.getInstance().toggleElementState($("#btnSendData"));
 		$('.waiting-layer').hide();
 		});
@@ -91,12 +92,13 @@ function fillingStarted() {
 				return;
 			}
 			else{
-				setCookie('PHPSESSID', getCookie('PHPSESSID'),{expires:24*60, path:'/'});
+				setCookie('PHPSESSID', getCookie('PHPSESSID'),{expires:24*60, path:'/Callcenter'});
 			}
 		$('.waiting-layer').hide();	
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		setTimeout(fillingStarted(), 5*1000);
+		//model.getInstance().api.showError( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		$('.waiting-layer').hide();
 		});
             

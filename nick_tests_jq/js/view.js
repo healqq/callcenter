@@ -66,7 +66,10 @@ var  view = (function(){
 				}
 				if (state){
 					$(element).removeClass('inactive');
-					$(element).add
+					//$(element).add
+				}
+				else{
+					$(element).addClass('inactive');
 				}
 				
 			},
@@ -78,7 +81,24 @@ var  view = (function(){
 				$('.editbuttonAccordion').each( function(){
 					instance.toggleElementState($(this), state);
 				});
-			}
+			},
+			focusElement: function (element, type){
+				if (! (element == undefined) ){
+					jElement = $(element);
+					if ( jElement.is("div") ){
+						jElement.addClass(type == "focus"?"focused":"not-filled");
+					}
+					else
+						jElement.focus();
+					
+				}
+					
+			},
+			clearUnfilled: function (){
+					$('.not-filled').each(function(){
+							$(this).removeClass('not-filled');
+						});
+				},
 			
 			
 		

@@ -35,41 +35,69 @@ var model = (function(){
 				var settings = {'autosave': autosave,
 								'autofillID': autofillID
 								};
-				setCookie('settings', JSON.stringify(settings), {expires:24*60*60*365,path:'/'});
+				setCookie('settings', JSON.stringify(settings), {expires:24*60*60*365,path:'/Callcenter'});
 				$('#temp_divs').data('autofillID', settings.autofillID);
 				
 				},
 			//loading settings +
 				loadSettings: function(){
-				var savedSettings  =	getCookie('settings');
-				if (savedSettings !== undefined){
-					try{
-						var	savedSettingsObj = JSON.parse(savedSettings);
+					var savedSettings  =	getCookie('settings');
+					if (savedSettings !== undefined){
+						try{
+							var	savedSettingsObj = JSON.parse(savedSettings);
+							
+							
+						}
+						catch(e){
+							savedSettingsObj = {'autosave': false,
+									'autofillID': false
+									};
+							//showError('Unable to load settings');
+							
+						}
+						var autosaveItem = $('#autosave');
+						var autofillItem = $('#elementNameAutofill');
+						autosaveItem.prop('checked', savedSettingsObj.autosave);
+						//записываем параметр для использования чтобы не дергать печеньки
+						$('#temp_divs').data('autofillID', savedSettingsObj.autofillID);
+						controller.getInstance().addEvent($('#autosave')[0], 'change', instance.api.saveSettings);
 						
+						if (autofillItem.length > 0 ){
+							autofillItem.prop('checked', savedSettingsObj.autofillID);
+							controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', instance.api.saveSettings);
+							controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change',  instance.autofillIDClick);
+						}
 						
 					}
-					catch(e){
-						savedSettingsObj = {'autosave': false,
-								'autofillID': false
-								};
-						//showError('Unable to load settings');
+				},
+				onRequestFail: function(stringRequestDesc, jqXHR){
+					instance.api.showError( stringRequestDesc+": статус: "+jqXHR.status + " " + jqXHR.statusText);
+				},
+				
+				showError: function (errString, element){
+				var errDiv = $('.error');
+				errDiv.children('.error-text').empty();
+				view.getInstance().clearUnfilled();
+			//	errDiv.hide();
+				instance.setHTML($('.error-text'),errString);
+				errDiv.addClass("active");
+				errDiv.slideDown('fast');
+				
+				view.getInstance().focusElement(element);
+				
+				
+				},
+				
+				//Функция для отчистки строки ошибок
+				clearErrors: function (){
+						errorElem = $('.error');
+						errorElem.slideUp('fast');
+						errorElem.children('.error-text').empty();
+						errorElem.removeClass("active");
+						view.getInstance().clearUnfilled();
 						
-					}
-					var autosaveItem = $('#autosave');
-					var autofillItem = $('#elementNameAutofill');
-					autosaveItem.prop('checked', savedSettingsObj.autosave);
-					//записываем параметр для использования чтобы не дергать печеньки
-					$('#temp_divs').data('autofillID', savedSettingsObj.autofillID);
-					controller.getInstance().addEvent($('#autosave')[0], 'change', instance.api.saveSettings);
-					
-					if (autofillItem.length > 0 ){
-						autofillItem.prop('checked', savedSettingsObj.autofillID);
-						controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', instance.api.saveSettings);
-						controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change',  instance.autofillIDClick);
-					}
-					
 				}
-				}
+				
 			
 			},
 			setHTML: function(element, text){
@@ -130,7 +158,7 @@ var model = (function(){
 						loadStructure(true);
 						instance.setState('new');
 					});
-					control.addEvent($('#close-errors'), 'click', clearErrors);
+					control.addEvent($('#close-errors'), 'click', instance.api.clearErrors);
 				}
 				else{
 				
@@ -199,7 +227,7 @@ var model = (function(){
 			blockActions:{
 				deleteBlock: function(element ){
 					if (instance.isEdited() ){
-						showError('Сначала закончите редактирование текущего элемента');
+						instance.api.showError('Сначала закончите редактирование текущего элемента');
 						return;
 					}
 					view.getInstance().hideWarning();
@@ -277,7 +305,7 @@ var model = (function(){
 				},
 				saveStructure:function(){
 					var JSONstructure = exportToJSON(["#container","#imported"]);
-					setCookie('structure', JSONstructure,{expires:60*60*60, path:'/'});
+					setCookie('structure', JSONstructure,{expires:60*60*60, path:'/Callcenter'});
 				},
 				restoreStructure: function(){
 					var savedStruct = getCookie('structure');

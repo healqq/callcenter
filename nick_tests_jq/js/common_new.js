@@ -18,7 +18,7 @@ function fabric ( type,  options) {
 	if ( !(newElementId == undefined) ) {
 		if ( !($('#'+options.id).size() == 0 ) ){
 
-			showError("Элемент с таким id уже существует!", "#newElementName");
+			model.getInstance().api.showError("Элемент с таким id уже существует!", "#newElementName");
 			// throw new exeption;
 			return;
 
@@ -434,7 +434,7 @@ switch (type) {
 		return objectSpecs;
 		
 }
-function showError(errString, element){
+/*function showError(errString, element){
 	var errDiv = $('.error');
 	errDiv.children('.error-text').empty();
 	clearUnfilled();
@@ -472,7 +472,7 @@ function clearUnfilled(){
 	$('.not-filled').each(function(){
 			$(this).removeClass('not-filled');
 		});
-}
+}*/
 //удаление элемента
 function removeElement(element){
 		element.remove();
@@ -856,13 +856,15 @@ function createNewTempElement(contents, edit){
 }
 //добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
 function addElement(){
-	view.getInstance().toggleControlButtonsState();
+	view.getInstance().toggleControlButtonsState(true);
 	/*clearErrors();*/
 	var thisDiv 		= $("#temp_divs").children().first();
 	var input 			= undefined;
 	var radio 			= undefined;
 	var fieldsListArray = undefined;
 	var insert 			= false;
+	var modelInst 		= model.getInstance();
+	//var model 			= modeltmp;
 	
 	if ($("#branch").prop("checked") == true){
 		branches = [];
@@ -873,27 +875,27 @@ function addElement(){
 	else{
 		//если вдруг мы поменяли тип дива с ветвления на другой
 		branches = thisDiv.data('branches');
-		if (model.getInstance().blockActions.hasBranches(branches) ){
-			showError('У данного ветвления есть зависимые элементы! Удалите их перед тем, как менять тип данного элемента!');
+		if (modelInst.blockActions.hasBranches(branches) ){
+			modelInst.api.showError('У данного ветвления есть зависимые элементы! Удалите их перед тем, как менять тип данного элемента!');
 			$("#branch").trigger('click');
 			return;
 		}
 	}
 	var name = $('#newElementName').val();
-	if (model.getInstance().isEdited() ){
+	if (modelInst.isEdited() ){
 		var removedBlockID = $('#temp_divs').data('removedBlockID');
 		removeElement($('#'+removedBlockID) );
 	}	
 	var namePattern = /^[a-z]+[a-z,0-9,\-,\_]*$/i;
 	
 	if ( (name == "") || !(namePattern.test(name) ) ){
-		showError('Имя блока должно быть заполнено, начинаться с латинской буквы \
+		modelInst.api.showError('Имя блока должно быть заполнено, начинаться с латинской буквы \
 			и состоять только из латинских букв, цифр, символов "-" и "_"', "#newElementName");
 		//$('#newElementName').focus();
 		return;
 	}
 	if ( !($('#'+name).size() == 0 ) ){
-		showError("Элемент с таким id уже существует!", "#newelementName" );
+		modelInst.api.showError("Элемент с таким id уже существует!", "#newelementName" );
 		return;
 		
 	}
@@ -903,10 +905,10 @@ function addElement(){
 	//var position = undefined;
 //	var positionType = 
 	try{
-		var position = model.getInstance().getElementInsertPosition();
+		var position = modelInst.getElementInsertPosition();
 	}
 	catch(ex){
-		showError(ex);
+		modelInst.api.showError(ex);
 		return;
 	}
 	if (position === undefined ){
@@ -919,7 +921,7 @@ function addElement(){
 			
 	var inputType = $('input[name=' + 'inputType' + ']:checked','#temp_divs');
 	if (inputType.length == 0) {
-		showError("Не выбран тип ввода информации", '#radioInputTypesDiv');
+		modelInst.api.showError("Не выбран тип ввода информации", '#radioInputTypesDiv');
 		return;
 	}
 	switch (inputType.val()){
@@ -942,7 +944,7 @@ function addElement(){
 				});
 				
 				if ( radioOptionsFilled.length < 2 ){
-					showError("Для переключателя нужно указать как минимум два значения!","#radioOptions");
+					modelInst.api.showError("Для переключателя нужно указать как минимум два значения!","#radioOptions");
 					return;
 				}
 				radioOptionsFilled.each(function(){
@@ -960,7 +962,7 @@ function addElement(){
 					}
 				});
 			if ( inputFieldsFilled.length == 0 ){
-					showError("Необходимо заполнить хотя бы одно текстовое поле!", "#fieldsList");
+					modelInst.api.showError("Необходимо заполнить хотя бы одно текстовое поле!", "#fieldsList");
 					return;
 				}
 			inputFieldsFilled.each(function(){
@@ -993,7 +995,7 @@ function addElement(){
 			if ( !(branchesPrevElement == undefined) ) {
 				checkedDiv = lastDiv.find(':input[type=radio]:checked');
 					if (checkedDiv.length == 0 ){
-						showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last>.input-block");
+						modelInst.api.showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last>.input-block");
 						return;
 					}
 					radioValue = checkedDiv.val();
@@ -1023,7 +1025,7 @@ function addElement(){
 				if (branchesPrevElement.length > 1) {
 				checkedDiv = lastDiv.find(':input[type=radio]:checked');
 					if (checkedDiv.length == 0 ){
-						showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last");
+						modelInst.api.showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last");
 						return;
 					}
 				
@@ -1094,18 +1096,18 @@ function addElement(){
 		showBranch(newDiv.data('branches')[0],true);
 	}
 	view.getInstance().buttonsAnimation(newDiv);
-	model.getInstance().setState('new');
+	modelInst.setState('new');
 	
-	clearErrors();
+	modelInst.api.clearErrors();
 	showHelp();
 }
 //нажатие на "редактировать"
 function onEditClick(){
 	if (model.getInstance().isEdited() ){
-		showError('Сначала закончите редактирование текущего элемента');
+		model.getInstance().api.showError('Сначала закончите редактирование текущего элемента');
 		return;
 	}
-	view.getInstance().toggleControlButtonsState();
+	view.getInstance().toggleControlButtonsState(false);
 	view.getInstance().hideWarning();
 	model.getInstance().setState('edit');
 	var position;
@@ -1149,7 +1151,7 @@ function onEditClick(){
 //нажатие на "скопировать"
 function onCopyClick(){
 	if (model.getInstance().isEdited() ){
-		showError('Сначала закончите редактирование текущего элемента');
+		model.getInstance().api.showError('Сначала закончите редактирование текущего элемента');
 		return;
 	}
 	view.getInstance().hideWarning();
@@ -1265,13 +1267,13 @@ function createRadioOptionsList( optionsList, branchesList ){
 
 		newOption1.change(function(){
 		if ( radioOptionsIsFilled() ){
-			clearErrors();
+			model.getInstance().api.clearErrors();
 		}
 			
 		});
 		newOption2.change(function(){
 		if ( radioOptionsIsFilled() ){
-			clearErrors();
+			model.getInstance().api.clearErrors();
 		}
 			
 		})
@@ -1306,7 +1308,7 @@ function createRadioOptionsList( optionsList, branchesList ){
 			newOption.appendTo(newIn);
 			newOption.change(function(){
 				if ( radioOptionsIsFilled() ){
-					clearErrors();
+					model.getInstance().api.clearErrors();
 				}
 			
 				});
@@ -1961,7 +1963,7 @@ function saveData(element, value){
 		savedData.items.push({'id': element.attr('id'), 'value': value});
 	}
 	savedData.last = element.attr('id');
-	setCookie('savdata', JSON.stringify(savedData),{expires:24*60*60,path:'/'});
+	setCookie('savdata', JSON.stringify(savedData),{expires:24*60*60,path:'/Callcenter'});
 	
 }
 function getSavedData(){
@@ -2037,7 +2039,7 @@ function insertElement(element, position, branches){
 	if ( (branchesOldElement !== undefined) && (branchesOldElement.length > 1) ){
 		checkedDiv = elementToInsertAfter.find(':input[type=radio]:checked');
 		if (checkedDiv.length == 0 ){
-			showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last>.input-block");
+			model.getInstance().api.showError("Для элемента с ветвлением нужно выбрать ветвь!", ".divacc:last>.input-block");
 			return;
 		}
 		radioValue = checkedDiv.val();

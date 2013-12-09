@@ -12,7 +12,8 @@ function saveStructure() {
 			$('.waiting-layer').hide();
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "Request failed: " + textStatus );
+		model.getInstance().api.onRequestFail("При сохранении структуры произошла ошибка", jqXHR);
+		//model.getInstance().api.showError( "Request failed: " + textStatus );
 		$('.waiting-layer').hide();
 		});
             
@@ -42,7 +43,8 @@ function loadStructure(type) {
 			
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "При попытке загрузить данные анкеты произошла ошибка: " + textStatus);
+		model.getInstance().api.onRequestFail("При попытке загрузить данные анкеты произошла ошибка", jqXHR);
+		//model.getInstance().api.showError( : статус: "+jqXHR.status + " " + jqXHR.statusText);
 		});
             
 }
@@ -62,8 +64,8 @@ function sendRequest(action, params, async){
 					contentType: "text/xml",
                     dataType: "text",
                     data: soapRequest,
-				//	username: 'test',
-				//	password: 'qweqwe'
+					username: 'test',
+					password: 'qweqwe'
                 });
 	
 	return  request;

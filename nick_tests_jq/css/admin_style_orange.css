@@ -179,6 +179,7 @@
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		.error {
 		/*	color: #121310;*/
+			z-index: 100;
 			border: 1px solid transparent;
 			background-color:#ff8888;
 			/*background-image: url(images/error.png);
@@ -294,7 +295,7 @@
 /*}*/
 		.temp-div, .sample-view{
 			border-radius: 2px;
-			box-shadow: -1px 0 0 0 #d2d2d2,-1px 0 0 0 #e6e6e6,1px 0 0 0 #d2d2d2,2px 0 0 0 #e6e6e6,0 -1px 0 0 #e8e8e8,0 2px 0 0 rgba(241,241,241,0.3),0 1px 0 0 #b1b1b1;
+			box-shadow: 1px 0 5px #666, -1px 0 5px #aaa;
 			margin-bottom: 10px;
 			background: #FAFAFA;
 			padding-top: 10px;
@@ -979,11 +980,12 @@
 	min-height: 60px;
 	width: 90%;
 	margin-left:5%;
-	border: 1px solid #aaa;
+	/*border: 1px solid #aaa;*/
 	padding-bottom: 5px;
-	border-radius: 4px;
+	border-radius: 2px;
 	overflow: auto;
 	overflow-wrap: break-word;
+	box-shadow: 1px 0 2px #666, -1px 0 1px #666;
 	/*background-color: #eee;*/
 }
 #block-info-id, #block-info-name{
@@ -1085,8 +1087,7 @@ display: inline;
 	left:30%;
 	/*height: 40%;*/
 	margin: auto;
-	
-	opacity: 1.0;
+	box-shadow: 1px 0 10px #666;
 	background-color: #FAFAFA;
 	padding: 10px;
 	border-radius: 2px;
