@@ -1144,7 +1144,7 @@ function onEditClick(){
 	//для эдита такую возможность уберем
 	$('.add-block-position__div').hide();
 	model.getInstance().setRadioValue( $('.add-block-position__div'), undefined);
-	view.getInstance().scrollToTop();
+	view.getInstance().scrollToTop($('body') );
 	
 	
 }
@@ -1168,7 +1168,7 @@ function onCopyClick(){
 	if (autofill){
 		$('#newElementName').val(model.getInstance().autofillID());
 	}
-	view.getInstance().scrollToTop();
+	view.getInstance().scrollToTop($('body'));
 	
 	
 }
@@ -1810,7 +1810,14 @@ function showElement( elementID ){
 	elementBlock = $('#'+elementId);
 	if (!elementBlock.children('h3').hasClass('active_header') ){ 
 		elementBlock.children('h3').trigger('click');
+		
 	}
+	var elemOffset = elementBlock.offset().top;
+	var winHeight =  window.innerHeight;
+	var windowTimes = elemOffset % winHeight;
+	var mainShift = windowTimes * winHeight;
+	var addShift = elemOffset - winHeight;
+	view.getInstance().scrollToTop($('body'), (elemOffset - winHeight/2) );
 	
 	
 }

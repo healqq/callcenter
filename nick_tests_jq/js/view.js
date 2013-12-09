@@ -74,8 +74,12 @@ var  view = (function(){
 				
 			},
 			//Скроллим вверх при нажатии на edit/copy(+animation)
-			scrollToTop: function(){
-				$('body').animate({scrollTop:137},{duration:'fast'});
+			scrollToTop: function(elem, scrollValue){
+				scrollValue = ( (scrollValue === undefined) ? 137 : scrollValue);
+				var $elem = $(elem);
+				console.log(scrollValue);
+				console.log($elem);
+				$elem.animate({scrollTop:scrollValue +'px'},{duration:'fast'});
 			},
 			toggleControlButtonsState: function(state){
 				$('.editbuttonAccordion').each( function(){
