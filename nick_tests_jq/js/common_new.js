@@ -216,7 +216,7 @@ function onTextChanged(evt) {
 		//div_block.
 		onHeaderClick(undefined,divBlock.children("h3:first"));
 		showSubmitBlock();
-		focusElement('#btnSendData');
+		view.getInstance().focusElement('#btnSendData');
 	}
 	else{
 		//controller.getInstance().clearEvents(nextDivBlock.children("h3:first"));
@@ -1582,7 +1582,7 @@ function showHelp(elemType, timeout){
 	
 		
 	}
-	focusElement(".help", "focus");
+	view.getInstance().focusElement(".help", "focus");
 	helpDivSelection.data('type', ((elemType === undefined)?"null": elemType ) );
 	if ( ( (helpDivSelection.css('opacity') == '0') ||(helpDivSelection.css('display') == 'none') )  && (elemType !== undefined) ){
 		helpDivSelection.slideDown('fast');
