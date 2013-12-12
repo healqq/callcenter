@@ -1,9 +1,10 @@
-//Начинаем приводить код к MVC
+﻿//Начинаем приводить код к MVC
 //модель
 var model = (function(){
     function model() {
 	//private
 		var lastid = 0;
+		var prevElement = undefined;
 		var state ={ element_edit:'new',
 					display_view:'controls'// state используется для контроля пользователя и получения данных
 					};						// о текущем состоянии ( варианты 'new', 'edit' )
@@ -315,6 +316,12 @@ var model = (function(){
 						redraw();
 					}
 			//		createNewTempElement();
+				},
+				setPrevElement: function(element){
+					prevElement = (element === undefined)? undefined : $(element).attr('id');
+				},
+				getPrevElement: function(){
+					return prevElement;
 				}
 			}
 		}

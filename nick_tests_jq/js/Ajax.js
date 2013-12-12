@@ -63,9 +63,8 @@ function sendRequest(action, params, async){
                     url: wsUrl,
 					contentType: "text/xml",
                     dataType: "text",
-                    data: soapRequest,
-					username: 'test',
-					password: 'qweqwe'
+                    data: soapRequest
+		
                 });
 	
 	return  request;

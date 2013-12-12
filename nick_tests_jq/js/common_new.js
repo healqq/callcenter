@@ -1,4 +1,4 @@
-//функция создает элемент в зависимости от полученного типа
+﻿//функция создает элемент в зависимости от полученного типа
 /*
 	type: div, p, h3, radio, text;
 */
@@ -856,7 +856,8 @@ function createNewTempElement(contents, edit){
 }
 //добавляет элемент из temp_div в конец основного контейнера и очищает поля в temp_div
 function addElement(){
-	view.getInstance().toggleControlButtonsState(true);
+	
+	
 	/*clearErrors();*/
 	var thisDiv 		= $("#temp_divs").children().first();
 	var input 			= undefined;
@@ -865,7 +866,8 @@ function addElement(){
 	var insert 			= false;
 	var modelInst 		= model.getInstance();
 	//var model 			= modeltmp;
-	
+	//открываем элемент предыдущий при эдите
+	showElement ( modelInst.blockActions.getPrevElement() );
 	if ($("#branch").prop("checked") == true){
 		branches = [];
 		$(".branchId").each(function(){
@@ -1056,14 +1058,15 @@ function addElement(){
 		if (position == 0) {
 			var firstElem = $('#container').children(".divacc:first");
 				
-			
-			if (branches === undefined){
+			if (!modelInst.isEdited() ){
+				if (branches === undefined){
 						
-				branches = ( (firstElem.length === 0) ? undefined: [firstElem.attr('id')] );
+					branches = ( (firstElem.length === 0) ? undefined: [firstElem.attr('id')] );
 				
-			}
-			else{
-				branches[0] =firstElem.attr('id');
+				}
+				else{
+					branches[0] =firstElem.attr('id');
+				}
 			}
 			
 			newDiv.data('branches', branches );
@@ -1097,7 +1100,8 @@ function addElement(){
 	}
 	view.getInstance().buttonsAnimation(newDiv);
 	modelInst.setState('new');
-	
+	modelInst.blockActions.setPrevElement();
+	view.getInstance().toggleControlButtonsState(true);
 	modelInst.api.clearErrors();
 	showHelp();
 }
@@ -1120,6 +1124,7 @@ function onEditClick(){
 	
 	
 	position = parentBlock.index();
+	
 	objectDiv = createObjectFromDiv(parentBlock, false);
 	objectDiv.position = position;
 	parentBlock.animate({opacity: 'hide',height:0+'px'},{duration:'slow',easing: 'swing',complete:function(){
@@ -1134,8 +1139,9 @@ function onEditClick(){
 	//objectDiv.radio = ["text","radio"];
 	//objectDiv.radioName = "inputType";
 	createNewTempElement(objectDiv);
-	var prevBlock = $('#container').children(':nth-child('+(position)+')');
 	
+	var prevBlock = $('#container').children(':nth-child('+(position)+')');
+	model.getInstance().blockActions.setPrevElement( prevBlock );
 	//открываем предыдущий блок
 	if (prevBlock.length !== 0)
 		//var branches = prevBlock
@@ -1774,6 +1780,8 @@ function findPathToElement(element){
 	
 }
 function showElement( elementID ){
+	if (elementID === undefined)
+		return;
 	//он спрятан и нужно его найти
 	var symbolIndex = elementID.search(':');
 	var elementId  = elementID;
