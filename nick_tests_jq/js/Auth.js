@@ -102,7 +102,7 @@ function auth(login, pwd){
 	});
 	request.fail(function( jqXHR, textStatus ) {
 		$('.waiting-layer').hide();
-		$('.error').append( "При попытке загрузить данные анкеты произошла ошибка: статус: "+jqXHR.status + " " + jqXHR.statusText);
+		$('.error').append( "При попытке авторизации произошла ошибка. Попробуйте ещё раз. статус: "+jqXHR.status + " " + jqXHR.statusText);
 		$('.error').slideDown('fast');
 		console.log(jqXHR.statusCode());
 		});

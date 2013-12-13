@@ -1273,6 +1273,7 @@ input[type=checkbox]:checked + label:before {
 #submit-block {
 	padding-right:1px;
 	padding-left:-1px;
+	padding-bottom: 20px;
 	/*background: #D6E68A;
 	border-bottom: 1px solid #121310; /* Параметры линии внизу */
 	/*border-left: 1px solid #121310; /* Линия слева от текста */
