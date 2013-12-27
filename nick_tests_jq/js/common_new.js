@@ -474,8 +474,19 @@ function clearUnfilled(){
 		});
 }*/
 //удаление элемента
-function removeElement(element){
-		element.remove();
+function removeElement(element, removeAll){
+		var removeType =( ( removeAll === undefined )? true: removeAll);
+		controller.getInstance().debugInfo();
+		//очистка от евентов
+		
+		var elements = $('input[type=button], input[type=text], h3, p, textarea, input[type=radio], iput[type=checkbox]', $(element));
+		controller.getInstance().clearEvents(elements);
+		
+		//controller.getInstance().clearEvents(element);
+		if (removeType)
+			element.remove();
+		else
+			element.empty();
 }
 //создает новый блок 
 //contents - объект, содержащий необходимые поля
@@ -808,7 +819,8 @@ function createNewTempElement(contents, edit){
 		edit = false;
 		}
 	controller.getInstance().clearEvents($('#elementNameAutofill')[0]);
-	$('#temp_divs').empty();
+	removeElement($('#temp_divs'), false);
+	//$('#temp_divs').empty();
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
 	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().api.saveSettings);
@@ -1045,7 +1057,8 @@ function addElement(){
 	if ( lastDiv !== undefined ){
 		lastDiv.data("branches", branchesPrevElement); 
 	}
-	thisDiv.remove();
+	
+	removeElement( thisDiv );
 	newDiv = createNewDivElement("show",contents, true);
 	//это новый элемент
 	if (position === "") {
@@ -1090,6 +1103,9 @@ function addElement(){
 	}
 	newHeader.trigger('click');
 	redraw();
+	//controller.getInstance().debugInfo();
+	
+	//controller.getInstance().debugInfo();
 	createNewTempElement();//обнуляем значения у temp_div
 	if ( $('#autosave').prop('checked') === true ) 
 		saveStructure();
