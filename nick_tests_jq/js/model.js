@@ -375,7 +375,7 @@ var model = (function(){
 					func(element);
 					$(element.data('branches')).each(function(index, value){
 						var nextElement = $('#'+value);
-						if ( ! (nextElement.size === 0 ) ){
+						if ( ! (nextElement.length === 0 ) ){
 							instance.blockActions.allElementsCircuit (nextElement, func);
 						}
 					});
