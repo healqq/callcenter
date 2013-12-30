@@ -1364,6 +1364,9 @@ input[type=checkbox]:checked + label:before {
 	position: relative;
 	overflow-wrap: break-word;
 }
+.summary-element-valuevalue>input[type=text]{
+	width: 50%;
+}
 .odd{
 	background-color: #FFBB66;
 }
@@ -1445,4 +1448,31 @@ input[type=checkbox]:checked + label:before {
 }
 .warning-exit-btn:hover{
 	background-position: 0px 16px;
+}
+/*блок синхронизации*/
+.sync{
+	width: 58.8%;
+	margin: auto;
+	position: absolute;
+	z-index: 100;
+	display: none;
+	top: 137px;
+	left: 11.8%;
+	
+	
+}
+.sync-help{
+	margin: 0 2% 10px;
+	text-align: center;
+	color: #AAA;
+}
+	h5{
+		color: #666;
+	}
+	.underlined{
+		border-bottom: 1px solid #999;
+	}
+.sync-exit{
+	top: 26px;
+	right: 6px;
 }

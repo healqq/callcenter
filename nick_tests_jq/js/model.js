@@ -5,6 +5,7 @@ var model = (function(){
 	//private
 		var lastid = 0;
 		var prevElement = undefined;
+		var syncMap = {};
 		var state ={ element_edit:'new',
 					display_view:'controls'// state используется для контроля пользователя и получения данных
 					};						// о текущем состоянии ( варианты 'new', 'edit' )
@@ -97,6 +98,47 @@ var model = (function(){
 						errorElem.removeClass("active");
 						view.getInstance().clearUnfilled();
 						
+				},
+				/*заполнение соответствия имён полей выгрузки */
+				fillSyncMap: function(){
+					
+					firstElement = $('#container > div:first');
+					if (firstElement.length === 0){
+					}
+					else{
+						instance.blockActions.allElementsCircuit( firstElement, function ( element){
+							var id = element.attr('id');
+							var valuesArray = getInputValueArray(element, "sync");
+							for (var i=0; i< valuesArray.length; i++ ){ 
+								var fieldName = id+valuesArray[i].key;
+								if (syncMap[fieldName] === undefined)
+									syncMap[fieldName] = {	value: fieldName.replace(RegExp(' ', 'g'),''), 
+															id: id
+														};
+														
+									
+							}
+						});
+						
+					}
+					//console.log( syncMap);
+					return syncMap;
+				},
+				getSyncMap: function(){
+					return syncMap;
+				},
+				setSyncMap: function( syncMapLoaded ){
+					syncMap = syncMapLoaded;
+				},
+				saveSyncMap: function(){
+					$('.summary-element', '#sync-block').each( function(index, value){
+						var fieldName = $(value).data('id');
+						var newValue = $(value).find(':input[type=text]').val();
+						syncMap[fieldName] = {value: newValue,
+												id: syncMap[fieldName].id
+											};
+					});
+					view.getInstance().hideSyncBlock();
 				}
 				
 			
@@ -154,6 +196,10 @@ var model = (function(){
 					control.addEvent($("#toggle-state-btn"),'click', switchTables);
 					control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
 					control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
+					control.addEvent($("#btnSyncSettings"),'click', view.getInstance().showSyncBlock);
+					control.addEvent($("#btnSaveSyncMap"),'click', instance.api.saveSyncMap);
+					
+					
 					view.getInstance().buttonsAnimation();
 					control.addEvent($("#btnLoadStructure"),'click', function(){
 						loadStructure(true);
@@ -322,6 +368,17 @@ var model = (function(){
 				},
 				getPrevElement: function(){
 					return prevElement;
+				},
+				/*Применяет функцию ко всем элементам из структуры*/
+				allElementsCircuit: function ( element, func){
+					
+					func(element);
+					$(element.data('branches')).each(function(index, value){
+						var nextElement = $('#'+value);
+						if ( ! (nextElement.size === 0 ) ){
+							instance.blockActions.allElementsCircuit (nextElement, func);
+						}
+					});
 				}
 			}
 		}

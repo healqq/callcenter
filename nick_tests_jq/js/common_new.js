@@ -272,6 +272,7 @@ function exportToJSON(idNames){
 	}
 	objectJSON.blocks = divArray;
 	objectJSON.first  = first;
+	objectJSON.sync   = model.getInstance().api.getSyncMap();
 	return JSON.stringify(objectJSON);
 }
 function createObjectFromDiv(element, noConvert){
@@ -352,7 +353,9 @@ function importFromJSON(stringJSON, container, isEdited)
 		firstElement = false;
 		
 	}
-	
+	if (objectJSON.sync !== undefined){
+		model.getInstance().api.setSyncMap( objectJSON.sync);
+	}
 	
 	return objectJSON.first;
 	//var divArray = 
@@ -428,6 +431,9 @@ switch (type) {
 		case "summary-element-valuename": objectSpecs = {class:'summary-element-valuename',content:content, id:undefined};break; 
 		case "summary-element-valuevalue": objectSpecs = {class:'summary-element-valuevalue',content:content, id:undefined};break; 
 		//case "radioInputTypesDiv"		objectSpecs = {class:"radioInputTypesDiv",id:undefined,content:undefined};break;
+		//sync-block
+		case "sync-warning":			objectSpecs = {class: "sync-help warning", content: content, id: undefined};break;
+		
 		default:
 		return undefined;
 		}
@@ -1107,7 +1113,8 @@ function addElement(){
 	
 	//controller.getInstance().debugInfo();
 	createNewTempElement();//обнуляем значения у temp_div
-	if ( $('#autosave').prop('checked') === true ) 
+	if ( $('#autosave').prop('checked') === true )
+		modelInst.api.fillSyncMap();
 		saveStructure();
 	//$('#newElementName').val("");
 	//отображаем остальные элементы
@@ -1638,11 +1645,15 @@ function addHelpTriggers(){
 	});
 }
 //возвращает ключ-значение без добавления id и пробелов
-function getInputValueArray(element){
+function getInputValueArray(element, type){
 	value = undefined;
+	var altNames = false;
+	if (type === 'sync')
+		altNames = true;
+		
 	textAreaSelection 	= $(element).find("textarea");
 	if (! (textAreaSelection.length == 0 ) ){
-		value = {key:'текстовое поле', value:textAreaSelection.val()};
+		value = {key:(altNames? '': 'текстовое поле'), value:textAreaSelection.val()};
 	}
 	else{
 		textBlocksSelection = $(element).find("input[type=text]");
@@ -1654,7 +1665,7 @@ function getInputValueArray(element){
 			}
 		else{
 			radioSelection 		= $(element).find("input[type=radio]:checked");
-			value = {key: 'выбранное значение', value:$('label[for='+$(radioSelection).attr('id')+']').text()};
+			value = {key:(altNames? '': 'выбранное значение'), value:$('label[for='+$(radioSelection).attr('id')+']').text()};
 		}
 	}
 	return $.isArray(value)? value : [value];
@@ -1667,6 +1678,7 @@ function fillSummaryBlock(){
 	$('#container').children().each(function(index, value){
 			
 			var newBlock = fabric('div', getObjectSpecs('summary-element') );
+				
 			//раскраска цветом
 			if ((index % 2) === 0 ){
 				newBlock.addClass('odd');

@@ -112,8 +112,8 @@ var  controller = (function(){
 				
 			},
 			debugInfo: function(){
-				console.log(events.length);
-				 console.log(events);
+			/*	console.log(events.length);
+				 console.log(events);*/
 			}
 			
 			

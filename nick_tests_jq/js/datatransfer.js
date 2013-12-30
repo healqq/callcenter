@@ -1,21 +1,34 @@
 //получает значение input'а у div блока
 function getInputValue(element){
 	value = undefined;
-	textAreaSelection 	= $(element).find("textarea");
+	var syncMap = model.getInstance().api.getSyncMap();
+	var $element = $(element);
+	var mapElement = syncMap[$element.attr('id')];
+	key =  ( (mapElement === undefined)?$element.attr('id'):mapElement.value );
+	textAreaSelection 	= $element.find("textarea");
 	if (! (textAreaSelection.length == 0 ) ){
-		value = {key:$(element).attr('id'), value:textAreaSelection.val()};
+		
+		
+		value = {key:key, value:textAreaSelection.val()};
 	}
 	else{
-		textBlocksSelection = $(element).find("input[type=text]");
+		textBlocksSelection = $element.find("input[type=text]");
 		if (! (textBlocksSelection.length == 0 ) ){
 			value = [];
+			
+			
 			textBlocksSelection.each(function(){
-			value.push({key:$(this).parents('.divacc').attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),''), value:$(this).val()} );
+				var mapElement = syncMap[$element.attr('id')+$(this).attr('placeholder')];
+				var key = (mapElement === undefined)?
+				$$element.attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),''):mapElement.value;
+				//key:$(this).parents('.divacc').attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),'')
+				value.push({key: key, value:$(this).val()} );
 				});
 			}
 		else{
-			radioSelection 		= $(element).find("input[type=radio]:checked");
-			value = {key:$(element).attr('id'), value:radioSelection.val()};
+			radioSelection 		= $element.find("input[type=radio]:checked");
+	//		key =  syncMap[$element.attr('id')].value;
+			value = {key:key, value:radioSelection.val()};
 		}
 	}
 	return $.isArray(value)? value : [value];

@@ -34,6 +34,7 @@
 		<div class ="controls-block">
 			<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить" type="button" class = "control-button"></p>
 			<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить" type="button" class = "control-button"></p>
+			<p class = "addbuttonP"><input id="btnSyncSettings" value="Настройки" type="button" class = "control-button"></p>
 			<p id="autosave-p">
 			<input id="autosave" value="" type="checkbox">
 			<label for="autosave" class="checkBoxLabel">автосохранение</label>
@@ -150,6 +151,26 @@
 		<div id="img-block">
 		</div>
 	</div>
+	<div id ="sync-block" class="sample-view sync">
+			
+			<div id="sync-container" class="focused"><h3  class = 'title'>Настройка выгрузки</h3>
+				<div class ="sync-help underlined">
+					<h5>На этой форме можно задать произвольные имена для полей анкеты, которые будут использованы 
+						при выгрузке.</h5>
+				</div>
+				<p class = "addbuttonP add-block hidden">
+					<input id="btnSaveSyncMap"  type="button" value="Сохранить"  class = "control-button">
+				
+			</p>
+			</div>
+			<div class="exit-small__div sync-exit"  >
+				<input type="button" class="exit-btn-small" id="sync-exit" value="&#160;">
+			
+			</div>
+			
+	 
+
+		</div>
 </body>
 
 </html>
