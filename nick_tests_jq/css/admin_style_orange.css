@@ -1451,14 +1451,30 @@ input[type=checkbox]:checked + label:before {
 }
 /*блок синхронизации*/
 .sync{
-	width: 58.8%;
-	margin: auto;
+	
+	/*position: absolute;*/
+	z-index: 100;
+	position: relative;
+	width: 99.8%;
+	height: 99.8%;
+	overflow-y: hidden;
+	/*top: 137px;*/
+	
+	/**/
+	
+	
+	
+}
+.sync-wrap{
+	padding-bottom: 5%;
 	position: absolute;
 	z-index: 100;
-	display: none;
 	top: 137px;
-	left: 11.8%;
-	
+	width: 60.5%;
+	margin: auto;
+	display: none;
+	left: 11%;
+	background: transparent;
 	
 }
 .sync-help{
@@ -1475,4 +1491,12 @@ input[type=checkbox]:checked + label:before {
 .sync-exit{
 	top: 26px;
 	right: 6px;
+}
+.scroll-to-top{
+	position: fixed;
+	left: 80%;
+	width: 60px;
+	height: 60px;
+	bottom: 0;
+	display: none;
 }

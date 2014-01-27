@@ -75,7 +75,7 @@ var  view = (function(){
 			},
 			//Скроллим вверх при нажатии на edit/copy(+animation)
 			scrollToTop: function(){
-				$('body').animate({scrollTop:137},{duration:'fast'});
+				$('body').animate({scrollTop:137},{duration:'slow'});
 			},
 			toggleControlButtonsState: function(state){
 				$('.editbuttonAccordion').each( function(){
@@ -164,7 +164,7 @@ var  view = (function(){
 			showSyncBlock: function(){
 				instance.fillSyncContainer();
 				$('#scheeme-help-layer').show();
-				$('#sync-block').slideDown({duration:'slow', complete:function(){
+				$('#sync-block-wrap').slideDown({duration:'slow', complete:function(){
 						var exit = $('.exit-small__div,.sync-exit').slideDown('fast');
 						controller.getInstance().addEvent($('#sync-exit'), 'click', instance.hideSyncBlock);
 					}
@@ -172,11 +172,17 @@ var  view = (function(){
 			},
 			hideSyncBlock: function(){
 				$('.exit-small__div,.sync-exit').slideUp('fast');
-				$('#sync-block').slideUp({duration:'slow', complete:function(){
+				$('#sync-block-wrap').slideUp({duration:'slow', complete:function(){
 						$('#scheeme-help-layer').hide();
 					}
 				});
-			}
+			},
+			showScrollTopButton: function(){
+				$('.scroll-to-top').animate({bottom:"+=50", opacity: "show"}, "slow");
+			},
+			hideScrollTopButton: function(){
+				$('.scroll-to-top').animate({bottom:"-=50", opacity: "hide"}, "slow");
+			},
 			
 			
 		

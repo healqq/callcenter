@@ -7,11 +7,13 @@ var model = (function(){
 		var prevElement = undefined;
 		var syncMap = {};
 		var state ={ element_edit:'new',
-					display_view:'controls'// state используется для контроля пользователя и получения данных
+					display_view:'controls',
+					scroll_top_btn: 'off'	// state используется для контроля пользователя и получения данных
 					};						// о текущем состоянии ( варианты 'new', 'edit' )
 		var statesList = {
 			element_edit:['new', 'edit'],
-			display_view:['controls', 'scheeme']
+			display_view:['controls', 'scheeme'],
+			scroll_top_btn:['on', 'off']
 		}
 		//public
 		return{
@@ -230,7 +232,9 @@ var model = (function(){
 				}
 		
 		//$("#btnSendData").click(sendData);
+				control.addEvent($("#btn-scroll-top"), 'click', view.getInstance().scrollToTop);
 				control.addEvent($("#logout"), 'click', logout);
+				control.addEvent($(window), 'scroll', instance.scrollCheck);
 				view.getInstance().buttonsAnimation();
 	
 			},
@@ -270,6 +274,24 @@ var model = (function(){
 				
 				
 				
+			},
+			scrollCheck: function(){
+				var $body = $('body');
+				if( $body.scrollTop() > 200 ) {
+					if (state.scroll_top_btn === 'off') {
+						state.scroll_top_btn = 'on';
+						view.getInstance().showScrollTopButton();
+					}
+					
+					
+				}
+				else{
+					if (state.scroll_top_btn === 'on')
+						view.getInstance().hideScrollTopButton();
+						state.scroll_top_btn = 'off';
+					
+				}
+					
 			},
 			blockActions:{
 				deleteBlock: function(element ){
@@ -352,10 +374,10 @@ var model = (function(){
 				},
 				saveStructure:function(){
 					var JSONstructure = exportToJSON(["#container","#imported"]);
-					setCookie('structure', JSONstructure,{expires:60*60*60, path:'/Callcenter'});
+					$('#container').data('structure', JSONstructure);
 				},
 				restoreStructure: function(){
-					var savedStruct = getCookie('structure');
+					var savedStruct = $('#container').data('structure');
 					if (savedStruct !== undefined){
 						first = importFromJSON( savedStruct, "#imported", true);
 						showBranch(first,false);
