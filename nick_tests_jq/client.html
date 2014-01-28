@@ -36,6 +36,7 @@
 	
 		<p class = "addbuttonP" id="btnLoadStructureClient"><input id="btnLoadStructure" value="Загрузить cтруктуру" type="button" class = "control-button"></p>
 		<p class = "addbuttonP" id="btnReload"><input id="btnReload" value="Очистить" type="button" class = "control-button"></p>
+		<p class = "addbuttonP" id="btnReload"><input id="btnShowHelp" value="Помощь" type="button" class = "control-button"></p>
 		<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
 		<!-- <p class = "addbuttonP"><input id="logout" value="Выйти" type="button" class = "control-button"> </p> -->
 		<p id="response" style="display:none"></p>
@@ -87,8 +88,76 @@
 	</p>
 	<p id="warning-exit"><input type="button" class='warning-exit-btn' id="warning-exit-btn" value="&#160;"</p>
 </div>
-<div class="waiting-layer"><div id="img-block"></div></div>
+<!--<div class="waiting-layer"><div id="img-block"></div></div>
+<div id= "scheeme-help-layer">
+		
+	</div>
+	<div id = "scheeme-help-basic" class = "focused">
+			<h3 class="title">Помощь при работе с приложением</h3>
+			<ul>
+			<li>
+				<img src = "css/images/round-black.png" alt="черный круг"><p><span>Круги в схеме означают элементы - ветвления. Цифра в
+				центре круга - количество веток.</span></p><br>
+			</li>
+			<li>
+				<img src = "css/images/square-black.png" alt="черный квадрат"><p><span>Квадраты - все остальные элементы.</span></p><br>
+			</li>
+			<li>
+				<img src = "css/images/round-red.png" alt="красный круг"><p><span>Красный круг означает, что не все ветви заполнены.</span></p><br>
+			</li>
+			<li>
+				<img src = "css/images/square-red.png" alt="красный квадрат"><p><span>Дозаполнить ветви можно, нажав на красный квадрат,
+				соответсвующий нужной ветви.</span></p><br>
+			</li>
+			<li>
+				<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><p><span>Закрашенный синим элемент отображает текущее местоположение.</span></p>
+				<p><span> Для перехода на другой элемент нужно нажать на него.</span></p>
+			</li>
+			</ul>
+			<div class="exit-small__div scheeme"  >
+			<input type="button" class="exit-btn-small" id="scheeme-help-exit" value="&#160;">
+			
+			</div>
+			
+		</div>
+		
 <!-- <input type="button" id="import">build from json</input> -->
+
+
+<!-- gallery -->
+<div class="wrapper sample-view">
+	<div class="nav-list">
+		
+			<input type="radio" id="nav-selection-1" name="nav-selection" class="nav-radio" value="1">
+			<label for="nav-selection-1"></label>
+			<input type="radio" id="nav-selection-2" name="nav-selection" class="nav-radio" value="2">
+			<label for="nav-selection-2"></label>
+			<input type="radio" id="nav-selection-3" name="nav-selection" class="nav-radio" value="3">
+			<label for="nav-selection-3"></label>
+			<input type="radio" id="nav-selection-4" name="nav-selection" class="nav-radio" value="4">
+			<label for="nav-selection-4"></label>
+			
+		
+			
+	</div>
+	<div class="gallery">
+		
+		<h3 class="title" id="help-title"></h3>
+		<div class="help-content">
+			<div class="help-img-block">
+				<img class="help-img"></img>
+			</div>
+			<p class="help-text"></p>
+		</div>
+		<div class="nav-change-button" id="nav-next">
+		</div>
+		<div class="nav-change-button" id="nav-prev">
+		</div>
+	</div>
+</div>
+<div class="scroll-to-top">
+		<p class = "addbuttonP"><input id="btn-scroll-top" value="Наверх" type="button" class = "control-button"></p>
+	</div>
 </body>
 
 </html>

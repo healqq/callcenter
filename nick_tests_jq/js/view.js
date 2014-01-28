@@ -3,13 +3,14 @@
 var  view = (function(){
     function view() {
 	//private
-	var	events = [];
+	//var	events = [];
 	
 	
-	var removeEventFromElement = ( function( eventsList, eventName){
+	
+	//var removeEventFromElement = ( function( eventsList, eventName){
 			
 		
-	});
+	//});
 		
 		//public
 		return{
@@ -182,7 +183,8 @@ var  view = (function(){
 			},
 			hideScrollTopButton: function(){
 				$('.scroll-to-top').animate({bottom:"-=50", opacity: "hide"}, "slow");
-			},
+			}
+			
 			
 			
 		

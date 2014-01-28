@@ -1500,3 +1500,72 @@ input[type=checkbox]:checked + label:before {
 	bottom: 0;
 	display: none;
 }
+
+
+
+/*GALLERY CSS*/
+.wrapper{
+	overflow: auto;
+	position: absolute;
+	top: 136px;
+	left: 15%;
+	width: 800px;
+	height: 600px;
+	display: none;
+}
+.gallery{
+	width: 99%;
+	height:500px;
+	position: relative;
+	margin-top: 30px;
+}
+.nav-list{
+	position: absolute;
+	top: 10px;
+	right: 0px;
+	/*height: 20px;*/
+	overflow: auto;
+	width: auto;
+	z-index: 10;
+}
+.nav-selection{
+	margin-top: 0;
+	width: 50px;
+	height: 30px;
+}
+.nav-change-button{
+	height: 100%;
+	width: 5%;
+	background: transparent;
+	cursor: pointer;
+	z-index: 5;
+	position: absolute;
+	top: 0;
+	
+}
+#nav-prev{
+	left: 0;
+	
+}
+#nav-next{
+	right: 0;
+}
+.help-content{
+	width: 90%;
+	margin: auto;
+	top: 50%;
+	
+}
+.help-img-block{
+	margin: auto;
+	position: relative;
+	float: left;
+}
+.help-text{
+	padding: 2%;
+	position: relative;
+	float: left;
+}
+.help-img{
+	margin: auto;
+}

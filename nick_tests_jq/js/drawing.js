@@ -331,10 +331,13 @@ var drawerSingleton = (function(){
 		var nameText; //= '<strong>заголовок:</strong> ' + header;
 		//обработка красных блоков
 		if ( (id !== undefined) && (id.search(':') !== -1 ) ){
-						idText = "У элемента <strong>" + id.substr(0,id.search(':'))  + 
-						"</strong> не заполнена ветвь номер <strong>" +
-						( parseInt(id.substr(id.search(':')+1 ) ) + 1) +'</strong>.' ;
-						nameText = undefined;
+			var parentID = id.substr(0,id.search(':'));
+			var parentBlock = $('#'+ parentID);
+			var parentHeader = $('#'+parentID).find('h3').children('span:first').text();
+			idText = "У элемента <strong>"  + parentHeader + " [id: " + parentID  + "]" +
+				"</strong> не заполнена ветвь номер <strong>" + 
+				( parseInt(id.substr(id.search(':')+1 ) ) + 1) +'</strong>.' ;
+			nameText = undefined;
 		}
 		else{
 			header = $('#'+id).find('h3').children('span:first').text(); 

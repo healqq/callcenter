@@ -15,6 +15,14 @@ var model = (function(){
 			display_view:['controls', 'scheeme'],
 			scroll_top_btn:['on', 'off']
 		}
+		var helpContents = [
+			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
+			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
+			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
+			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
+			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
+			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
+		];
 		//public
 		return{
 			//функция возвращает id элемента для автозаполнения
@@ -401,6 +409,15 @@ var model = (function(){
 							instance.blockActions.allElementsCircuit (nextElement, func);
 						}
 					});
+				}
+			},
+			galleryActions:{
+				showItem: function( index ){
+					var currentPage = helpContents[index];
+					//var modelInstance = model.getInstance();
+					instance.setHTML($('#help-title'), currentPage.header);
+					$('.help-img').attr('src', currentPage.image);
+					instance.setHTML($('.help-text'), currentPage.text);
 				}
 			}
 		}
