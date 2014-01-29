@@ -1521,8 +1521,8 @@ input[type=checkbox]:checked + label:before {
 }
 .nav-list{
 	position: absolute;
-	top: 10px;
-	right: 0px;
+	top: 40px;
+	right: 20px;
 	/*height: 20px;*/
 	overflow: auto;
 	width: auto;
@@ -1535,31 +1535,53 @@ input[type=checkbox]:checked + label:before {
 }
 .nav-change-button{
 	height: 100%;
-	width: 5%;
+	width: 25%;
 	background: transparent;
 	cursor: pointer;
 	z-index: 5;
 	position: absolute;
 	top: 0;
+	/*background-image: url(images/arrow.png);
+	background-repeat: no-repeat;*/
 	
 }
 #nav-prev{
 	left: 0;
+	background-position: left center;/*0px 80px;*/
 	
+	
+}
+.nav-change-button:hover{
+	background:url(images/arrow-gallery.png) no-repeat;
+	opacity: 0.2;
 }
 #nav-next{
 	right: 0;
+	background-position: left center;
+	-moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
 }
+
+	
+	
 .help-content{
-	width: 90%;
-	margin: auto;
+	width: 45%;
+	margin: 0 2.5%;
 	top: 50%;
+	overflow: auto;
+	float: left;
+	display: inline-block;
 	
 }
 .help-img-block{
 	margin: auto;
 	position: relative;
 	float: left;
+	padding-left: 2%;
 }
 .help-text{
 	padding: 2%;
@@ -1568,4 +1590,20 @@ input[type=checkbox]:checked + label:before {
 }
 .help-img{
 	margin: auto;
+}
+.slide{
+	/*display: none;*/
+	
+	
+}
+.help-slide{
+	width: 1600px;
+	margin: auto;
+	top: 50%;
+	margin: auto;
+	overflow: auto;
+	
+}
+.overflow-wrap{
+	overflow: hidden;
 }

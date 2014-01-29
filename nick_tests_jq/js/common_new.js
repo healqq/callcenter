@@ -59,6 +59,18 @@ function fabric ( type,  options) {
 			}
 			//elementContent = '<input type="radio">' + elementInnerData + '</input>'; 
 			break;
+		case "radio-line":
+			if ( ! $.isArray(options.content) || (options.name == undefined) ){
+				//alert(typeof(options.content));
+				return;
+			};
+			//elementInnerData = "";
+			for (var i=0; i < options.content.length; i++ ){
+				elementContent  += '<input type="radio" name ='+ options.name 
+					+' value ="' + i + '"id ='+options.name+i+'><label for='+options.name+i+'>'+options.content[i]+'</label>';
+			}
+			//elementContent = '<input type="radio">' + elementInnerData + '</input>'; 
+			break;
 		case "checkbox":
 			elementContent = '<input type="checkbox" >';break;
 		case "label":
@@ -433,6 +445,8 @@ switch (type) {
 		//case "radioInputTypesDiv"		objectSpecs = {class:"radioInputTypesDiv",id:undefined,content:undefined};break;
 		//sync-block
 		case "sync-warning":			objectSpecs = {class: "sync-help warning", content: content, id: undefined};break;
+		//gallery
+		case "nav-radio":				objectSpecs = {class: "nav-radio", content: content, name: "nav-selection"};break;
 		
 		default:
 		return undefined;

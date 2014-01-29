@@ -16,13 +16,62 @@ var model = (function(){
 			scroll_top_btn:['on', 'off']
 		}
 		var helpContents = [
-			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
-			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
-			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
-			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
-			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
-			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "here's some text"},
+			{header:"Начало работы",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
+				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
+				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
+				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
+				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
+				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
+				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
+				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
+				Cras dapibus."},
+			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
+				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
+				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
+				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
+				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
+				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
+				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
+				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
+				Cras dapibus."},
+			{header:"h2",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
+				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
+				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
+				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
+				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
+				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
+				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
+				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
+				Cras dapibus."},
+			{header:"h3",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
+				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
+				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
+				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
+				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
+				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
+				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
+				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
+				Cras dapibus."},
+			{header:"h4",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
+				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
+				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
+				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
+				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
+				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
+				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
+				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
+				Cras dapibus."},
+			{header:"h5",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
+				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
+				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
+				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
+				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
+				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
+				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
+				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
+				Cras dapibus."},
 		];
+		var currentPage = undefined;
 		//public
 		return{
 			//функция возвращает id элемента для автозаполнения
@@ -223,6 +272,7 @@ var model = (function(){
 					
 					loadStructure(false);
 					control.addEvent($("#btnLoadStructure"),'click',function(){ loadStructure(false) });
+					control.addEvent($("#btnShowHelp"), 'click', instance.galleryActions.initGallery);
 					control.addEvent($("#btnSendData"),'click',function(){
 						view.getInstance().toggleElementState($("#btnSendData"));
 						sendData();
@@ -250,7 +300,11 @@ var model = (function(){
 				if (index === undefined){
 					$(element).find(':input[type=radio]').prop('checked', false);
 				}
-				var indexedElement = $($(element).find(':input[type=radio]')[index]);
+				var radioElements = $(element).find(':input[type=radio]');
+				if (radioElements.length === 0){
+					radioElements = $(element).siblings(':input[type=radio]')
+				}
+				var indexedElement = $(radioElements[index]);
 				indexedElement.trigger('click');
 			},
 			getElementInsertPosition: function(){
@@ -412,13 +466,81 @@ var model = (function(){
 				}
 			},
 			galleryActions:{
-				showItem: function( index ){
+				showItem: function( index, direction ){
 					var currentPage = helpContents[index];
 					//var modelInstance = model.getInstance();
+					
+					
+					var scrollWrap 		= $('.overflow-wrap');
+					var scrollAmount 	= $('.help-slide').width()/2;
+					if (!direction) {
+						scrollWrap.scrollLeft(scrollAmount);
+						$('.help-img').not('.slide').attr('src', currentPage.image);
+						instance.setHTML($('.help-text').not('.slide'), currentPage.text);
+					}
+					else{
+						$('.help-img.slide').attr('src', currentPage.image);
+						instance.setHTML($('.help-text.slide'), currentPage.text);
+						
+					}
 					instance.setHTML($('#help-title'), currentPage.header);
-					$('.help-img').attr('src', currentPage.image);
-					instance.setHTML($('.help-text'), currentPage.text);
+					/*$('.help-content.slide').show();*/
+					
+					scrollWrap.animate({scrollLeft:(!direction?"0":scrollAmount)},{duration:"15000",
+						complete: function(){
+							$('.help-img').attr('src', currentPage.image);
+							instance.setHTML($('.help-text'), currentPage.text);
+							scrollWrap.scrollLeft(0);
+						}
+					});
+					
+				},
+				//клик на пункт меню
+				/*onNavClick: function(element){
+					var newPage = $(element).val();
+					
+					
+					
+				},*/
+				initGallery: function(){
+				//init nav
+				//инит делается 1 раз, затем просто show/hide
+					if (currentPage === undefined){
+						var contentsArray = new Array(helpContents.length);
+						for (var i=0; i < helpContents.length; i++){
+							contentsArray[i] = "";
+						}
+						var navRadio = fabric("radio-line", getObjectSpecs('nav-radio', contentsArray ));
+						navRadio.appendTo($('.nav-list') );
+						//начальные параметры
+						currentPage = 0;
+						instance.galleryActions.showItem( currentPage, true );
+						$('input[type=radio][name=nav-selection]').first().prop('checked', true);
+					//buttons handlers
+						var controllerInst = controller.getInstance();
+						controllerInst.addEvent($('#gallery-exit'), 'click', function() { $('.wrapper').hide();});
+						controllerInst.addEvent($('input[type=radio][name=nav-selection]'), 'change', function(){
+							var newPage = parseInt( $(this).val() );
+							instance.galleryActions.showItem( newPage, newPage > currentPage );
+							currentPage = newPage;
+						});
+						controllerInst.addEvent($('#nav-next'), 'click', function(){
+							newPage = (currentPage + 1) % helpContents.length;
+						//	instance.galleryActions.showItem( currentPage );
+							instance.setRadioValue($('input[type=radio][name=nav-selection]'), newPage);
+							
+						});
+						controllerInst.addEvent($('#nav-prev'), 'click', function(){
+							newPage = ( (currentPage === 0) ? helpContents.length -1 : currentPage - 1 );
+						//	instance.galleryActions.showItem( currentPage  );
+							instance.setRadioValue($('input[type=radio][name=nav-selection]'), newPage);
+						});
+					}
+					//show form
+					$('.wrapper').show();
 				}
+				
+				
 			}
 		}
 	}
