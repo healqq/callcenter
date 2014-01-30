@@ -1270,7 +1270,10 @@ input[type=checkbox]:checked + label:before {
 
 /*SUBMIT BLOCK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-
+.submit-wrapper{
+	padding: 30px 20px;
+	overflow: auto;
+}
 #submit-block {
 	padding-right:1px;
 	padding-left:-1px;
@@ -1535,7 +1538,7 @@ input[type=checkbox]:checked + label:before {
 }
 .nav-change-button{
 	height: 100%;
-	width: 25%;
+	width: 20%;
 	background: transparent;
 	cursor: pointer;
 	z-index: 5;
@@ -1580,16 +1583,19 @@ input[type=checkbox]:checked + label:before {
 .help-img-block{
 	margin: auto;
 	position: relative;
-	float: left;
+	/*float: left;*/
 	padding-left: 2%;
+	
 }
 .help-text{
 	padding: 2%;
 	position: relative;
 	float: left;
+	z-index: 6;
 }
 .help-img{
 	margin: auto;
+	border: 1px solid #999;
 }
 .slide{
 	/*display: none;*/
@@ -1604,6 +1610,11 @@ input[type=checkbox]:checked + label:before {
 	overflow: auto;
 	
 }
+#gallery-exit, .help-gallery{
+	z-index: 10;
+	cursor: pointer;
+}
+
 .overflow-wrap{
 	overflow: hidden;
 }

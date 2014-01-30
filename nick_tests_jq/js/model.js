@@ -16,60 +16,34 @@ var model = (function(){
 			scroll_top_btn:['on', 'off']
 		}
 		var helpContents = [
-			{header:"Начало работы",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
-				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
-				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
-				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
-				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
-				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
-				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
-				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
-				Cras dapibus."},
-			{header:"h1",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
-				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
-				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
-				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
-				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
-				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
-				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
-				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
-				Cras dapibus."},
-			{header:"h2",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
-				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
-				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
-				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
-				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
-				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
-				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
-				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
-				Cras dapibus."},
-			{header:"h3",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
-				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
-				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
-				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
-				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
-				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
-				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
-				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
-				Cras dapibus."},
-			{header:"h4",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
-				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
-				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
-				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
-				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
-				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
-				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
-				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
-				Cras dapibus."},
-			{header:"h5",image:"./css/images/help/13674414211007.jpg",text: "Lorem ipsum dolor sit amet, \
-				consectetuer adipiscing elit. Aenean commodo ligula eget dolor.\
-				Aenean massa. Cum sociis natoque penatibus et magnis dis parturient\
-				montes, nascetur ridiculus mus. Donec quam felis, ultricies nec,\
-				pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.\
-				Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.\
-				In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo.\
-				Nullam dictum felis eu pede mollis pretium. Integer tincidunt.\
-				Cras dapibus."},
+			{header:"Начало работы",image:"./css/images/help/1_help_help.png",text: "Вы находитесь в разделе помощи,\
+				здесь вы можете узнать о возможностях сервиса и найти некоторые полезные советы, \
+				которые помогут вам в работе.<br/>\
+				При повторном открытии формы, вы попадете на тот раздел, на котором остановились.<br/> \
+				Перейдите на следующий раздел для знакомства с элементами управления."},
+			{header:"Заявка",image:"./css/images/help/2_help_script_table.png",text: 'Основную часть экрана \
+				занимает форма для заполнения заявки. Для перехода на любой элемент необходимо нажать на \
+				заголовок этого элемента. По мере заполнения элементов переход будет выполняться автоматически,\
+				для перехода между полями ввода и элементами  удобно пользоваться клавишей \
+				<img src="./css/images/help/2_help_tab.jpg"</img>. \
+				'},
+			{header:"Заявка (продолжение) ",image:"./css/images/help/3_help_restore_fill.png",text: "Вылетел браузер? \
+				По-ошибке закрыли вкладку? Не беда! При повторном открытии все уже заполненные блоки будут восстановлены,\
+				а внизу появится окно, позволяющее отменить заполнение. А так же можно очистить заполненные поля\
+				используя кнопку очистить на левой панели.\
+				"},
+			{header:"Проверка заявки",image:"./css/images/help/4_help_filling_check.png",text: "При переходе на последний \
+				элемент откроется форма проверки анкеты, на которой будут показаны значения всех полей. \
+				Если информация в каком-то из блоков неправильная, то для отображения этого блока \
+				необходимо нажать на соответствующую строку в форме проверки.\
+				"},
+			{header:"Отправка анкеты",image:"./css/images/help/5_help_submit_script.png",text: "После того, как анкета\
+				проверена, отправьте анкету, нажав на кнопку. Как только анкета отправится - вы увидите оповещение и\
+				заполненные поля сбросятся. Можно приступать к новой анкете!"},
+			{header:"Заключение",image:"./css/images/Tabus_web.png",text: '<p style="text-align:center"><a href="mailto:ask@tabus.ru" \
+			target="_blank">Сюда</a> вы можете присылать возникшие вопросы или пожелания!</p>\
+			'},
+			
 		];
 		var currentPage = undefined;
 		//public
