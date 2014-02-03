@@ -323,8 +323,10 @@ function createObjectFromDiv(element, noConvert){
 		fieldsList = [];
 		inputType = "text";
 		textSelection.each(function(){
-				fieldsList.push($(this).prop("placeholder"));
-		});
+				fieldsList.push({value: $(this).prop("placeholder"),
+				required: model.getInstance().validation.isRequired( $(this) )
+				});
+			});
 		
 		
 	}
@@ -360,6 +362,18 @@ function importFromJSON(stringJSON, container, isEdited)
 			firstElement = true;
 		}
 		objectJSON.blocks[i].description = bbCodeParserSingleton.getInstance().bbToHTML(objectJSON.blocks[i].description);
+		if (objectJSON.blocks[i].fieldsList !== undefined){
+			if (objectJSON.blocks[i].fieldsList[0].value === undefined) {
+				var tempArray = objectJSON.blocks[i].fieldsList;
+				objectJSON.blocks[i].fieldsList = [];
+				for (var j = 0; j < tempArray.length; j++){
+					objectJSON.blocks[i].fieldsList.push({value:tempArray[j],
+						required: false
+					});
+				}
+				
+			}
+		}
 		view.getInstance().buttonsAnimation(createNewDivElement(
 		"show", objectJSON.blocks[i], isEdited, firstElement).appendTo(container));
 		firstElement = false;
@@ -402,7 +416,9 @@ switch (type) {
 		case "bb-button":				objectSpecs = {class:'line-button',content:content,id:name};break;
 		case 'blockname-block':			objectSpecs = {class:undefined,content:undefined,id:'blockname-block'};break;
 		case 'elementNameAutofill':		objectSpecs = {class:'checkBox',content:'Автозаполнение', id:'elementNameAutofill'};break;
-		case 'elementNameAutofillLabel':objectSpecs = {class:'checkBoxLabel',content:'Автозаполнение', id:'elementNameAutofill'};break;
+		case 'elementNameAutofillLabel':objectSpecs = {class:'checkBoxLabel ',content:'Автозаполнение', id:'elementNameAutofill'};break;
+		case 'elementRequired':			objectSpecs = {class:'checkBox ',content:'Обязательный', id:name};break;
+		case 'elementRequiredLabel':	objectSpecs = {class:'checkBoxLabel req-chbox',content:'Обязательный', id:name};break;
 		case 'add-block':				objectSpecs = {class:'add-block', content: undefined, id: undefined};break;
 		case 'add-block-button':		objectSpecs = {class:'addbuttonP add-block',content: undefined, id: undefined};break;
 		case 'add-block-position__div':	objectSpecs = {class:'add-block-position__div', content: undefined, id: undefined};break;
@@ -427,7 +443,7 @@ switch (type) {
 		case "nextElementText": 		objectSpecs = {class:"branchId",content:"id элемента",id:undefined};break;
 		case "nextElementText edit":	objectSpecs = {class:"branchId",content:content,id:undefined};break;
 		//fields lists
-		case "fieldsListText":			objectSpecs = {class:"fieldsListInput",content:"Введите название",id:undefined};break;
+		case "fieldsListText":			objectSpecs = {class:"fieldsListInput",content:"Введите название",id:name};break;
 		case "fieldsListText edit":		objectSpecs = {class:"fieldsListInput",content:content,id:undefined};break;
 		
 		
@@ -565,7 +581,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			break;
 			case "textarea":
 				
-				newInput		= fabric("text area",  	getObjectSpecs("accordiontextarea",contents.input)); 
+				newInput		= fabric("text area",  	getObjectSpecs("accordiontextarea",contents.input, 'textarea_'+contents.id)); 
 				newInput.appendTo( newInputDiv );
 				newInput.change(function(evt){setTimeout(function(){onTextChanged(evt)}, 100)});
 				//по ctrl+enter переход на следующий вопрос
@@ -584,8 +600,12 @@ function createNewDivElement(type, contents, isEdited, first){
 			case "text":
 				
 				for(var i = 0; i < contents.fieldsList.length; i++){
-					newInput = newInput		= fabric("textinline",  	getObjectSpecs("textfield",contents.fieldsList[i])); 
+					newInput = newInput		= fabric("textinline",  	getObjectSpecs("textfield",contents.fieldsList[i].value,'text_'+i+'_'+contents.id)); 
 					newInput.appendTo( newInputDiv );
+					if (contents.fieldsList[i].required){
+						model.getInstance().validation.setRequired( newInput);
+					}
+					//newInput.data('required', contents.fieldsList[i].required);
 					
 					if (first){
 						newInput.change(TriggersOnFirstElement);
@@ -1000,7 +1020,9 @@ function addElement(){
 					return;
 				}
 			inputFieldsFilled.each(function(){
-					fieldsListArray.push($(this).val());
+					fieldsListArray.push({value:$(this).val(),
+					required:($(this).parents('.radioOption').children('input[type=checkbox]').prop('checked') === true) 
+					});
 				});
 		break;
 	}
@@ -1408,7 +1430,7 @@ function addRadioOptionsListItem(){
 		newIn.slideToggle("slow");
 }	
 function removeRadioOptionsListItem(){
-		element = $(this).parent("p");
+	var	element = $(this).parent("p");
 		element.animate({height:0, opacity:'hide'},{duraiton:"slow", complete:function(){
 			removeElement($(this));
 			}	
@@ -1420,17 +1442,24 @@ function removeRadioOptionsListItem(){
 //Отображение и добавление для текстовых полей
 function createTextInputField( fieldsList){
 	
+	model.getInstance().initIdCounter(0);
+	
 	newFieldsList 		= fabric("div"	    , 	getObjectSpecs("div", undefined ,"fieldsList" ) );
 	newFieldsListAdd 	= fabric("buttoninlinetooltip", getObjectSpecs("addbutton") );
 	
 	//new
 	if (fieldsList == undefined) {
 		newItemParagraph 	= fabric("p", getObjectSpecs("radioOptionP" ));
-		newItem 			= fabric("textinline",getObjectSpecs("fieldsListText" ));
+		newItem 			= fabric("textinline",getObjectSpecs("fieldsListText"  ));
+		newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_0'));
+		newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabel',undefined, 'req-chbox_0'));
+		
 		newItemRemove  		= fabric("buttoninlinetooltip",	getObjectSpecs("removebutton") );
 		
 		newItemRemove.click(removeFieldsListItem);
 		newItem.appendTo(newItemParagraph);
+		newItemReqChbox.appendTo(newItemParagraph);
+		newItemReqLabel.appendTo(newItemParagraph);
 		newItemRemove.appendTo(newItemParagraph);
 		newItemParagraph.appendTo(newFieldsList);
 	}
@@ -1438,15 +1467,24 @@ function createTextInputField( fieldsList){
 	else {
 		for (var i=0; i< fieldsList.length; i++){
 			newItemParagraph 	= fabric("p", getObjectSpecs("radioOptionP" ));
-			newItem 			= fabric("textinline edit",getObjectSpecs("fieldsListText edit", fieldsList[i] ));
+			newItem 			= fabric("textinline edit",getObjectSpecs("fieldsListText edit", fieldsList[i].value ));
+			newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_'+i));
+			newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabel',undefined, 'req-chbox_'+i));
 			newItemRemove  		= fabric("buttoninlinetooltip",	getObjectSpecs("removebutton") );
 		
 			newItemRemove.click(removeFieldsListItem);
 			newItem.appendTo(newItemParagraph);
+			newItemReqChbox.appendTo(newItemParagraph);
+			newItemReqLabel.appendTo(newItemParagraph);
 			newItemRemove.appendTo(newItemParagraph);
 			newItemParagraph.appendTo(newFieldsList);
+			if (fieldsList[i].required){
+				newItemReqChbox.prop('checked', true);
+			}
 			
 		}
+		model.getInstance().initIdCounter(fieldsList.length-1);
+		
 	}
 	newFieldsListAdd.click(addNewFieldsListItem);
 	newFieldsListAdd.appendTo(newFieldsList);
@@ -1457,12 +1495,17 @@ function createTextInputField( fieldsList){
 
 
 function addNewFieldsListItem(){
+	var numItems = model.getInstance().getIdCounter() ;
 	newItemParagraph 	= fabric("p", getObjectSpecs("radioOptionP" ));
 	newItem 			= fabric("textinline",getObjectSpecs("fieldsListText" ));
+	newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_'+numItems));
+	newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabel',undefined, 'req-chbox_'+numItems));
 	newItemRemove  		= fabric("buttoninlinetooltip",	getObjectSpecs("removebutton") );
 		
 	newItemRemove.click(removeFieldsListItem);
 	newItem.appendTo(newItemParagraph);
+	newItemReqChbox.appendTo(newItemParagraph);
+	newItemReqLabel.appendTo(newItemParagraph);
 	newItemRemove.appendTo(newItemParagraph);
 	newItemParagraph.hide();
 	newItemParagraph.insertBefore(newFieldsList.children("input[type=button]"));

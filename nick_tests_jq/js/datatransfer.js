@@ -20,7 +20,7 @@ function getInputValue(element){
 			textBlocksSelection.each(function(){
 				var mapElement = syncMap[$element.attr('id')+$(this).attr('placeholder')];
 				var key = (mapElement === undefined)?
-				$$element.attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),''):mapElement.value;
+				$element.attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),''):mapElement.value;
 				//key:$(this).parents('.divacc').attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),'')
 				value.push({key: key, value:$(this).val()} );
 				});

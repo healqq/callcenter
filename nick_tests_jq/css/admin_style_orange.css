@@ -410,6 +410,9 @@
 			margin-left: 15px;
 			float: left;
 		}
+		.req-chbox:before{
+			margin: 6px 6px;
+		}
 /*BB BUTTONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		#bb-block{
 			width: 90%;

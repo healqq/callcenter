@@ -4,6 +4,7 @@ var model = (function(){
     function model() {
 	//private
 		var lastid = 0;
+		var fieldsListId = 0;
 		var prevElement = undefined;
 		var syncMap = {};
 		var state ={ element_edit:'new',
@@ -48,6 +49,12 @@ var model = (function(){
 		var currentPage = undefined;
 		//public
 		return{
+			initIdCounter: function(value){
+				fieldsListId = value;
+			},
+			getIdCounter: function(){
+				return ++fieldsListId;
+			},
 			//функция возвращает id элемента для автозаполнения
 			autofillID: function(){
 				while ($('#block'+lastid).length > 0){
@@ -513,9 +520,97 @@ var model = (function(){
 					//show form
 					$('.wrapper').show();
 				}
+			},
+				//валидация данных
+			validation:{
+				inputTypes: ['input[type=radio]','textarea','input[type=text]'],
+				//соответствие id-regexp
+				patternsHash:{},
+				//проверка осуществляется при нажатии на кнопку отправить.
+				//1. проверка заполнения полей required ( поиск-по классу)
+				//Установка элемента формы как обязательного
 				
-				
+				addPatternHashPair: function(elements, pattern){
+					if (pattern === undefined){
+					//тогда ставим любую строку в паттерн
+						pattern = '/.*/';
+					}
+					elements.each(function(index, value){
+						/*var elementBlock = $(value).parents('.divacc').attr('id');*/
+						
+						instance.validation.patternsHash[$(value).attr('id')] = pattern;
+					});
+					
+					
+					
+				},
+				setRequired: function( element){
+					$(element).addClass('form-required');
+				},
+				isRequired: function( element){
+					return $(element).hasClass('form-required');
+				},
+				//done
+				checkFilling: function(){
+					var errorsList = [];
+					var requiredList = $('.form-required','#container');
+					while (requiredList.length > 0 ){
+						var notFound = true;
+						var inputType = 0;
+						var $value = $(requiredList[0]);
+						for (var i=0; (i<3) && (notFound) ;i++){
+							notFound = !($value.is(instance.validation.inputTypes[i]) );
+							inputType = i;
+						}
+						var notFilled = false;
+						switch (inputType){
+						case 0:
+							var radioName = $value.attr('name');
+							if ($('input[type=radio][name='+radioName+']:checked').length === 0){
+								//notFilled = true;
+								errorsList.push($value.parents('.divacc').attr('id'));
+							}
+							requiredList = $.grep( requiredList, function(element, i){
+								return $(element).attr('name') !== radioName;
+							});
+							
+						break;
+						case 1:
+						case 2:
+							if ($.trim($value.val()).length === 0){
+								errorsList.push($value.attr('id'));
+								//notFilled = true;
+							}
+							requiredList = requiredList.splice(1);
+						break;
+						
+						}
+						
+						
+					}
+					
+					console.log( errorsList);
+				},
+				checkPatterns: function(){
+					var errorsList 		= [];
+					var elementsList 	= $(instance.validation.inputTypes[1] + ',' +
+						instance.validation.inputTypes[2], '#container');
+					elementsList.each(function(index, value){
+						var $value = $(value);
+						var patternRegExp = new RegExp(instance.validation.patternsHash[$value.attr('id')]);
+						if ( !patternRegExp.test($value.val()) ){
+							errorsList.push( $value.attr('id') );
+							
+						}
+					});
+					
+					
+					
+				}
 			}
+				
+				
+			
 		}
 	}
 	var instance;
