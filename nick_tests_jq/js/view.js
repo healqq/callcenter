@@ -75,8 +75,9 @@ var  view = (function(){
 				
 			},
 			//Скроллим вверх при нажатии на edit/copy(+animation)
-			scrollToTop: function(){
-				$('body').animate({scrollTop:137},{duration:'slow'});
+			scrollToTop: function(evt, value){
+				var scrollValue = ( (value === undefined)? 125: value);
+				$('body').animate({scrollTop:scrollValue},{duration:'slow'});
 			},
 			toggleControlButtonsState: function(state){
 				$('.editbuttonAccordion').each( function(){

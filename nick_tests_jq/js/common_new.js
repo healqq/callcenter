@@ -164,17 +164,26 @@ function onHeaderClick(evt, elem, state){
 	
 	//div_block.find("textarea").focus();
 	if ( ! $(that).hasClass('active_header') ){
-		markHeaders(that);
+		markHeaders(div_block);
 	}
 	else{
 		$(that).removeClass('not-filled');
 	}
 	
 	redraw();
-	var values = getInputValue(div_block);
+	//var values = getInputValue(div_block);
+	var objElement = model.getInstance().blockActions.getElement( div_block.attr('id')) ;
 	/*if ( values[values.length-1].val() !== '' ) */
-	if ( (div_block.data('branches') == undefined )/* && ( values[values.length-1].value !== '' ) 
-	&& ( values[values.length-1].value !== undefined )*/	&& ( $('#submit-block').css('display') == 'none' ) ){
+	if ( 
+		( 
+			!( ( objElement.branches !== undefined) && ( objElement.branches.length === 1 ) )
+			&&
+			(!model.getInstance().blockActions.hasBranches( objElement ) ) 
+		) 
+	&& 
+		( $('#submit-block').css('display') == 'none' ) 
+	){
+		
 		fillSummaryBlock();
 		showSubmitBlock();
 		
@@ -185,8 +194,8 @@ function onHeaderClick(evt, elem, state){
 	}*/
 }
 function markHeaders(element){
-	divObject = createObjectFromDiv(element);
-	state = 'filled';
+	var divObject = model.getInstance().blockActions.getElement( $(element).attr('id'), true );//createObjectFromDiv(element);
+	var state = 'filled';
 	switch (divObject.inputType) {
 		case "text": textSelection   = $(element).find(":input[type=text]");
 					textSelection.each(function(){if ( $(this).val().trim() == "")
@@ -277,7 +286,7 @@ function exportToJSON(idNames){
 		
 		var radioName = undefined;
 		divSelection.each(function(){
-			 divArray.push(createObjectFromDiv(this));
+			 divArray.push(model.getInstance().blockActions.getElement($(this).attr('id'), true) );
 			
 		});
 		 
@@ -297,6 +306,7 @@ function createObjectFromDiv(element, noConvert){
 	var name, header, description, inputType, inputValues;
 	branchesList = $(element).data("branches");
 	id 				= $(element).attr("id");
+//	branchesList    = 
 	header 			= $(element).children("h3").children().not(".idSpan").text();
 	pSelection 		= $(element).children("p");
 	description 	= (noConvert ? pSelection.first().html() : bbCodeParserSingleton.getInstance().htmlToBB(pSelection.first().html()) );
@@ -352,12 +362,14 @@ function importFromJSON(stringJSON, container, isEdited)
 	isEdited = (isEdited == undefined ? false : isEdited);
 	var objectJSON = JSON.parse(stringJSON);
 	var newElement;
+	var scriptStructure = {};
 	var container = $(container);
 	//очищаем контейнеры
 	$("#container").empty();
 	$('#imported').empty();
 	firstElement = false;
 	for (var i = 0; i < objectJSON.blocks.length; i++){
+		scriptStructure[objectJSON.blocks[i].id] = objectJSON.blocks[i];
 		if (objectJSON.blocks[i].id == objectJSON.first){
 			firstElement = true;
 		}
@@ -382,7 +394,7 @@ function importFromJSON(stringJSON, container, isEdited)
 	if (objectJSON.sync !== undefined){
 		model.getInstance().api.setSyncMap( objectJSON.sync);
 	}
-	
+	model.getInstance().blockActions.setStructure( scriptStructure, objectJSON.first);
 	return objectJSON.first;
 	//var divArray = 
 	
@@ -534,7 +546,7 @@ function createNewDivElement(type, contents, isEdited, first){
 	switch (type){
 	case "show":
 	var	newElement 		= fabric("div", 		getObjectSpecs("divacc",undefined,contents.id));
-		newElement.data("branches", contents.branches);
+		//newElement.data("branches", contents.branches);
 		newHeader 		= fabric("h3", 			getObjectSpecs("headerAccordion",isEdited?'<span>'+contents.header + '</span>' +'<span class="idSpan">id: '+ contents.id+'</span>': '<span>'+contents.header + '</span>')); 
 		newParagraph 	= fabric("p",  			getObjectSpecs("description",contents.description)); 
 		newInputDiv 	= fabric('div', 		getObjectSpecs('input-block'));
@@ -571,7 +583,7 @@ function createNewDivElement(type, contents, isEdited, first){
 					controller.getInstance().addEvent(newRadio,'change',TriggersOnFirstElement);
 					
 				}
-				controller.getInstance().addEvent(newRadio, 'change', function(){
+				controller.getInstance().addEvent(newRadio, 'click', function(){
 					view.getInstance().addLabelsAnimation(newRadio);
 				});
 				
@@ -686,7 +698,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			newElementName.appendTo( newElementNameDiv);
 			newElementNameDiv.appendTo( newElement);
 			
-			newElement.data("branches", contents.branches);
+			//newElement.data("branches", contents.branches);
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
 			newBBControls.appendTo(newElement);
@@ -761,7 +773,7 @@ function createNewDivElement(type, contents, isEdited, first){
 	break;
 	//создаем новый temp_div
 	default:
-			var autofill = $('#temp_divs').data('autofillID') ;
+			var autofill = model.getInstance().api.settingsValue("autofill") ;
 			newElement 			= fabric("div", 			getObjectSpecs("div",undefined,undefined) );
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
 			newElementNameDiv   = fabric("div", 			getObjectSpecs('blockname-block') );
@@ -916,7 +928,10 @@ function addElement(){
 	var radio 			= undefined;
 	var fieldsListArray = undefined;
 	var insert 			= false;
+	var name = $('#newElementName').val();
 	var modelInst 		= model.getInstance();
+	var branches = [];
+	//var objElement 		= modelInst.blockActions.getElement( name );
 	//var model 			= modeltmp;
 	//открываем элемент предыдущий при эдите
 	showElement ( modelInst.blockActions.getPrevElement() );
@@ -927,15 +942,22 @@ function addElement(){
 		});
 	}
 	else{
-		//если вдруг мы поменяли тип дива с ветвления на другой
-		branches = thisDiv.data('branches');
-		if (modelInst.blockActions.hasBranches(branches) ){
-			modelInst.api.showError('У данного ветвления есть зависимые элементы! Удалите их перед тем, как менять тип данного элемента!');
-			$("#branch").trigger('click');
-			return;
+		branches = undefined;
+		if (modelInst.isEdited() ){
+			//если вдруг мы поменяли тип дива с ветвления на другой
+			branches = modelInst.blockActions.getElement( name ).branches;//thisDiv.data('branches');
+			if (modelInst.blockActions.hasBranches(branches) ){
+				modelInst.api.showError('У данного ветвления есть зависимые элементы! Удалите их перед тем, как менять тип данного элемента!');
+				$("#branch").trigger('click');
+				return;
+			}
+			else{
+			// если length > 1 значит было ["","",.....,""];
+				branches = ( (branches.length > 1) ? undefined: branches);
+			}
 		}
 	}
-	var name = $('#newElementName').val();
+	
 	if (modelInst.isEdited() ){
 		var removedBlockID = $('#temp_divs').data('removedBlockID');
 		removeElement($('#'+removedBlockID) );
@@ -983,6 +1005,7 @@ function addElement(){
 		
 				input = "";
 				inputTypeVal = "textarea";
+				//branches = [];
 		break;
 		case "1":
 			
@@ -1038,16 +1061,26 @@ function addElement(){
 		input: input,
 		inputType: inputTypeVal,
 		branches: branches,
-		fieldsList:fieldsListArray
+		fieldsList:fieldsListArray,
+		previous: undefined,
 	};
 	
-	branchesPrevElement = undefined;
-	lastDiv = undefined;
+	var branchesPrevElement = undefined;
+	var lastDiv = undefined;
+	var lastDivId = undefined;
+	var prevElement = undefined;
 	//это новый элемент
 	if (position === "") {
+		 
 		lastDiv = $('#container').children(':last');
+		
 		if (!(lastDiv.length == 0) ) {
-			branchesPrevElement = lastDiv.data("branches");
+			lastDivId = lastDiv.attr('id');
+			prevElement = modelInst.blockActions.getElement( lastDivId);
+			branchesPrevElement = prevElement.branches;
+	//		contents.previous 	=  lastDivId;	 
+			
+			//lastDiv.data("branches");
 			if ( !(branchesPrevElement == undefined) ) {
 				checkedDiv = lastDiv.find(':input[type=radio]:checked');
 					if (checkedDiv.length == 0 ){
@@ -1055,14 +1088,17 @@ function addElement(){
 						return;
 					}
 					radioValue = checkedDiv.val();
-					branchesPrevElement[radioValue] = contents.id;
+					prevElement.branches[radioValue] = contents.id;
 				}
 			
 			else{
-				branchesPrevElement = [contents.id];
+				prevElement.branches = [contents.id];
 				
 			}
 			
+		}
+		else{
+			contents.previous 	=  null;
 		}
 		
 	}
@@ -1070,13 +1106,16 @@ function addElement(){
 	//элемент с edita, и он первый
 	else{
 		if (position == 0) {
+			contents.previous 	=  null;
 			
 			
 		}
 		else{
 			if (!insert){
-				lastDiv = $("#container").children(':nth-child('+position+')');
-				branchesPrevElement = lastDiv.data("branches");
+				lastDiv 			= $("#container").children(':nth-child('+position+')');
+				lastDivId 			= lastDiv.attr('id');
+				prevElement 		= modelInst.blockActions.getElement( lastDivId);
+				branchesPrevElement = prevElement.branches;//lastDiv.data("branches");
 				
 				if (branchesPrevElement.length > 1) {
 				checkedDiv = lastDiv.find(':input[type=radio]:checked');
@@ -1086,22 +1125,26 @@ function addElement(){
 					}
 				
 					radioValue = checkedDiv.val();
-					branchesPrevElement[radioValue] = contents.id;
+					prevElement.branches[radioValue] = contents.id;
 					
 				}
 				else{
-					branchesPrevElement = [contents.id];
+					prevElement.branches = [contents.id];
 				}
 			}
 			
 		}
 	}
-	if ( lastDiv !== undefined ){
-		lastDiv.data("branches", branchesPrevElement); 
+	if ( ( lastDiv !== undefined ) && ( lastDiv.length > 0 ) ) {
+		branchesPrevElement = prevElement.branches;
+		//lastDiv.data("branches", branchesPrevElement); 
+		//записываем изменения предыдущего элемента
+		modelInst.blockActions.addElement( prevElement);
 	}
 	
 	removeElement( thisDiv );
 	newDiv = createNewDivElement("show",contents, true);
+	//modelInst.blockActions.addElement( contents);
 	//это новый элемент
 	if (position === "") {
 		
@@ -1114,17 +1157,18 @@ function addElement(){
 			var firstElem = $('#container').children(".divacc:first");
 				
 			if (!modelInst.isEdited() ){
-				if (branches === undefined){
+				if (contents.branches === undefined){
 						
-					branches = ( (firstElem.length === 0) ? undefined: [firstElem.attr('id')] );
+					contents.branches = ( (firstElem.length === 0) ? undefined: [firstElem.attr('id')] );
 				
 				}
 				else{
-					branches[0] =firstElem.attr('id');
+					contents.branches[0] =firstElem.attr('id');
 				}
 			}
-			
-			newDiv.data('branches', branches );
+			//меняем prev у 
+	
+			//newDiv.data('branches', contents.branches );
 			newDiv.prependTo( $("#container") );
 			
 			
@@ -1132,30 +1176,35 @@ function addElement(){
 		else{
 			
 			if (insert){
-				insertElement(newDiv, position, branches);
+				contents.branches = insertElement(newDiv, position, contents.branches);
+				
 			}
 			else{
 			//newDiv.data('branches', [$('#container').children(":first").attr('id')] );
 				lastDiv = $("#container").children(':nth-child('+position+')');
+				contents.previous = lastDiv.attr('id');
 				newDiv.insertAfter(lastDiv );
 			}
 			
 		
 		}
 	}
+	modelInst.blockActions.addElement( contents);
 	newHeader.trigger('click');
 	redraw();
 	//controller.getInstance().debugInfo();
 	
 	//controller.getInstance().debugInfo();
 	createNewTempElement();//обнуляем значения у temp_div
-	if ( $('#autosave').prop('checked') === true )
+	if ( modelInst.api.settingsValue('autosave') ){
 		modelInst.api.fillSyncMap();
 		saveStructure();
+	}
 	//$('#newElementName').val("");
 	//отображаем остальные элементы
-	if ((newDiv.data('branches') !== undefined) && ( newDiv.data('branches').length < 2) ){ 
-		showBranch(newDiv.data('branches')[0],true);
+	var newElementObj = modelInst.blockActions.getElement( contents.id );
+	if ((newElementObj.branches !== undefined) && ( newElementObj.branches.length < 2) ){ 
+		showBranch(newElementObj.branches[0],true);
 	}
 	view.getInstance().buttonsAnimation(newDiv);
 	modelInst.setState('new');
@@ -1184,7 +1233,7 @@ function onEditClick(){
 	
 	position = parentBlock.index();
 	
-	objectDiv = createObjectFromDiv(parentBlock, false);
+	objectDiv = model.getInstance().blockActions.getElement(parentBlock.attr('id'), true);//createObjectFromDiv(parentBlock, false);
 	objectDiv.position = position;
 	parentBlock.animate({opacity: 'hide',height:0+'px'},{duration:'slow',easing: 'swing',complete:function(){
 		$('#temp_divs').data('removedBlockID', parentBlock.attr('id') );
@@ -1209,7 +1258,7 @@ function onEditClick(){
 	//для эдита такую возможность уберем
 	$('.add-block-position__div').hide();
 	model.getInstance().setRadioValue( $('.add-block-position__div'), undefined);
-	view.getInstance().scrollToTop($('body') );
+	view.getInstance().scrollToTop();
 	
 	
 }
@@ -1222,18 +1271,18 @@ function onCopyClick(){
 	view.getInstance().hideWarning();
 	var parentBlock = $(this).parent().parent('div');
 	
-	objectDiv = createObjectFromDiv(parentBlock);
+	objectDiv = model.getInstance().blockActions.getElement( parentBlock.attr('id'), true);//createObjectFromDiv(parentBlock);
 	objectDiv.branches = undefined;
 	objectDiv.position = "";
 	objectDiv.title = "Создание нового блока";
 	
 	
 	createNewTempElement(objectDiv, true);
-	var autofill = $('#temp_divs').data('autofillID') ;
-	if (autofill){
+	//var autofill = $('#temp_divs').data('autofillID') ;
+	if (model.getInstance().api.settingsValue('autofill' ) ){
 		$('#newElementName').val(model.getInstance().autofillID());
 	}
-	view.getInstance().scrollToTop($('body'));
+	view.getInstance().scrollToTop();
 	
 	
 }
@@ -1536,7 +1585,7 @@ function moveDiv(value, id)
 	}
 	$(that).slideUp({duration:'slow',complete:function(){
 		that = this;
-		contents = createObjectFromDiv($(that), true);
+		contents = model.getInstance().blockActions.getElement($(that).attr('id'), false);//createObjectFromDiv($(that), true);
 		
 		removeElement($(that));
 		if (contents.id == id ){
@@ -1558,7 +1607,7 @@ function moveDiv(value, id)
 function hideDivElements(){
 	divBlock = $(this).parents('.divacc');
 	addSavedData(divBlock);
-	branches = divBlock.data("branches");
+	branches = model.getInstance().blockActions.getElement(divBlock.attr('id') ).branches;//divBlock.data("branches");
 	selectedValue = $(this).children(":input[type=radio]").val();
 	currBranch = branches[selectedValue];
 	//selectedValue = $(this).val();
@@ -1572,6 +1621,7 @@ function hideDivElements(){
 function showBranch(currBranch,hide){
 	if (currBranch == ""){
 		if (!hide){
+			clearSummaryBlock();
 			fillSummaryBlock();
 			showSubmitBlock();
 		}
@@ -1579,7 +1629,8 @@ function showBranch(currBranch,hide){
 	}
 	else{
 			hideSubmitBlock();
-			divElement = $('#'+currBranch);
+			var divElement = $('#'+currBranch);
+			var divObj 	   = model.getInstance().blockActions.getElement( currBranch ); 
 			divElement.children().hide();
 			divElement.appendTo("#container");
 			
@@ -1596,19 +1647,23 @@ function showBranch(currBranch,hide){
 				focusOnInput(divElement);
 				hide = true;
 			}
-			branches = divElement.data("branches");
-			if ( (branches == undefined) || (branches.length > 1) ) {
-				if (branches == undefined){
-					if (!hide){
+			branches = divObj.branches;// divElement.data("branches");
+			if  (branches === undefined) {
+				if (!hide){
+						clearSummaryBlock();
 						fillSummaryBlock();
 						showSubmitBlock();
 					}
-				}
 				return;
 			}
 			else{
-				divElement.children("h3");
-				showBranch(branches[0], hide);
+				if ( model.getInstance().blockActions.hasBranches( branches ) ){
+					return;
+				}
+				else{
+					divElement.children("h3");
+					showBranch(branches[0], hide);
+				}
 			}
 		
 	}
@@ -1662,6 +1717,8 @@ function showHelp(elemType, timeout){
 	break;
 	case 'send'		: paragraphSelection.html('Анкета отправлена успешно!');
 	break;
+	case 'not-filled': paragraphSelection.html('Заполнены не все обязательные поля!');
+	break;
 	default: 
 		helpDivSelection.slideUp('fast'); 
 		
@@ -1676,6 +1733,7 @@ function showHelp(elemType, timeout){
 	if (timeout !== undefined){
 		setTimeout(function(){showHelp()}, timeout);
 	}
+	view.getInstance().scrollToTop();
 }
 
 function addHelpTriggers(){
@@ -1707,24 +1765,28 @@ function getInputValueArray(element, type){
 	var altNames = false;
 	if (type === 'sync')
 		altNames = true;
-		
-	textAreaSelection 	= $(element).find("textarea");
-	if (! (textAreaSelection.length == 0 ) ){
-		value = {key:(altNames? '': 'текстовое поле'), value:textAreaSelection.val()};
-	}
-	else{
-		textBlocksSelection = $(element).find("input[type=text]");
-		if (! (textBlocksSelection.length == 0 ) ){
+	var objElement = model.getInstance().blockActions.getElement( element.attr('id') );
+	switch (objElement.inputType){
+		case 'text':
+			//textBlocksSelection = $(element).find("input[type=text]");
 			value = [];
-			textBlocksSelection.each(function(){
-			value.push({key:$(this).attr('placeholder'), value:$(this).val()} );
-				});
+			//textBlocksSelection.each(function(index, elem){
+			for (var i =0; i < objElement.fieldsList.length; i++){
+				value.push({key:objElement.fieldsList[i].value, value:$('#text_'+i+'_'+objElement.id).val(), required:objElement.fieldsList[i].required } );
 			}
-		else{
+		break;
+		case 'radio':
 			radioSelection 		= $(element).find("input[type=radio]:checked");
-			value = {key:(altNames? '': 'выбранное значение'), value:$('label[for='+$(radioSelection).attr('id')+']').text()};
-		}
+			value = {key:(altNames? '': 'выбранное значение'), 
+				value:$('label[for='+$(radioSelection).attr('id')+']').text()
+			};
+		break;
+		case 'textarea':
+			textAreaSelection 	= $(element).find("textarea");
+			value = {key:(altNames? '': 'текстовое поле'), value:textAreaSelection.val()};
+		break;
 	}
+	
 	return $.isArray(value)? value : [value];
 	
 	
@@ -1752,7 +1814,9 @@ function fillSummaryBlock(){
 			//todo
 			//change to normal code
 			for (var i=0; i< values.length; i++ ){
-				var newValueNameSpan = fabric('p', getObjectSpecs('summary-element-valuename', values[i].key + ': ') );
+				
+				var newValueNameSpan = fabric('p', getObjectSpecs('summary-element-valuename', values[i].key +
+					((values[i].required)?'(*)':'') + ': ') );
 				//var value = '<span style="float: left; width: 200px; height: 100%">'+values[i].key + ': </span>' ;
 				var newValueValueSpan = fabric('p', getObjectSpecs('summary-element-valuevalue', values[i].value) );
 				
@@ -1810,7 +1874,7 @@ function reloadStructure(){
 	clearData();
 	$('#container:first').data('started', false);
 	divBlock = $('#container').children('div');
-	id = divBlock.first().attr('id');
+	id = model.getInstance().blockActions.getStructure().first;//divBlock.first().attr('id');
 	//nextElements = divBlock.siblings();
 	divBlock.each( function(index, value){
 		moveDiv(value, id)
@@ -1833,11 +1897,16 @@ function hideCanvasHelp(){
 }
 function findPathToElementStep(element, node){
 	var path = undefined;
-	var nodeElement = $('#'+node);
-	var branches = undefined;
-	if (nodeElement.attr('id') == element )
+	//var nodeElement = $('#'+node);
+	
+	if (node === element )
 		return new Array();
-	branches = nodeElement.data("branches");
+	var nodeObj = model.getInstance().blockActions.getElement( node );
+	if (nodeObj === undefined) {
+		 return undefined;
+	}
+	var branches = nodeObj.branches;
+	//branches = .branches;//nodeElement.data("branches");
 	if ( branches == undefined )
 		return undefined;
 	else{
@@ -1888,9 +1957,11 @@ function showElement( elementID ){
 				elem.appendTo($('#imported') );
 			});
 			showBranch( path[0].id, true);
-			for (var i = 0; i < path.length; i++ ){
-				var elementToShowID = $('#'+path[i].id).data('branches')[path[i].branch];
-				$($('#'+path[i].id).find('input[type=radio]')[path[i].branch]).prop('checked', true);
+			for (var i = 1; i < path.length; i++ ){
+				var elementToShowID = model.getInstance().blockActions.
+					getElement(path[i].id).branches[path[i].branch];//$('#'+path[i].id).data('branches')[path[i].branch];
+				model.getInstance().setRadioValue( $('#'+path[i].id), path[i].branch);
+		//		$($('#'+path[i].id).find('input[type=radio]')[path[i].branch]).prop('checked', true);
 				showBranch( elementToShowID, true );
 			}
 			
@@ -1898,7 +1969,8 @@ function showElement( elementID ){
 	}
 	//если это был псевдоэлемент - тогда ставим значение перечисления
 	if (symbolIndex !== -1 ){
-		$($('#'+elementId).find('input[type=radio]')[parseInt( branchIndex)]).prop('checked', true).trigger('change');
+		model.getInstance().setRadioValue( $('#'+elementId), parseInt( branchIndex));
+		//$($('#elementId'+).find('input[type=radio]')[parseInt( branchIndex)]).prop('checked', true).trigger('change');
 	}
 	elementBlock = $('#'+elementId);
 	if (!elementBlock.children('h3').hasClass('active_header') ){ 
@@ -1910,7 +1982,7 @@ function showElement( elementID ){
 	var windowTimes = elemOffset % winHeight;
 	var mainShift = windowTimes * winHeight;
 	var addShift = elemOffset - winHeight;
-	view.getInstance().scrollToTop($('body'), (elemOffset - winHeight/2) );
+	//view.getInstance().scrollToTop((elemOffset - winHeight/2) );
 	
 	
 }
@@ -2087,7 +2159,7 @@ function restoreData(){
 	for (var i = 0; i < savedData.items.length; i++){
 		var currElement = $('#'+savedData.items[i].id);
 		
-		var objDiv = createObjectFromDiv(currElement);
+		var objDiv = model.getInstance().blockActions.getElement( savedData.items[i].id, false);//createObjectFromDiv(currElement);
 		
 		switch (objDiv.inputType){
 		case "textarea":
@@ -2132,10 +2204,11 @@ function addSavedData(divBlock){
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
 
 function insertElement(element, position, branches){
-	var pos = position + 1;
+	var pos = position;
 	var elementToInsertAfter =  $("#container").children(':nth-child('+pos+')');
 	//устанавливаем новому элементу ветви предыдущего
-	var branchesOldElement 	 =  elementToInsertAfter.data('branches');
+	var oldElement 			 = model.getInstance().blockActions.getElement( elementToInsertAfter.attr('id') );
+	var branchesOldElement 	 =  oldElement.branches;
 	if ( (branchesOldElement !== undefined) && (branchesOldElement.length > 1) ){
 		checkedDiv = elementToInsertAfter.find(':input[type=radio]:checked');
 		if (checkedDiv.length == 0 ){
@@ -2160,9 +2233,16 @@ function insertElement(element, position, branches){
 	}
 	//устанавливаем элементу за которым вставляем в ветви новый элемент
 	elementToInsertAfter.data('branches', branchesOldElement );
-	$(element).data('branches', nextElementId);
+	//$(element).data('branches', nextElementId);
 	$(element).insertAfter( elementToInsertAfter );
-	
+	oldElement.branches = branchesOldElement;
+	model.getInstance().blockActions.addElement( oldElement );
+	return  nextElementId;
+/*	return {
+		branches: nextElementId,
+		previous: elementToInsertAfter.attr('id');
+		}
+*/	
 	
 	
 }

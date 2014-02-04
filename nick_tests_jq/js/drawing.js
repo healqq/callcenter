@@ -50,7 +50,7 @@ var drawerSingleton = (function(){
 				
 		}
 		else{
-			nextElements = $('#'+element).data('branches');
+			nextElements = model.getInstance().blockActions.getElement( element).branches;//$('#'+element).data('branches');
 			if ( (nextElements !== undefined) && (nextElements.length > 1) ){
 				options.branchesSize = nextElements.length;
 				//это развилка, бахаем круг

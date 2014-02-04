@@ -5,18 +5,12 @@ function getInputValue(element){
 	var $element = $(element);
 	var mapElement = syncMap[$element.attr('id')];
 	key =  ( (mapElement === undefined)?$element.attr('id'):mapElement.value );
-	textAreaSelection 	= $element.find("textarea");
-	if (! (textAreaSelection.length == 0 ) ){
-		
-		
-		value = {key:key, value:textAreaSelection.val()};
-	}
-	else{
-		textBlocksSelection = $element.find("input[type=text]");
-		if (! (textBlocksSelection.length == 0 ) ){
+	//textAreaSelection 	= $element.find("textarea");
+	var objElement = model.getInstance().blockActions.getElement($(element).attr('id') );
+	switch (objElement.inputType){
+		case 'text':
+			textBlocksSelection = $(element).find("input[type=text]");
 			value = [];
-			
-			
 			textBlocksSelection.each(function(){
 				var mapElement = syncMap[$element.attr('id')+$(this).attr('placeholder')];
 				var key = (mapElement === undefined)?
@@ -24,18 +18,19 @@ function getInputValue(element){
 				//key:$(this).parents('.divacc').attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),'')
 				value.push({key: key, value:$(this).val()} );
 				});
-			}
-		else{
-			radioSelection 		= $element.find("input[type=radio]:checked");
-	//		key =  syncMap[$element.attr('id')].value;
+			
+		break;
+		case 'radio':
+			radioSelection 		= $(element).find("input[type=radio]:checked");
 			value = {key:key, value:radioSelection.val()};
-		}
+		break;
+		case 'textarea':
+			textAreaSelection 	= $(element).find("textarea");
+			value = {key:key, value:textAreaSelection.val()};
+		break;
 	}
+	
 	return $.isArray(value)? value : [value];
-	
-	
-	
-	
 }
 
 function createDataList(){
@@ -59,6 +54,14 @@ function fillDataString(key,value){
 
 
 function sendData(){
+//validation
+	validation_errors = model.getInstance().validation.checkFilling();
+	if (validation_errors.length > 0){
+		//model.getInstance().api.showError('Заполнены не все обязательные поля!');
+		showHelp("not-filled");
+		view.getInstance().toggleElementState($("#btnSendData"));
+		return;
+	}	
 	request = sendRequest("RecieveData", [ { key:'EncodedData', value: escapeHTML( createDataList() ) } ] );
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );

@@ -7,6 +7,7 @@ var model = (function(){
 		var fieldsListId = 0;
 		var prevElement = undefined;
 		var syncMap = {};
+		var savedStructure = undefined;
 		var state ={ element_edit:'new',
 					display_view:'controls',
 					scroll_top_btn: 'off'	// state используется для контроля пользователя и получения данных
@@ -16,7 +17,12 @@ var model = (function(){
 			display_view:['controls', 'scheeme'],
 			scroll_top_btn:['on', 'off']
 		}
-		var helpContents = [
+		var settings = {autosave: false,
+			autofill: false
+			};
+		//help data
+		var helpContents = undefined;
+		var helpContentsClient = [
 			{header:"Начало работы",image:"./css/images/help/1_help_help.png",text: "Вы находитесь в разделе помощи,\
 				здесь вы можете узнать о возможностях сервиса и найти некоторые полезные советы, \
 				которые помогут вам в работе.<br/>\
@@ -46,9 +52,39 @@ var model = (function(){
 			'},
 			
 		];
+		var helpContentsAdmin = [
+			{header:"Help",image:"./css/images/help/no-help.jpg",text: "In progress..."},
+		/*	{header:"Заявка",image:"./css/images/help/2_help_script_table.png",text: 'Основную часть экрана \
+				занимает форма для заполнения заявки. Для перехода на любой элемент необходимо нажать на \
+				заголовок этого элемента. По мере заполнения элементов переход будет выполняться автоматически,\
+				для перехода между полями ввода и элементами  удобно пользоваться клавишей \
+				<img src="./css/images/help/2_help_tab.jpg"</img>. \
+				'},
+			{header:"Заявка (продолжение) ",image:"./css/images/help/3_help_restore_fill.png",text: "Вылетел браузер? \
+				По-ошибке закрыли вкладку? Не беда! При повторном открытии все уже заполненные блоки будут восстановлены,\
+				а внизу появится окно, позволяющее отменить заполнение. А так же можно очистить заполненные поля\
+				используя кнопку очистить на левой панели.\
+				"},
+			{header:"Проверка заявки",image:"./css/images/help/4_help_filling_check.png",text: "При переходе на последний \
+				элемент откроется форма проверки анкеты, на которой будут показаны значения всех полей. \
+				Если информация в каком-то из блоков неправильная, то для отображения этого блока \
+				необходимо нажать на соответствующую строку в форме проверки.\
+				"},
+			{header:"Отправка анкеты",image:"./css/images/help/5_help_submit_script.png",text: "После того, как анкета\
+				проверена, отправьте анкету, нажав на кнопку. Как только анкета отправится - вы увидите оповещение и\
+				заполненные поля сбросятся. Можно приступать к новой анкете!"},
+			{header:"Заключение",image:"./css/images/Tabus_web.png",text: '<p style="text-align:center"><a href="mailto:ask@tabus.ru" \
+			target="_blank">Сюда</a> вы можете присылать возникшие вопросы или пожелания!</p>\
+			'},*/
+			
+		];
 		var currentPage = undefined;
+		
+		//structure
+		var scriptStructure = {elements:{}, first: undefined};
 		//public
 		return{
+			
 			initIdCounter: function(value){
 				fieldsListId = value;
 			},
@@ -71,14 +107,18 @@ var model = (function(){
 			//функции для работы основные
 			api:{
 				//saves settings to cookies +
+				settingsValue: function( key ){
+					 return settings[key];
+				},
+				
 				saveSettings: function(){
 				var autosave = $('#autosave').prop('checked');
 				var autofillID = $('#elementNameAutofill').prop('checked');
-				var settings = {'autosave': autosave,
-								'autofillID': autofillID
+				 settings = {'autosave': autosave,
+								'autofill': autofillID
 								};
 				setCookie('settings', JSON.stringify(settings), {expires:24*60*60*365,path:'/Callcenter'});
-				$('#temp_divs').data('autofillID', settings.autofillID);
+				//$('#temp_divs').data('autofillID', settings.autofillID);
 				
 				},
 			//loading settings +
@@ -92,7 +132,7 @@ var model = (function(){
 						}
 						catch(e){
 							savedSettingsObj = {'autosave': false,
-									'autofillID': false
+									'autofill': false
 									};
 							//showError('Unable to load settings');
 							
@@ -101,7 +141,8 @@ var model = (function(){
 						var autofillItem = $('#elementNameAutofill');
 						autosaveItem.prop('checked', savedSettingsObj.autosave);
 						//записываем параметр для использования чтобы не дергать печеньки
-						$('#temp_divs').data('autofillID', savedSettingsObj.autofillID);
+						//$('#temp_divs').data('autofillID', savedSettingsObj.autofillID);
+						settings = savedSettingsObj;
 						controller.getInstance().addEvent($('#autosave')[0], 'change', instance.api.saveSettings);
 						
 						if (autofillItem.length > 0 ){
@@ -126,7 +167,7 @@ var model = (function(){
 				errDiv.slideDown('fast');
 				
 				view.getInstance().focusElement(element);
-				
+				view.getInstance().scrollToTop( 128 );
 				
 				},
 				
@@ -238,6 +279,9 @@ var model = (function(){
 					control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
 					control.addEvent($("#btnSyncSettings"),'click', view.getInstance().showSyncBlock);
 					control.addEvent($("#btnSaveSyncMap"),'click', instance.api.saveSyncMap);
+					control.addEvent($("#btnShowHelp"), 'click', function(){
+						instance.galleryActions.initGallery("admin");
+						});
 					
 					
 					view.getInstance().buttonsAnimation();
@@ -253,7 +297,7 @@ var model = (function(){
 					
 					loadStructure(false);
 					control.addEvent($("#btnLoadStructure"),'click',function(){ loadStructure(false) });
-					control.addEvent($("#btnShowHelp"), 'click', instance.galleryActions.initGallery);
+					
 					control.addEvent($("#btnSendData"),'click',function(){
 						view.getInstance().toggleElementState($("#btnSendData"));
 						sendData();
@@ -268,9 +312,13 @@ var model = (function(){
 						}
 						
 					});
+					control.addEvent($("#btnShowHelp"), 'click', function(){
+						instance.galleryActions.initGallery();
+						});
 				}
 		
 		//$("#btnSendData").click(sendData);
+				
 				control.addEvent($("#btn-scroll-top"), 'click', view.getInstance().scrollToTop);
 				control.addEvent($("#logout"), 'click', logout);
 				control.addEvent($(window), 'scroll', instance.scrollCheck);
@@ -299,7 +347,7 @@ var model = (function(){
 							throw	'Выберите блок, после которого хотите вставить элемент';
 							}
 							else{
-								retValue = activeBlock;
+								retValue = activeBlock + 1;
 							}
 					break;
 					
@@ -345,60 +393,77 @@ var model = (function(){
 					view.getInstance().hideWarning();
 					instance.blockActions.saveStructure();
 					var $element = $(element);
-					console.log(element);
-					var branches = $element.data('branches');
-					console.log(instance.blockActions.hasBranches(branches));
+					var elementID = $(element).attr('id');
+				//	console.log(element);
+					var objElement 	= instance.blockActions.getElement(elementID );
+					var branches 	= objElement.branches;
+				//	console.log(instance.blockActions.hasBranches(branches));
 					if (instance.blockActions.hasBranches(branches)){
 						//нельзя удалить элемент с ветвями 
+						instance.api.showError('Нельзя удалить элемент с разветвлением! Сначала удалите дочерние элементы.');
 						return false;
 					}
 					else{
-						var prevElem = $element.prev();
-						var nextElem = $element.next();
-						var prevElemBranches = prevElem.data('branches');
+						var prevElem = instance.blockActions.getElement(objElement.previous);
+						var nextElem = ( ( branches === undefined )? undefined: instance.blockActions.getElement(branches[0]) );
+						
+						//var prevElemBranches = prevElem.data('branches');
 						//var nextElemBranches = nextElem.data('branches');
 						
 						//варианты
 						//первый элемент:
 						//просто удаляем его, изменений в других элементах не будет,
 						//но нужна перерисовка
-						if (prevElem.length === 0 ){
+						if (prevElem === undefined ){
 							firstElement = ( branches === undefined?undefined:branches[0]);
 							removeElement($element);
+							instance.blockActions.removeElement(objElement);
 							showBranch(firstElement, false);
 							
 							
 							
 						}
-						else
-							//последний элемент
-							//очищаем ветвь у предыдущего элемента и всё
-							if (nextElem.length === 0){
-								prevElemBranches[prevElemBranches.indexOf($element.attr('id'))] = '';
-								//prevElemBranches = ( (prevElemBranches.length === 1) ? undefined : prevElemBranches);
-								removeElement(element);
-								if (prevElemBranches.length === 1){
-									prevElem.removeData('branches');
+						else{
+							var prevElemBranches = prevElem.branches;
+								//последний элемент
+								//очищаем ветвь у предыдущего элемента и всё
+								if (nextElem === undefined){
+									prevElemBranches[prevElemBranches.indexOf(elementID)] = '';
+									//prevElemBranches = ( (prevElemBranches.length === 1) ? undefined : prevElemBranches);
+									removeElement(element);
+									if (prevElemBranches.length === 1){
+										prevElemBranches = undefined;
+										$('#'+prevElem.id).removeData('branches');
+										instance.blockActions.removeElement(objElement);
+										prevElem.branches = prevElemBranches;
+										instance.blockActions.addElement( prevElem);
+										
+									}
+									else{
+										$('#'+prevElem.id).data('branches', prevElemBranches);
+										instance.blockActions.removeElement(objElement);
+										prevElem.branches = prevElemBranches;
+										instance.blockActions.addElement( prevElem);
+									}
 									
 								}
+								//элемент в серединке.
+								//предыдущему вставляем в ветвь следующий
 								else{
-									prevElem.data('branches', prevElemBranches);
+									prevElemBranches[prevElemBranches.indexOf(elementID)] = branches[0];
+									removeElement(element);
+									$('#'+prevElem.id).data('branches', prevElemBranches);
+									instance.blockActions.removeElement(objElement);
+									prevElem.branches = prevElemBranches;
+									instance.blockActions.addElement( prevElem);
+									
+									
 								}
-								
-							}
-							//элемент в серединке.
-							//предыдущему вставляем в ветвь следующий
-							else{
-								prevElemBranches[prevElemBranches.indexOf($element.attr('id'))] = branches[0];
-								removeElement(element);
-								prevElem.data('branches', prevElemBranches);
-								
-								
 							}
 						
 						
 						redraw();
-						view.getInstance().showWarning('Элемент был удален. Нажмите, чтобы отменить удаление.', instance.blockActions.restoreStructure);
+						view.getInstance().showWarning('Элемент ' + elementID + ' был удален. Нажмите, чтобы отменить удаление.', instance.blockActions.restoreStructure);
 					}
 					
 					
@@ -416,13 +481,13 @@ var model = (function(){
 					}
 				},
 				saveStructure:function(){
-					var JSONstructure = exportToJSON(["#container","#imported"]);
-					$('#container').data('structure', JSONstructure);
+					savedStructure = exportToJSON(["#container","#imported"]);
+					//$('#container').data('structure', JSONstructure);
 				},
 				restoreStructure: function(){
-					var savedStruct = $('#container').data('structure');
-					if (savedStruct !== undefined){
-						first = importFromJSON( savedStruct, "#imported", true);
+					//var savedStruct = $('#container').data('structure');
+					if (savedStructure !== undefined){
+						first = importFromJSON( savedStructure, "#imported", true);
 						showBranch(first,false);
 						redraw();
 					}
@@ -444,7 +509,118 @@ var model = (function(){
 							instance.blockActions.allElementsCircuit (nextElement, func);
 						}
 					});
-				}
+				},
+				//инициализация структуры
+				setStructure: function( structure, firstElement ){
+					scriptStructure = {elements: structure,
+						first: firstElement
+					};
+					scriptStructure.elements[firstElement].previous = null;
+					instance.blockActions.loopStructure( firstElement, instance.blockActions.fillPreviousElementToChildren);
+					instance.blockActions.clearUnusedBlocks();
+					
+					//instance.blockActions.allElementsCircuit($('#'+scriptStructure.first), );
+				},
+				//получение структуры
+				getStructure: function(){
+					return scriptStructure;
+				},
+				//Проставляет значение previous для детей текущего элемента
+				fillPreviousElementToChildren: function(element){
+					var branches = element.branches;
+					var currElement = undefined;
+					for (var i = 0; (branches !== undefined) && ( i < branches.length); i++){
+						currElement = scriptStructure.elements[branches[i]];
+						if	(currElement !== undefined ) {
+							currElement.previous = element.id;
+						}
+					}
+				},
+				//рекурсивный обход дерева с вызовом функции func( element ) 
+				loopStructure: function(element, func){
+					var currElement = scriptStructure.elements[element];
+					if (currElement === undefined){
+						return;
+					}
+					func(currElement);
+					//console.log( currElement);
+					var nextElements = currElement.branches;
+					if ( (nextElements !== undefined) && (nextElements.length !== 0 ) ) {
+						$(nextElements).each( function(index, value){
+						//var nextElement = scriptStructure.elements[value];
+						instance.blockActions.loopStructure(value, func);
+						});
+					}
+					
+				},
+				//удаление мусорных блоков ( таких блоков не должно быть)
+				clearUnusedBlocks: function(){
+					for(var element in scriptStructure.elements) {
+						if (scriptStructure.elements[element].previous === undefined){
+							removeElement($('#'+element));
+							delete scriptStructure.elements[element];
+						}
+   
+					}
+					
+				},
+				removeElement: function( element){
+					if (element.id === scriptStructure.first ){
+						if (element.branches !== undefined){
+							scriptStructure.first = element.branches[0];
+							scriptStructure.elements[element.branches[0]].previous = null;
+						}
+						else{
+							scriptStructure.first = undefined;
+						}
+					}
+					else{
+						if (element.branches !== undefined ){
+							for( var i=0 ;i < element.branches.length; i++){
+								if (element.branches[i] !== ""){
+									scriptStructure.elements[element.branches[i]].previous = element.previous;
+								}
+							}
+						}
+					}
+					delete scriptStructure.elements[element.id];
+				},
+				//получает элемент по id
+				getElement: function( id, convertBB){
+					var retValue = jQuery.extend({},scriptStructure.elements[id]);
+					var prepared = ( (convertBB === undefined)? true: !convertBB);
+					if ( (!prepared) && (retValue !== undefined) ){
+						retValue.description = bbCodeParserSingleton.getInstance().htmlToBB(retValue.description);
+					}
+					return retValue;
+				},
+				//добавляет новый элемент
+				addElement: function( elementContents){
+					scriptStructure.elements[elementContents.id] = elementContents; 
+					//Если элемент первый - то предыдущему первому ставим его как предыдущий
+					if (elementContents.previous === null){
+						var previousElement = scriptStructure.elements[scriptStructure.first];
+						if ( (previousElement !== undefined) && (scriptStructure.first !== elementContents.id ) ){
+							previousElement.previous = elementContents.id;
+						}
+						scriptStructure.first = elementContents.id;
+					}
+					else{
+						previousElement = instance.blockActions.findPrevElement( elementContents.id );
+						instance.blockActions.fillPreviousElementToChildren( previousElement );
+					}
+				},
+				findPrevElement: function( elementID){
+					var elementObj = undefined;
+					for ( var element in scriptStructure.elements){
+						elementObj = instance.blockActions.getElement( element);
+						if ( (elementObj.branches !== undefined) && ( elementObj.branches.indexOf( elementID) !== -1 ) ){
+							return elementObj;
+						}
+					}
+					
+				},
+				
 			},
 			galleryActions:{
 				showItem: function( index, direction ){
@@ -483,10 +659,17 @@ var model = (function(){
 					
 					
 				},*/
-				initGallery: function(){
+				initGallery: function( type ){
 				//init nav
 				//инит делается 1 раз, затем просто show/hide
+					
 					if (currentPage === undefined){
+						if (type === "admin"){
+							helpContents = helpContentsAdmin;
+						}
+						else{
+							helpContents = helpContentsClient;
+						}
 						var contentsArray = new Array(helpContents.length);
 						for (var i=0; i < helpContents.length; i++){
 							contentsArray[i] = "";
@@ -499,7 +682,7 @@ var model = (function(){
 						$('input[type=radio][name=nav-selection]').first().prop('checked', true);
 					//buttons handlers
 						var controllerInst = controller.getInstance();
-						controllerInst.addEvent($('#gallery-exit'), 'click', function() { $('.wrapper').hide();});
+						controllerInst.addEvent($('#gallery-exit'), 'click', function() { $('.wrapper').slideUp('slow');});
 						controllerInst.addEvent($('input[type=radio][name=nav-selection]'), 'change', function(){
 							var newPage = parseInt( $(this).val() );
 							instance.galleryActions.showItem( newPage, newPage > currentPage );
@@ -518,7 +701,7 @@ var model = (function(){
 						});
 					}
 					//show form
-					$('.wrapper').show();
+					$('.wrapper').slideDown('slow');
 				}
 			},
 				//валидация данных
@@ -588,8 +771,9 @@ var model = (function(){
 						
 						
 					}
+					return errorsList;
 					
-					console.log( errorsList);
+					//console.log( errorsList);
 				},
 				checkPatterns: function(){
 					var errorsList 		= [];
