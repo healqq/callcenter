@@ -1233,13 +1233,14 @@ input[type=checkbox]:checked + label{
 	font-weight: bold;
 }
 input[type=radio]:checked + label:before {  
-    content: "\2022";  
+    content: "\2022";
+	/*font-weight:bold;*/
     
 } 
 input[type=checkbox]:checked + label:before {  
     content: "\2713";  
     text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);  
-    font-size: 10pt;  
+    font-size: 12pt;  
     
 } 
 
@@ -1378,6 +1379,10 @@ input[type=checkbox]:checked + label:before {
 }
 .odd{
 	background-color: #FFBB66;
+}
+.summary-unfilled{
+	color: red;
+	font-weight: bold;
 }
 
 /*SUBMIT BLOCK ------------------------------------------------------------------------*/

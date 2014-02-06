@@ -164,7 +164,10 @@ function onHeaderClick(evt, elem, state){
 	
 	//div_block.find("textarea").focus();
 	if ( ! $(that).hasClass('active_header') ){
-		markHeaders(div_block);
+		if (!$('#container').data("sstype")){
+				markHeaders(div_block);
+			}
+		
 	}
 	else{
 		$(that).removeClass('not-filled');
@@ -198,7 +201,9 @@ function markHeaders(element){
 	var state = 'filled';
 	switch (divObject.inputType) {
 		case "text": textSelection   = $(element).find(":input[type=text]");
-					textSelection.each(function(){if ( $(this).val().trim() == "")
+					//for (var i=0; i< 
+					textSelection.each(function(index, value){
+						if ( $(this).val().trim() == "")
 							state = "warning";
 						});
 		break;
@@ -430,6 +435,7 @@ switch (type) {
 		case 'elementNameAutofill':		objectSpecs = {class:'checkBox',content:'Автозаполнение', id:'elementNameAutofill'};break;
 		case 'elementNameAutofillLabel':objectSpecs = {class:'checkBoxLabel ',content:'Автозаполнение', id:'elementNameAutofill'};break;
 		case 'elementRequired':			objectSpecs = {class:'checkBox ',content:'Обязательный', id:name};break;
+		case 'elementRequiredLabelAll':	objectSpecs = {class:'checkBoxLabel ',content:'Обязательный', id:name};break;
 		case 'elementRequiredLabel':	objectSpecs = {class:'checkBoxLabel req-chbox',content:'Обязательный', id:name};break;
 		case 'add-block':				objectSpecs = {class:'add-block', content: undefined, id: undefined};break;
 		case 'add-block-button':		objectSpecs = {class:'addbuttonP add-block',content: undefined, id: undefined};break;
@@ -446,6 +452,7 @@ switch (type) {
 		case "input-block":				objectSpecs = {class:"input-block",id:undefined,content:undefined};break;
 		//checkbox
 		case "branchP":					objectSpecs = {class:undefined,content:undefined,id:"branch-block"};break;
+		case "reqP":					objectSpecs = {class:undefined,content:undefined,id:"req-block"};break;
 		case "checkboxBranch":			objectSpecs = {class:'checkBox',content:"Ветвление",id:"branch"};break;
 		case "checkboxBranchLabel":		objectSpecs = {class:'checkBoxLabel',content:"Ветвление",id:"branch"};break;
 		//radio options
@@ -583,9 +590,13 @@ function createNewDivElement(type, contents, isEdited, first){
 					controller.getInstance().addEvent(newRadio,'change',TriggersOnFirstElement);
 					
 				}
-				controller.getInstance().addEvent(newRadio, 'click', function(){
+				controller.getInstance().addEvent(newRadio, 'change', function(){
 					view.getInstance().addLabelsAnimation(newRadio);
 				});
+				if (contents.required){
+						model.getInstance().validation.setRequired( newInput);
+				}
+				
 				
 				
 			}
@@ -607,6 +618,9 @@ function createNewDivElement(type, contents, isEdited, first){
 				if (first){
 					newInput.change(TriggersOnFirstElement);
 				}
+				if (contents.required){
+					model.getInstance().validation.setRequired( newInput);
+				}
 			//}
 			break;
 			case "text":
@@ -617,6 +631,12 @@ function createNewDivElement(type, contents, isEdited, first){
 					if (contents.fieldsList[i].required){
 						model.getInstance().validation.setRequired( newInput);
 					}
+					
+					controller.getInstance().addEvent( newInput , 'change', function(){
+						clearSummaryBlock();
+						fillSummaryBlock();
+						
+					});
 					//newInput.data('required', contents.fieldsList[i].required);
 					
 					if (first){
@@ -658,6 +678,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			newEditBlock.appendTo ( newElement );
 			newEditBlock.hide();
 		}
+		
 	break;
 	//заполняем поля значениями, которые были
 	case "edit":
@@ -666,6 +687,9 @@ function createNewDivElement(type, contents, isEdited, first){
 			newElementNameDiv   = fabric("div", 			getObjectSpecs('blockname-block') );
 			newElementName		= fabric("textinline edit", getObjectSpecs("elementName", contents.id) );
 			newHeader 			= fabric("textinline edit", getObjectSpecs("temp-div-header", contents.header) );
+			var newItemReqP     = fabric("p",				getObjectSpecs("reqP") );
+			var newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_all'));
+			var newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabelAll',undefined, 'req-chbox_all'));
 			newBBControls 		= addBBControls();
 			newParagraph    	= fabric("text area edit", 	getObjectSpecs("text area", contents.description, 'desc-block') );
 			newInputDiv 		= fabric("div",				getObjectSpecs("div", undefined ,"radioInputTypesDiv") );
@@ -714,6 +738,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			newInput.appendTo ( newInputDiv );
 			
 			newInputDiv.appendTo(newElement);
+
 			newInputRadio.appendTo ( newElement );
 		//	newInputRadio.hide();
 			newInputFields.hide();
@@ -724,38 +749,51 @@ function createNewDivElement(type, contents, isEdited, first){
 			newAddElementButton.appendTo ( newAddElementButtonP);
 			newAddElementPositionDiv.appendTo( newAddElementDiv );
 			newAddElementPositionRadio.appendTo( newAddElementPositionDiv );
-			
+			newItemReqChbox.appendTo( newItemReqP );
+			newItemReqLabel.appendTo( newItemReqP );
+			newItemReqP.appendTo( newInputDiv );
 			
 			controller.getInstance().addEvent(newAddElementPositionRadio, 'change', function(){
 				view.getInstance().addLabelsAnimation(newAddElementPositionRadio);
 			});
-			
+		//	newItemReqChbox.appendTo( newElement );
+	//		newItemReqLabel.appendTo( newElement );
 			newAddElementButton.click(addElement);
 		//	newInputFieldsCount.appendTo(newElement);
 		//	newInputFieldsCount.hide();
 			
 			
 			
+			var radioValue = 0;
 			switch (contents.inputType){
 				case "radio":
-					newInput.find(':input[value="1"]').prop('checked',true);
+			//		newInput.find(':input[value="1"]').prop('checked',true);
+					radioValue = 1;
+					
 					//newInputRadio.slideDown("slow");
 				break;
 				case "textarea":
-					newInput.find(':input[value="0"]').prop('checked',true);
+			//		newInput.find(':input[value="0"]').prop('checked',true);
+					radioValue = 0;
 					//newInputRadio.hide();
 				break;
 				case "text":
-					newInput.find(':input[value="2"]').prop('checked',true);
+			//		newInput.find(':input[value="2"]').prop('checked',true);
+					radioValue = 2;
 					//newInputFields.slideDown("slow");
 				break;
 					
 			}
+			if (contents.required ){
+				$("#req-chbox_all").prop('checked', true);
+			}
+			model.getInstance().setRadioValue(newInput, radioValue);
 			
 				
 			//newPosition.children(':input').val(contents.position);
 			newPosition.appendTo( newElement );
 			newPosition.hide();
+			
 			
 			
 			if ( (contents.branches == undefined) || (contents.branches.length < 2 ) ){
@@ -777,6 +815,9 @@ function createNewDivElement(type, contents, isEdited, first){
 			newElement 			= fabric("div", 			getObjectSpecs("div",undefined,undefined) );
 			newTitle 			= fabric("h3",				getObjectSpecs("temp-title", contents.title ) );
 			newElementNameDiv   = fabric("div", 			getObjectSpecs('blockname-block') );
+			var newItemReqP     = fabric("p",				getObjectSpecs("reqP") );
+			var newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_all'));
+			var newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabelAll',undefined, 'req-chbox_all'));
 			newElementName		= ( ( autofill ) ?
 				fabric("textinline edit", 			getObjectSpecs("elementName", model.getInstance().autofillID()) ) :
 				fabric("textinline", 			getObjectSpecs("elementName", "Введите имя элемента") )  );
@@ -827,7 +868,9 @@ function createNewDivElement(type, contents, isEdited, first){
 			newInput.appendTo ( newInputDiv );
 			newInputDiv.appendTo(newElement);
 			
+			
 			newInputRadio.appendTo ( newElement );
+
 		//	newInputRadio.hide();	
 			newPosition.children(':input').val(contents.position);
 			newPosition.appendTo( newElement );
@@ -843,6 +886,9 @@ function createNewDivElement(type, contents, isEdited, first){
 			newAddElementPositionDiv.appendTo( newAddElementDiv );
 			newAddElementPositionRadio.appendTo( newAddElementPositionDiv );
 			
+			newItemReqChbox.appendTo( newItemReqP );
+			newItemReqLabel.appendTo( newItemReqP );
+			newItemReqP.appendTo( newInputDiv );
 			
 			controller.getInstance().addEvent(newAddElementPositionRadio, 'change', function(){
 				view.getInstance().addLabelsAnimation(newAddElementPositionRadio);
@@ -866,7 +912,8 @@ function createNewTempElement(contents, edit){
 			inputType:  undefined,
 			branches: undefined,
 			fieldsList: undefined,
-			title: "Создание нового блока"
+			title: "Создание нового блока",
+			required: false
 			};
 		edit = false;
 		}
@@ -875,6 +922,7 @@ function createNewTempElement(contents, edit){
 	//$('#temp_divs').empty();
 	newElement = createNewDivElement(edit?"edit":undefined,contents);
 	newElement.appendTo( $('#temp_divs') );
+	$("#req-chbox_all", '#temp_divs').prop('checked', contents.required);
 	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().api.saveSettings);
 	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().autofillIDClick);
 	$('#desc-block').keyup();
@@ -892,23 +940,30 @@ function createNewTempElement(contents, edit){
 			$('input[name=inputType]').not(":checked").each(function(){$('label[for='+$(this).attr('id')+']').removeClass('active-checkBoxLabel');});
 			
 			switch (inputTypeSelector.val()) {
+			//radio
 			case "1":
 				$("#radioOptions", '#temp_divs').slideDown("slow");
 				$("#fieldsList", '#temp_divs').slideUp("slow");
+				$("#req-block", '#temp_divs').slideDown('slow');
 				showHelp("radio");
 				
 				
 			break;
+			//text
 			case "2":
 				
 					$("#fieldsList", '#temp_divs').slideDown("slow");
 					$("#radioOptions", '#temp_divs').slideUp("slow");
+					$("#req-block", '#temp_divs').slideUp('slow');
+					$('#req-chbox_all').prop('checked', false);
 					showHelp("inputfields");
 			break;
+			//textarea
 			case "0":
 				//if (inputTypeSelector.val() == "0"){
 					$("#radioOptions", '#temp_divs').slideUp("slow");
 					$("#fieldsList", '#temp_divs').slideUp("slow");
+					$("#req-block", '#temp_divs').slideDown('slow');
 					showHelp("textarea");
 				//	}
 			break;
@@ -931,6 +986,7 @@ function addElement(){
 	var name = $('#newElementName').val();
 	var modelInst 		= model.getInstance();
 	var branches = [];
+	var required = $('#req-chbox_all').prop('checked');
 	//var objElement 		= modelInst.blockActions.getElement( name );
 	//var model 			= modeltmp;
 	//открываем элемент предыдущий при эдите
@@ -953,7 +1009,7 @@ function addElement(){
 			}
 			else{
 			// если length > 1 значит было ["","",.....,""];
-				branches = ( (branches.length > 1) ? undefined: branches);
+				branches = ( (( branches !== undefined) && branches.length > 1) ? undefined: branches);
 			}
 		}
 	}
@@ -1063,6 +1119,7 @@ function addElement(){
 		branches: branches,
 		fieldsList:fieldsListArray,
 		previous: undefined,
+		required: required
 	};
 	
 	var branchesPrevElement = undefined;
@@ -1289,11 +1346,15 @@ function onCopyClick(){
 //если есть ветвление - то тип по дефолту радио
 function onBranchClick(){
 	$(':input[name=inputType]').each(function(){
+		
 			$('label[for='+$(this).attr('id')+']').removeClass("active-checkBoxLabel");
 		});
 	$('label[for='+$(':input[name=inputType][value=1]').attr('id')+']').addClass("active-checkBoxLabel");
+	//model.getInstance().setRadioValue( $('input[name=inputType]'), 1);
 	$('label[for='+$(this).attr('id')+']').toggleClass("active-checkBoxLabel");
 	if ($(this).is(':checked') ) {
+	//	$("#req-block", '#temp_divs').slideUp('slow');
+		$('#req-chbox_all').prop('checked', false);
 		//$('label[for='+$(this).attr('id')+']').addClass("active-checkBoxLabel");
 		$(':input[name=inputType][value=1]').prop('checked',true);
 		
@@ -1323,6 +1384,7 @@ function onBranchClick(){
 				$(this).siblings(":input[type=button]").animate({"left": "-=100px"}, "slow");
 			}
 		});
+		$("#req-block", '#temp_divs').slideDown('slow');
 		//showHelp("input");
 		showHelp("radio");
 	}
@@ -1813,10 +1875,16 @@ function fillSummaryBlock(){
 			var values = getInputValueArray($(this));
 			//todo
 			//change to normal code
+			var objElement = model.getInstance().blockActions.getElement( $(this).attr('id') );
+			
 			for (var i=0; i< values.length; i++ ){
 				
 				var newValueNameSpan = fabric('p', getObjectSpecs('summary-element-valuename', values[i].key +
-					((values[i].required)?'(*)':'') + ': ') );
+					((values[i].required || objElement.required)?'(*)':'') + ': ') );
+				if ( (values[i].required || objElement.required) 
+					&& ($.trim(values[i].value) === '' ) ){
+					newValueNameSpan.addClass('summary-unfilled');
+				}
 				//var value = '<span style="float: left; width: 200px; height: 100%">'+values[i].key + ': </span>' ;
 				var newValueValueSpan = fabric('p', getObjectSpecs('summary-element-valuevalue', values[i].value) );
 				
