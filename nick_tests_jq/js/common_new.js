@@ -179,9 +179,9 @@ function onHeaderClick(evt, elem, state){
 	/*if ( values[values.length-1].val() !== '' ) */
 	if ( 
 		( 
-			!( ( objElement.branches !== undefined) && ( objElement.branches.length === 1 ) )
-			&&
-			(!model.getInstance().blockActions.hasBranches( objElement ) ) 
+			( ( objElement.branches === undefined) /*&& ( objElement.branches.length === 1 ) )*/)
+			||
+			( objElement.branches.length > 1) && (!model.getInstance().blockActions.hasBranches( objElement.branches ) ) 
 		) 
 	&& 
 		( $('#submit-block').css('display') == 'none' ) 
