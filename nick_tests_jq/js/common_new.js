@@ -419,7 +419,7 @@ switch (type) {
 		case "addElementButton":		objectSpecs = {class:"control-button",content:"Добавить элемент",id:'add_div'};break;
 		case "addElementButtonP": 		objectSpecs = {class:"addbuttonP",content:undefined,id:undefined};break;
 		case "temp-div-header":			objectSpecs = {class:"temp-div-header",content:content};break;
-		case "radioOptionP": 			objectSpecs = {class:"radioOption"};break;
+	//	case "radioOptionP": 			objectSpecs = {class:"radioOption"};break;
 		case "radioInputTypes":			objectSpecs = {class:undefined,content:["Многострочное поле","Выбор из нескольких элементов","Однострочные поля"],name:"inputType"};break;
 		case "radio":					objectSpecs = {class:'radio-block',content:content,name:name};break;
 		case "text area":				objectSpecs = {class:"textarea",content:content,id:name};break;
@@ -476,7 +476,15 @@ switch (type) {
 		case "summary-element-value":	objectSpecs = {class:'summary-element-value',content:undefined, id:undefined};break;
 		case "summary-element-value-p":	objectSpecs = {class:'summary-element-value-p',content:content, id:undefined};break;
 		case "summary-element-valuename": objectSpecs = {class:'summary-element-valuename',content:content, id:undefined};break; 
-		case "summary-element-valuevalue": objectSpecs = {class:'summary-element-valuevalue',content:content, id:undefined};break; 
+		case "summary-element-valuevalue": objectSpecs = {class:'summary-element-valuevalue',content:content, id:undefined};break;
+		//printing
+		case "print-element":				objectSpecs = {class:'print-element',content:undefined, id:undefined};break;
+		case "print-element-wrap":				objectSpecs = {class:'print-element-wrap',content:undefined, id:undefined};break;
+		case "print-element-name":			objectSpecs = {class:'print-text',content:content, id:undefined};break;
+		case "print-element-desc":			objectSpecs = {class:'print-text',content:content, id:undefined};break;
+		case "print-element-input-type":	objectSpecs = {class:'print-text',content:content, id:undefined};break;
+		case "print-element-input-value":	objectSpecs = {class:'print-text-value',content:content, id:undefined};break;
+		
 		//case "radioInputTypesDiv"		objectSpecs = {class:"radioInputTypesDiv",id:undefined,content:undefined};break;
 		//sync-block
 		case "sync-warning":			objectSpecs = {class: "sync-help warning", content: content, id: undefined};break;
@@ -1068,7 +1076,7 @@ function addElement(){
 
 				inputTypeVal = "radio";
 				radio = [];
-				radioOptionsList = $(':input[type=text]','.radioOption').not('.branchId');
+				radioOptionsList = $('.radioOptionInput');
 				radioOptionsFilled = radioOptionsList;
 				radioOptionsList.each(function(){
 					if ($(this).val() == "" ){
@@ -2273,6 +2281,7 @@ function addSavedData(divBlock){
 
 function insertElement(element, position, branches){
 	var pos = position;
+	var nextElementId = undefined;
 	var elementToInsertAfter =  $("#container").children(':nth-child('+pos+')');
 	//устанавливаем новому элементу ветви предыдущего
 	var oldElement 			 = model.getInstance().blockActions.getElement( elementToInsertAfter.attr('id') );
@@ -2284,7 +2293,8 @@ function insertElement(element, position, branches){
 			return;
 		}
 		radioValue = checkedDiv.val();
-		var nextElementId = [branchesOldElement[radioValue]];
+		if (branchesOldElement[radioValue] !== "" )
+			nextElementId = [branchesOldElement[radioValue]];
 		branchesOldElement[radioValue] = $(element).attr('id');
 			
 			
@@ -2305,7 +2315,7 @@ function insertElement(element, position, branches){
 	$(element).insertAfter( elementToInsertAfter );
 	oldElement.branches = branchesOldElement;
 	model.getInstance().blockActions.addElement( oldElement );
-	return  nextElementId;
+	return  ;
 /*	return {
 		branches: nextElementId,
 		previous: elementToInsertAfter.attr('id');

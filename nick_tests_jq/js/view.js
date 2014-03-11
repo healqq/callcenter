@@ -173,7 +173,7 @@ var  view = (function(){
 				});
 			},
 			hideSyncBlock: function(){
-				$('.exit-small__div,.sync-exit').slideUp('fast');
+				$('.exit-small__div.sync-exit').slideUp('fast');
 				$('#sync-block-wrap').slideUp({duration:'slow', complete:function(){
 						$('#scheeme-help-layer').hide();
 					}
@@ -184,8 +184,65 @@ var  view = (function(){
 			},
 			hideScrollTopButton: function(){
 				$('.scroll-to-top').animate({bottom:"-=50", opacity: "hide"}, "slow");
+			},
+			showPrintBlock: function(){
+				model.getInstance().api.fillPrintBlock();
+				$('#scheeme-help-layer').show();
+				$('#print-block-wrap').slideDown({duration:'slow', complete:function(){
+						var exit = $('.exit-small__div,.print-exit').slideDown('fast');
+						controller.getInstance().addEvent($('#print-exit'), 'click', instance.hidePrintBlock);
+					}
+				});
+					
+			},
+			hidePrintBlock: function(){
+				$('.exit-small__div,.print-exit').slideUp('fast');
+				$('#print-block-wrap').slideUp({duration:'slow', complete:function(){
+						$('#scheeme-help-layer').hide();
+					}
+				});
+			},
+			addElementToPrintBlock: function( element, level){
+				var newBlockWrap = fabric('div', getObjectSpecs('print-element-wrap') );
+				var newBlock = fabric('div', getObjectSpecs('print-element') );
+				
+				var newNameP = fabric('p', getObjectSpecs('print-element-name', "<strong>Имя блока: </strong>" + element.header) );
+				var newDescP = fabric('p', getObjectSpecs('print-element-desc') );
+				model.getInstance().setHTML(newDescP,"<strong>Описание: </strong>" + element.description);
+				newNameP.appendTo(newBlock);
+				newDescP.appendTo(newBlock);
+				var inputTypeStr = '';
+				//var newInputTypeP = fabric('p', getObjectSpecs('print-element-input-type', element.inputType) );
+				switch( element.inputType){
+					case 'radio':
+						for (var i=0; i< element.radio.length; i++){
+							var newInput = fabric('p', getObjectSpecs('print-element-input-value', element.radio[i]) );
+							newInput.appendTo( newBlock );
+							
+						}
+						inputTypeStr = 'перечисление';
+						break;
+					case 'textarea':
+						inputTypeStr = 'Текстовое поле';
+						break;
+					case 'text':
+						for (var i=0; i< element.fieldsList.length; i++){
+							var newInput = fabric('p', getObjectSpecs('print-element-input-value', element.fieldsList[i].value) );
+							newInput.appendTo( newBlock );
+							
+						}
+						
+						break;
+						
+				}
+				var newInputTypeP = fabric('p', getObjectSpecs('print-element-input-type','<strong>Вид ответа: </strong>' + inputTypeStr) );
+				newInputTypeP.insertAfter(newDescP);
+				newBlockWrap.appendTo($('#print-container'));
+				newBlock.css('left', 50* level + 'px');
+				newBlock.css('padding-right', 50* level + 'px');
+				newBlock.appendTo(newBlockWrap);
+				
 			}
-			
 			
 			
 		

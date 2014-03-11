@@ -1491,7 +1491,7 @@ input[type=checkbox]:checked + label:before {
 	background: transparent;
 	
 }
-.sync-help{
+.help-annotation{
 	margin: 0 2% 10px;
 	text-align: center;
 	color: #AAA;
@@ -1628,4 +1628,38 @@ input[type=checkbox]:checked + label:before {
 
 .overflow-wrap{
 	overflow: hidden;
+}
+
+
+/*PRINT BLOCK CSS*/
+.print-wrap{
+	top: 0;
+	width: 100%;
+	position: absolute;
+	display: none;
+}
+.print-element{
+	position: relative;
+	width: auto;
+	margin:0;
+	
+}
+.print-element-wrap{
+	
+	width: 90%;
+	margin: auto;
+	position: relative;
+	border-bottom: 1px solid #999;
+}
+.print-text-value{
+	
+	margin-left: 20px;
+	margin-top: 0px;
+	margin-bottom: 1px;
+	
+	
+}
+.print-text{
+	
+	margin: 0 0 0 0 ;
 }

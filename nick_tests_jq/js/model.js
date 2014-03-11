@@ -220,7 +220,34 @@ var model = (function(){
 											};
 					});
 					view.getInstance().hideSyncBlock();
+				},
+				fillPrintBlock: function(){
+					//console.log(scriptStructure.first);
+					var helpStr = 'Для печати воспользуйтесь штатными возможностями браузера';
+					//структура незаполнена
+					if (scriptStructure.first === undefined){
+						$('.print-help.help-annotation').children('h5').text('В структуре нет ни одного блока!');
+						
+						return;
+					}
+					else{
+						$('.print-help.help-annotation').children('h5').text(helpStr);
+					}					
+					var firstElement = $('#'+scriptStructure.first);
+					var addElementToPrintContainer = (function(elem, level){
+						var elemId   = $(elem).attr('id');
+						var elementInStructure = instance.blockActions.getElement( elemId, false);
+						view.getInstance().addElementToPrintBlock(elementInStructure, level);
+						//console.log( elementInStructure);
+						
+					});
+					//	var $element = $(element);
+						/*var index = 0;*/
+					var level = 0;
+					instance.blockActions.allElementsCircuit(firstElement, addElementToPrintContainer, level);
+					//console.log(firstElement);
 				}
+				
 				
 			
 			},
@@ -279,6 +306,7 @@ var model = (function(){
 					control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
 					control.addEvent($("#btnSyncSettings"),'click', view.getInstance().showSyncBlock);
 					control.addEvent($("#btnSaveSyncMap"),'click', instance.api.saveSyncMap);
+					control.addEvent($("#btnPrintStructure"),'click', view.getInstance().showPrintBlock);
 					control.addEvent($("#btnShowHelp"), 'click', function(){
 						instance.galleryActions.initGallery("admin");
 						});
@@ -500,13 +528,17 @@ var model = (function(){
 					return prevElement;
 				},
 				/*Применяет функцию ко всем элементам из структуры*/
-				allElementsCircuit: function ( element, func){
+				allElementsCircuit: function ( element, func, level){
 					
-					func(element);
-					$(element.data('branches')).each(function(index, value){
+					var nextLevel = level;
+					func(element, level);
+					branchesArray = $(scriptStructure.elements[element.attr('id')].branches);
+					branchesArray.each(function(index, value){
 						var nextElement = $('#'+value);
 						if ( ! (nextElement.length === 0 ) ){
-							instance.blockActions.allElementsCircuit (nextElement, func);
+							nextLevel = ( (level === undefined)? undefined: (level + 1) );
+							
+							instance.blockActions.allElementsCircuit (nextElement, func, nextLevel);
 						}
 					});
 				},
