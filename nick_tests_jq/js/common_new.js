@@ -487,7 +487,7 @@ switch (type) {
 		
 		//case "radioInputTypesDiv"		objectSpecs = {class:"radioInputTypesDiv",id:undefined,content:undefined};break;
 		//sync-block
-		case "sync-warning":			objectSpecs = {class: "sync-help warning", content: content, id: undefined};break;
+		case "sync-warning":			objectSpecs = {class: "help-annotation warning", content: content, id: undefined};break;
 		//gallery
 		case "nav-radio":				objectSpecs = {class: "nav-radio", content: content, name: "nav-selection"};break;
 		

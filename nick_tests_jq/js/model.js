@@ -223,16 +223,21 @@ var model = (function(){
 				},
 				fillPrintBlock: function(){
 					//console.log(scriptStructure.first);
+					//Сначала очищаем все
+					$('.print-help.warning', '#print-container').remove(); 
+					$('.print-element-wrap', '#print-container').remove();
+					//$('#print-container').empty();
+					//$(
 					var helpStr = 'Для печати воспользуйтесь штатными возможностями браузера';
+					$('.print-help.help-annotation').children('h5').text(helpStr);
 					//структура незаполнена
 					if (scriptStructure.first === undefined){
-						$('.print-help.help-annotation').children('h5').text('В структуре нет ни одного блока!');
 						
+						var warningDiv = fabric('div', getObjectSpecs('sync-warning', 
+						'Похоже нет ни одного блока,заполните скрипт прежде чем печатать его!') );
+						$('#print-container').append(warningDiv);
 						return;
 					}
-					else{
-						$('.print-help.help-annotation').children('h5').text(helpStr);
-					}					
 					var firstElement = $('#'+scriptStructure.first);
 					var addElementToPrintContainer = (function(elem, level){
 						var elemId   = $(elem).attr('id');

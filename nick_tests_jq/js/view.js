@@ -167,7 +167,7 @@ var  view = (function(){
 				instance.fillSyncContainer();
 				$('#scheeme-help-layer').show();
 				$('#sync-block-wrap').slideDown({duration:'slow', complete:function(){
-						var exit = $('.exit-small__div,.sync-exit').slideDown('fast');
+						var exit = $('.exit-small__div.sync-exit').slideDown('fast');
 						controller.getInstance().addEvent($('#sync-exit'), 'click', instance.hideSyncBlock);
 					}
 				});
@@ -189,14 +189,14 @@ var  view = (function(){
 				model.getInstance().api.fillPrintBlock();
 				$('#scheeme-help-layer').show();
 				$('#print-block-wrap').slideDown({duration:'slow', complete:function(){
-						var exit = $('.exit-small__div,.print-exit').slideDown('fast');
+						var exit = $('.exit-small__div.print-exit').slideDown('fast');
 						controller.getInstance().addEvent($('#print-exit'), 'click', instance.hidePrintBlock);
 					}
 				});
 					
 			},
 			hidePrintBlock: function(){
-				$('.exit-small__div,.print-exit').slideUp('fast');
+				$('.exit-small__div.print-exit').slideUp('fast');
 				$('#print-block-wrap').slideUp({duration:'slow', complete:function(){
 						$('#scheeme-help-layer').hide();
 					}
