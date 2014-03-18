@@ -67,7 +67,10 @@
 		/*background-color: #fafafa;*/
 		}
 		#logo{
-			
+			text-decoration: none;
+		}
+		#logo:focus{
+			outline: none;
 		}
 		.tables{
 			/*transition: all 2s; 
@@ -516,7 +519,9 @@
 			display: block;
 			position: relative;
 		}
-		
+		.Mask{
+			margin-left: 10px;
+		}
 		
 /*RADIO OPTIONS ELEMENTS --------------------------------------------------------------------*/
 /*Поля  для многострочного текста*/
@@ -1513,6 +1518,7 @@ input[type=checkbox]:checked + label:before {
 	height: 60px;
 	bottom: 0;
 	display: none;
+	z-index: 500;
 }
 
 
@@ -1637,6 +1643,9 @@ input[type=checkbox]:checked + label:before {
 	width: 100%;
 	position: absolute;
 	display: none;
+}
+#print-container{
+	margin-bottom: 20px;
 }
 .print-element{
 	position: relative;

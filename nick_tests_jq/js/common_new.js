@@ -463,7 +463,10 @@ switch (type) {
 		case "nextElementText edit":	objectSpecs = {class:"branchId",content:content,id:undefined};break;
 		//fields lists
 		case "fieldsListText":			objectSpecs = {class:"fieldsListInput",content:"Введите название",id:name};break;
-		case "fieldsListText edit":		objectSpecs = {class:"fieldsListInput",content:content,id:undefined};break;
+		case "fieldsListMask":			objectSpecs = {class:"fieldsListInput Mask",content:"Маска",id:undefined};break;
+		case "fieldsListText edit":		objectSpecs = {class:"fieldsListInput",content:content,id:name};break;
+		case "fieldsListMask edit":		objectSpecs = {class:"fieldsListInput Mask",content:content,id:undefined};break;
+		
 		
 		
 		//edit buttons block
@@ -639,7 +642,20 @@ function createNewDivElement(type, contents, isEdited, first){
 					if (contents.fieldsList[i].required){
 						model.getInstance().validation.setRequired( newInput);
 					}
-					
+					//jQuery mask plug-in
+					/*	default options
+					 	'0': {pattern: /\d/}, 
+						'9': {pattern: /\d/, optional: true}, 
+						'#': {pattern: /\d/, recursive: true}, 
+						'A': {pattern: /[a-zA-Z0-9]/}, 
+						'S': {pattern: /[a-zA-Z]/}
+						
+						http://igorescobar.github.io/jQuery-Mask-Plugin/
+						//используется для установки маски на однострочные поля ввода
+					*/
+					if (contents.fieldsList[i].mask !== undefined ){
+						$(newInput).mask( contents.fieldsList[i].mask );
+					}
 					controller.getInstance().addEvent( newInput , 'change', function(){
 						clearSummaryBlock();
 						fillSummaryBlock();
@@ -826,6 +842,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			var newItemReqP     = fabric("p",				getObjectSpecs("reqP") );
 			var newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_all'));
 			var newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabelAll',undefined, 'req-chbox_all'));
+			
 			newElementName		= ( ( autofill ) ?
 				fabric("textinline edit", 			getObjectSpecs("elementName", model.getInstance().autofillID()) ) :
 				fabric("textinline", 			getObjectSpecs("elementName", "Введите имя элемента") )  );
@@ -852,7 +869,7 @@ function createNewDivElement(type, contents, isEdited, first){
 			var newAddElementPositionRadio = fabric('radio', getObjectSpecs('add-block-position__radio') );
 			
 			//очищаем ветви
-			newElement.removeData("branches");
+			//newElement.removeData("branches");
 			addHelpTriggers();
 			newTitle.appendTo( newElement);
 			
@@ -894,9 +911,11 @@ function createNewDivElement(type, contents, isEdited, first){
 			newAddElementPositionDiv.appendTo( newAddElementDiv );
 			newAddElementPositionRadio.appendTo( newAddElementPositionDiv );
 			
+			
 			newItemReqChbox.appendTo( newItemReqP );
 			newItemReqLabel.appendTo( newItemReqP );
 			newItemReqP.appendTo( newInputDiv );
+		//	newMask.appendTo(newInputDiv );
 			
 			controller.getInstance().addEvent(newAddElementPositionRadio, 'change', function(){
 				view.getInstance().addLabelsAnimation(newAddElementPositionRadio);
@@ -1095,7 +1114,7 @@ function addElement(){
 		case "2":
 			fieldsListArray = [];
 			inputTypeVal = "text";
-			inputFields = $(':input[type=text]','#fieldsList');
+			inputFields = $(':input[type=text]','#fieldsList').not('.Mask');
 			inputFieldsFilled = inputFields;
 				inputFields.each(function(){
 					if ($(this).val() == "" ){
@@ -1107,8 +1126,10 @@ function addElement(){
 					return;
 				}
 			inputFieldsFilled.each(function(){
+					var maskVal = $(this).siblings('.Mask').val();
 					fieldsListArray.push({value:$(this).val(),
-					required:($(this).parents('.radioOption').children('input[type=checkbox]').prop('checked') === true) 
+					required:($(this).siblings('input[type=checkbox]').prop('checked') === true),
+					mask: (( maskVal === '')?undefined: maskVal )
 					});
 				});
 		break;
@@ -1570,6 +1591,7 @@ function createTextInputField( fieldsList){
 	if (fieldsList == undefined) {
 		newItemParagraph 	= fabric("p", getObjectSpecs("radioOptionP" ));
 		newItem 			= fabric("textinline",getObjectSpecs("fieldsListText"  ));
+		var newMask 		= fabric('textinline', getObjectSpecs('fieldsListMask') );
 		newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_0'));
 		newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabel',undefined, 'req-chbox_0'));
 		
@@ -1577,6 +1599,7 @@ function createTextInputField( fieldsList){
 		
 		newItemRemove.click(removeFieldsListItem);
 		newItem.appendTo(newItemParagraph);
+		newMask.appendTo( newItemParagraph );
 		newItemReqChbox.appendTo(newItemParagraph);
 		newItemReqLabel.appendTo(newItemParagraph);
 		newItemRemove.appendTo(newItemParagraph);
@@ -1587,12 +1610,15 @@ function createTextInputField( fieldsList){
 		for (var i=0; i< fieldsList.length; i++){
 			newItemParagraph 	= fabric("p", getObjectSpecs("radioOptionP" ));
 			newItem 			= fabric("textinline edit",getObjectSpecs("fieldsListText edit", fieldsList[i].value ));
+			var newMask 		= fabric('textinline edit', getObjectSpecs('fieldsListMask edit',
+				((fieldsList[i].mask === undefined)?'': fieldsList[i].mask) ) );
 			newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_'+i));
 			newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabel',undefined, 'req-chbox_'+i));
 			newItemRemove  		= fabric("buttoninlinetooltip",	getObjectSpecs("removebutton") );
 		
 			newItemRemove.click(removeFieldsListItem);
 			newItem.appendTo(newItemParagraph);
+			newMask.appendTo(newItemParagraph);
 			newItemReqChbox.appendTo(newItemParagraph);
 			newItemReqLabel.appendTo(newItemParagraph);
 			newItemRemove.appendTo(newItemParagraph);
@@ -1617,12 +1643,14 @@ function addNewFieldsListItem(){
 	var numItems = model.getInstance().getIdCounter() ;
 	newItemParagraph 	= fabric("p", getObjectSpecs("radioOptionP" ));
 	newItem 			= fabric("textinline",getObjectSpecs("fieldsListText" ));
+	var newMask 		= fabric('textinline', getObjectSpecs('fieldsListMask') );
 	newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_'+numItems));
 	newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabel',undefined, 'req-chbox_'+numItems));
 	newItemRemove  		= fabric("buttoninlinetooltip",	getObjectSpecs("removebutton") );
 		
 	newItemRemove.click(removeFieldsListItem);
 	newItem.appendTo(newItemParagraph);
+	newMask.appendTo(newItemParagraph);
 	newItemReqChbox.appendTo(newItemParagraph);
 	newItemReqLabel.appendTo(newItemParagraph);
 	newItemRemove.appendTo(newItemParagraph);
