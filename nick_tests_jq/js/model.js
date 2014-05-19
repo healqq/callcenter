@@ -187,6 +187,7 @@ var model = (function(){
 					if (firstElement.length === 0){
 					}
 					else{
+						//var controlSyncMap = {};
 						instance.blockActions.allElementsCircuit( firstElement, function ( element){
 							var id = element.attr('id');
 							var valuesArray = getInputValueArray(element, "sync");
@@ -196,10 +197,18 @@ var model = (function(){
 									syncMap[fieldName] = {	value: fieldName.replace(RegExp(' ', 'g'),''), 
 															id: id
 														};
-														
+												
 									
 							}
+							
+							
 						});
+						for (var key in syncMap){
+							if ( scriptStructure.elements[syncMap[key].id] === undefined ){
+								delete syncMap[key];
+							}
+							
+						}
 						
 					}
 					//console.log( syncMap);
@@ -219,7 +228,9 @@ var model = (function(){
 												id: syncMap[fieldName].id
 											};
 					});
+					saveStructure();
 					view.getInstance().hideSyncBlock();
+					
 				},
 				fillPrintBlock: function(){
 					//console.log(scriptStructure.first);
@@ -310,7 +321,7 @@ var model = (function(){
 					control.addEvent($("#scheeme-help-btn"),'click', showScheemeHelp);
 					control.addEvent($("#scheeme-help-exit"),'click', hideScheemeHelp);
 					control.addEvent($("#btnSyncSettings"),'click', view.getInstance().showSyncBlock);
-					control.addEvent($("#btnSaveSyncMap"),'click', instance.api.saveSyncMap);
+					control.addEvent($(".btnSaveSyncMap"),'click', instance.api.saveSyncMap);
 					control.addEvent($("#btnPrintStructure"),'click', view.getInstance().showPrintBlock);
 					control.addEvent($("#btnShowHelp"), 'click', function(){
 						instance.galleryActions.initGallery("admin");

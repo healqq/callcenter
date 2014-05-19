@@ -105,7 +105,7 @@ var  view = (function(){
 			//очистка
 				$('.sync-help.warning', '#sync-container').remove(); 
 				$('.summary-element', '#sync-container').remove();
-				$('#btnSaveSyncMap').parent().hide();
+				$('.btnSaveSyncMap').parent().hide();
 				
 				var modelApi = model.getInstance().api;
 				var syncMap = modelApi.getSyncMap();
@@ -118,7 +118,10 @@ var  view = (function(){
 					$('#sync-container').append(warningDiv);
 					return;
 				}
-				$('#btnSaveSyncMap').parent().show();	
+				else{
+					$('.help-annotation.warning').remove();
+				}
+				$('.btnSaveSyncMap').parent().show();	
 				for (var key in syncMap){
 					index++;
 		//			var element = $('#'+key);
@@ -157,7 +160,7 @@ var  view = (function(){
 						
 		//			}
 				//	$('.sync-help').append(newBlock);
-					newBlock.insertBefore($('.addbuttonP.add-block.hidden'));
+					newBlock.insertAfter($('.top-button'));
 				
 					
 				}
