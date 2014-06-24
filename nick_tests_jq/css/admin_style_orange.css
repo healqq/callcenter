@@ -1,15 +1,26 @@
-﻿		body {
-			font-family: Calibri; /* Семейство шрифтов */
+﻿		/*
+			-1px 0 0 0 #d2d2d2,-1px 0 0 0 #e6e6e6,1px 0 0 0 #d2d2d2,2px 0 0 0 #e6e6e6,0 -1px 0 0 #e8e8e8,0 2px 0 0 rgba(241,241,241,0.3),0 1px 0 0 #b1b1b1
+		*/
+		body {
+			font-family:"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; /* Семейство шрифтов */
 			font-size: 11pt; /* Размер основного шрифта в пунктах  */
+			overflow-wrap: break-word;
 		/*	background-image: url(images/FonBlack.png);  */
 		/*	background-color: #f0f0f0; /* Цвет фона веб-страницы */ 
-			background-color: #FAFAFA;
+			/*background-color: #FAFAFA;*/
+			background-color: #fff;
 			
 			color: #121310; /* Цвет основного текста */
 			width: 100%;
 			height: 100%;
 			margin: 0;
 }
+		.admin-body{
+		/*	background-color: #FAFAFA;*/
+}
+		.hidden{
+		display: none;
+		}
 
 		html {
 			width: 100%;
@@ -17,20 +28,29 @@
 			overflow-y: scroll;
 			/*overflow:  hidden;*/ 
 }
+/*styling input fields +++*/
+	input[type=text], textarea{
+		border-radius: 4px;
+		border: 1px solid #666;
+		
+	}
+	input[type=text]:focus, textarea:focus{
+		border: 2px solid #999;
+			outline: none;
+		
+	}
+/*styling input fields ---*/
 		::-webkit-scrollbar:not (#draw-block) {
 			display: none; 
 }
 		.page_header, .page_footer{
-		
+		/*height: 32px;*/
 		flex: 100%;
 		order: 0;
-		background-color: #D1D1D1;
+		
 }
-		.page_header{
-			overflow:auto;
-			
-		}
 		.page_footer{
+		background-color: #D1D1D1;
 		height: 32px;
 		width: 100%;
 		flex: 100%;
@@ -41,7 +61,17 @@
 		/*text-align: center;*/
 		
 }
-		
+		.page_header{
+		flex: 15%;
+		order: 0;
+		/*background-color: #fafafa;*/
+		}
+		#logo{
+			text-decoration: none;
+		}
+		#logo:focus{
+			outline: none;
+		}
 		.tables{
 			/*transition: all 2s; 
 			box-sizing: border-box;*/
@@ -75,15 +105,17 @@
 			-webkit-align-items: stretch;
 			-ms-flex-align: stretch;
 			align-items: stretch;
+			margin-bottom: 32px;
 			
 }	
 		.tableRight {
+			margin-top: 10px;
 			margin-left: 2%;
 			margin-right: 2%;
 			/*height: 20000%;*/
 			margin-bottom: 2%;
 		/*	height: 99999%;*/
-			
+	/*		background-color:#FAFAFA;*/
 			width: 70%;
 			-webkit-flex:  0 1 60%;
            flex: 60%;
@@ -93,8 +125,11 @@
 			
 					
 }
+		.admin-right{
+			margin-top: 0px;
+}
 		.tableRight, .tableInfo{
-		background-color:#FAFAFA;
+		/**/
 		
 }
 		.tableInfo {
@@ -111,14 +146,14 @@
 		.tableLeft {
 	
 			
-			background-color:#666;
+			 
 	
-			width: 15%;
+			width: 10%;
 			
-	
-			min-height: 90%
+			
+		/*	min-height: 90%
 		
-		/*	-webkit-flex:  0 1 15%;
+			-webkit-flex:  0 1 15%;
            flex: 15%;*/
 		   
 			-webkit-order: 0;
@@ -126,30 +161,64 @@
 			align-self: auto;		   
 		
 }
-	.active_header, .control-button,  .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
-		background-color: #FF4F00 !important;
+				.admin {
+	
+			
+			 
+			background-color: #666;
+				   
+		
+}
+	.controls-block{
+		overflow-x: hidden;
+		overflow-y: auto;
+		position: relative;
 	}
+	 .control-button,  .editbuttonAccordion, #goto-elem, label:before , .line-button, #summary-title, #warning-block{
+		background-color: #FF5F33;
+	}
+		.inactive{
+			background-color: #999 !important;
+		}
 /*блок ошибки +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 		.error {
 		/*	color: #121310;*/
-			background-color:#FFCCCC;
+			z-index: 100;
+			border: 1px solid transparent;
+			background-color:#ff8888;
 			/*background-image: url(images/error.png);
 			opacity: 0.7;*/
 			position: relative;
 			display: none;
-			width: 90%;
-			height: 25px;
+			/*margin-bottom: 2px;*/
+			/*margin-top: 2px;*/
+			/*padding-top: 5px;*/
+			width: 100%;
+			/*height: 30px;*/
 			/*padding-top: 2px;
 			height: 25pt;*/
-			margin-top: 5px;
+			/*margin-top: 5px;*/
 			font-size: 11pt;
 			/*height: 5%;*/
 			text-align: center;
-			margin-left: 5%; /* Расстояние от левого края до линии */
-			margin-right: auto; /* Расстояние от правого края до линии */
+			/*vertical-alingn: middle;*/
+			/*margin-left: 5%; /* Расстояние от левого края до линии */
+			/*margin-right: auto; /* Расстояние от правого края до линии */
 			background-repeat: no-repeat;
 			background-position: 10px center;
+			overflow: auto;
 }
+		.error>p{
+			margin: 5px 0px;
+			/*vertical-align: middle;*/
+		}
+		.close-error-btn{
+			position: absolute;
+			top:0;
+			right: 0;
+			width: 16px;
+			height: 16px;
+		}
 	
 		.active {
 			color: #121310;
@@ -228,21 +297,44 @@
 				
 		
 /*}*/
+		.temp-div, .sample-view{
+			border-radius: 2px;
+			box-shadow: 1px 0 5px #666, -1px 0 5px #aaa;
+			margin-bottom: 10px;
+			background: #FAFAFA;
+			padding-top: 10px;
+		}
 /* temp divs block +++++++++++++++++++++++++++++++++++++++++++++++++++++*/	
 		.temp-div{
-			background: #FAFAFA;
-			border: 1px solid #999; /* Параметры линии внизу */
+			
+		/*	border: 1px solid #999; /* Параметры линии внизу */
 			width: 100%;
 			margin-left: auto; /* Расстояние от левого края до линии */
 			margin-right: auto; /* Расстояние от правого края до линии */
 			display:table;
-			border-radius: 5px;
+			
+		/*	border-radius: 2px;
+			box-shadow: -1px 0 0 0 #d2d2d2,-1px 0 0 0 #e6e6e6,1px 0 0 0 #d2d2d2,2px 0 0 0 #e6e6e6,0 -1px 0 0 #e8e8e8,0 2px 0 0 rgba(241,241,241,0.3),0 1px 0 0 #b1b1b1;*/
 }
 		#temp-title, #container-title, #scheeme-title, #summary-title{
-			text-align: center;
+			/*text-align: center;*/
 			font-size: 16pt;
+			
 			 
 		}
+		.title{
+			border-bottom: 1px solid #999;
+			background-color: inherit !important;
+			margin-left: 2%;
+			margin-right: 2%;
+			width: auto;
+			color: #666;
+			font-weight: 400;
+			
+		}
+			.out{
+				width: 96%;
+			}
 		#blockname-block{
 		position: relative;
 		overflow: auto;
@@ -306,11 +398,30 @@
 			margin-bottom: 5px;
 			
 		}
+		.add-block{
+			overflow: auto;
+			margin-bottom: 10px;
+		}
+		.add-block-position__div{
+			overflow: auto;
+			margin: auto;
+			width: 80%;
+		}
+		.position-type{
+			/*float: left;
+			margin-left: 15px;*/
+			margin-left: 15px;
+			float: left;
+		}
+		.req-chbox:before{
+			margin: 6px 6px;
+		}
 /*BB BUTTONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-		#bb-block{
-			/*width: 90%;
-			margin:auto;*/
-			padding-left: 5%;
+		.bb-block{
+			width: 90%;
+			margin: 0 5%;
+			padding-left: 0.2%;
+			
 			
 			
 		}
@@ -331,23 +442,23 @@
 			border-radius: 3px;
 		}
 		
-		#bb-bold{
+		[id^=bb-bold]{
 		
 			background-image: url(images/bb-buttons.png);
 			background-position: 0px 0px;
 			
 			
 		}
-		#bb-bold:hover,#bb-italic:hover,#bb-underline:hover{
+		[id^=bb-bold]:hover,[id^=bb-italic]:hover,[id^=bb-underline]:hover{
 			background-position-x: 20px;
 		}
-		#bb-italic{
+		[id^=bb-italic]{
 		
 			background-position: 0px 40px;
 			
 		}
 
-		#bb-underline{
+		[id^=bb-underline]{
 			
 			background-position: 0px 20px;
 		}
@@ -404,26 +515,40 @@
 }
 		#branch-block, .radio-block, #autosave-p{
 			margin-left: 5%;
-			height: 20px;
+			/*height: 20px;*/
 			display: block;
 			position: relative;
 		}
-		
+		.Mask{
+			margin-left: 10px;
+		}
 		
 /*RADIO OPTIONS ELEMENTS --------------------------------------------------------------------*/
 /*Поля  для многострочного текста*/
 		
 /*temp divs block ------------------------------------------------------*/
 /* ACCORIDON                  +++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-		#container-title{
+	/*	#container-title{
 			width: 100%;
+		}*/
+		#container{
+			margin-bottom: 30px;
 		}
+		.sample-view{
+			overflow-y:auto;
+			overflow-x: hidden;
+			margin-bottom: 10px;
+		}
+			.client-container{
+				padding: 10px 0;
+			}
 		.accordion{
 			background: #FAFAFA;
-			border: 1px solid #999; /* Параметры линии внизу */
+		/*	border: 1px solid #999; /* Параметры линии внизу */
 			width: 100%;
-			margin-left: auto; /* Расстояние от левого края до линии */
-			margin-right: auto; /* Расстояние от правого края до линии */
+			
+		/*	margin-left: 5%; /* Расстояние от левого края до линии */
+		/*	margin-right: auto; /* Расстояние от правого края до линии */
 		/*	display:table;*/
 			position:relative;
 			border-radius: 2px;
@@ -435,8 +560,8 @@
 		
 		.accordionheader {
 		    margin: 0;
-			background-color: #eee;
-		 /* Семейство шрифтов */
+		/*	background-color: #eee;
+		  Семейство шрифтов */
 			font-size: 13pt;
 			cursor: pointer;
 			width: 99%;
@@ -449,8 +574,12 @@
 			opacity : 0.6;
 			
 }
+		.accordionheader>span{
+			margin-left: 15px;
+		}
 		.accordion h3:hover {
 			opacity : 0.8;
+			background-color: #999;
 }
 		.accordion h3.active {
 			/* background-position: right 5px; */
@@ -481,22 +610,39 @@
 			height: 100px;
 			width: 90%;
 			overflow: hidden;
+			/*border-radius: 4px;*/
+			
 }
 
+		
+		.accordiontextarea:focus{
+			
+		}
 
 		.accordiontext {
 			margin-bottom: 2%;
 	        width: 80%;
 			height: 20px;
 }
+		.form-required{
+			background-color: #ffffaa;
+		}
 
 
 		.divacc{
 			width: 100%;
 			position: relative;
+			border-top: 1px solid #ccc;
+			 
 }
+		.divacc:last-of-type{
+				border-bottom: 1px solid #ccc;
+		}
 		.active_header{
 			opacity: 1.0;
+			background-color: #aaa;
+			background-image: url(images/active_header.png);
+			background-repeat: repeat-y;
 		
 	
 }
@@ -504,6 +650,7 @@
 /* чекбоксы  начало*/
 		.checkBoxLabel{
 			font-family: Calibri;
+			text-transform: capitalize;
 	/*margin-left: 5%;*/
 	/*color:#828282;*/
 }
@@ -519,6 +666,7 @@
 }
 .not-filled{
 			background-image: url(images/warning_bg.png);
+			background-color: transparent;
 			opacity: 1.0;
 		}
 /* ACCORIDON                  -----------------------------------------------------------*/
@@ -526,6 +674,11 @@
 		.editbutton, .removebutton, .addbutton, .addbuttonP, .addbutton, .editbuttonAccordion, .exit-button, .control-button, .line-button{
 		border:none;
 		color: #FFF;
+		text-transform: uppercase;
+		font-size: 8pt;
+		font-weight: bold;
+		cursor: pointer;
+		
 		
 }
 		
@@ -536,31 +689,35 @@
 			/*background-image: url(images/buttons_bg.png);*/
 			/*background-color: #00EE00;*/
 			
-			height: 40px;
+			height: 26px;
 			position: relative;
-			font-size: 16px;
+			
 			/*margin: auto; */
 			opacity: 1.0;
 			vertical-align: middle;
 			/*font-size: 14pt;
 			border: 1px solid #999;*/
+		/*	font-size: 8pt;
+			font-weight: bold;
+			/*padding-bottom: 5px;*/
 			
 			/*background-image: linear-gradient(to top, #999, #DFDFDF);*/
 }
 		.click{
-			background: linear-gradient(to top, #4169E1, #4682B4) !important;
+			/*background: linear-gradient(to top, #4169E1, #4682B4) !important;*/
+			background-color: #F03F00 !important;
 		}
 		.no-display-fix{
 			padding-top: 10px;
 			
 		}
-		.editbutton, .removebutton,  .addbutton, .idSpan, .help, .editbuttonAccordion{
+		.editbutton, .removebutton,  .addbutton, .help{
 		background-color: #FAFAFA;
 }
 		.control-button, .editbutton, .editbuttonAccordion{
 			border-radius: 2px;
 			color: #FFFFFF;
-			font-weight: bold;
+			/*font-weight: bold;*/
 		}
 		.editbutton, .removebutton{
 		
@@ -593,9 +750,11 @@
 			/*margin-left: 5%; */
 			/*width: 80px;*/
 			margin-bottom: 5px;
+			width: 75pt;
+			margin-left: 5px;
 		
 }
-		.edit-block, #scheeme-help > h4, #scheeme-help-basic>h3, #temp-title, #container-title, #scheeme-title, #help>h3, #bb-block{
+		.edit-block, #scheeme-help > h4, #scheeme-help-basic>h3, #temp-title, #container-title, #scheeme-title, #help>h3, .bb-block{
 			background-color: #EEE;
 			margin-top: 2px;
 }
@@ -643,10 +802,10 @@
 	}
 		  .addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover{
 		/*background-color: #8270B6;*/
-			font-weight: bold;
+			/*font-weight: bold;*/
 			/*box-shadow: 0 0 15px #FA0;*/
 	}
-		.exit-button:focus, .addbutton:focus, .editbutton:focus, .control-button:focus{
+		.exit-button:focus, .addbutton:focus, .editbutton:focus, .control-button:focus, .line-button:focus, .exit-btn-small:focus{
 			outline:none;
 	}
 		
@@ -676,19 +835,21 @@
 }
 		.addbuttonP {
 			width: 90%;
-			height: 40px;
+			height: 30px;
 			position: relative;
 			float:left;
 			margin-left: 5%;
 			margin-right: auto;
-			margin-top: 10px !important;
-			margin-bottom : 10px !important;
+			margin-top: 10px ;
+			margin-bottom : 0px;/* !important;*/
 			opacity: 1.0;
 		
 			
 					
 }
-		
+			.add-block{
+				width: auto;
+			}
 		.exitP{
 			position: absolute;
 			
@@ -702,8 +863,9 @@
 			margin: 0 !important;
 			/*margin: 0;*/
 		}
+		
 		.exit-button{
-			background-color: #D1D1D1;
+			background-color: transparent;
 			/*background-color: #D1D1D1;*/
 			width: 32px;
 			height: 32px;
@@ -718,10 +880,11 @@
 /* BUTTONS                  ------------------------------------------------------------*/
 
 
-		.focused,.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
+		.addbutton:hover, .editbuttonAccordion:hover,.control-button:hover, #goto-elem:hover, .line-button:hover{
 			/*border: 2px solid;
 			border-color :#F00;*/
-			box-shadow: 0 0 10px #FA0;/*#DAA520;*/
+			/*box-shadow: 0 0 10px #FA0;/*#DAA520;*/
+			background-color: #F15F33;
 			
 }
 /*HELP BLOCK +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
@@ -733,22 +896,31 @@
 			/*opacity: 0;*/
 			/*float:right;*/
 			padding: 1%;
-			margin: 10px;
-			border-radius: 5px;
+			margin: 0 5%;
+			border-radius: 2px;
+			font-size: 9pt;
 		/*	border-left: solid 1px;
 			border-top: solid 1px;
 			border-bottom: solid 1px;*/
 	
 }
+			.client{
+				width: 100%;
+				background-color: #ffAA66;
+				height: 40px;
+				padding: 0;
+				margin: 0;
+				font-size: 11pt;
+				margin-top: 5px;
+			}
+			.client p{
+				margin-top: 10px !important;
+			}
 		.help p{
 			text-align:center;
 			margin-top: 2px;
 }
-		.help h3{
-			text-align:center;
-			margin-top: 5px;
-			margin-bottom: 0px !important;
-}
+	
 
 /*HELP BLOCK --------------------------------------------------------------------------*/
 
@@ -768,7 +940,7 @@
 #toggle-state{
 	float: left;
 	position: absolute;
-	top: 50%;
+	top: 30%;
 }
 #toggle-state-btn{
 	width: 50px;
@@ -778,9 +950,10 @@
 }
 #toggle-state-btn:hover{
 	background-position: 0px 80px;
+	
 }
 .state-active{
-	background-image: url(images/arrow.png);
+	/*background-image: url(images/arrow.png);*/
 	background-position: 0px 0px !important;
 }
 .state-active:hover{
@@ -809,8 +982,31 @@
 	overflow-y: hidden;
 	overflow-x: auto;
 	width: auto;
-	min-height: 100%;
-	height: 100%;
+/*	min-height: 100%;
+	height: 100%;*/
+	
+	/*padding-top: 40px;*/
+	
+}
+#block-info{
+	min-height: 60px;
+	width: 90%;
+	margin-left:5%;
+	margin-top: 10px;
+	/*border: 1px solid #aaa;*/
+	padding-bottom: 5px;
+	border-radius: 2px;
+	overflow: auto;
+	overflow-wrap: break-word;
+	box-shadow: 1px 0 2px #666, -1px 0 1px #666;
+	/*background-color: #eee;*/
+}
+#block-info-id, #block-info-name{
+	/*text-align: center;*/
+	margin-left: 5%;
+	width: 90%;
+	margin-top: 2px;
+	margin-bottom: 0px;
 }
 /*#draw-block::-webkit-scrollbar{
 display: inline;
@@ -832,7 +1028,7 @@ display: inline;
 	/*height: 80px;*/
 	border: 1px solid #999;
 	z-index: 10;
-	border-radius: 10px;
+	border-radius: 2px;
 	
 	
 }
@@ -840,7 +1036,7 @@ display: inline;
 	margin-top:2px !important;
 	margin-bottom: 5px !important;
 	padding-left: 5pt;
-	border-radius: 5px;
+	border-radius: 2px;
 	
 }
 #scheeme-help-exit{
@@ -852,7 +1048,7 @@ display: inline;
 	
 	margin: 0;
 }
-#scheeme-exit, #goto-elem, #toggle-state-btn, #scheeme-help-btn, #warning-exit-btn{
+#scheeme-exit, #goto-elem, #toggle-state-btn, #scheeme-help-btn, .warning-exit-btn{
 	border: none;
 	/*background-image: url(images/exit_small.png);
 	background-position: 0px 0px;*/
@@ -871,7 +1067,7 @@ display: inline;
 	margin-bottom: 5px;
 	float:right;
 	margin-right: 5px;
-	border-radius: 5px;
+	border-radius: 2px;
 	color: #FFFFFF;
 	font-weight: bold;
 	/*border: 1px solid #999;*/
@@ -904,22 +1100,38 @@ display: inline;
 	left:30%;
 	/*height: 40%;*/
 	margin: auto;
-	
-	opacity: 1.0;
+	box-shadow: 1px 0 10px #666;
 	background-color: #FAFAFA;
 	padding: 10px;
-	border-radius: 5px;
+	border-radius: 2px;
 	display: none;
-	
+		
 }
-#scheeme-help-basic>h3{
-	text-align: center;
-	
-}
-#scheeme-help-basic>span{
-	padding: 5px;
-	float: right;
-}
+	li{
+		list-style-type: none;
+		overflow: auto;
+	}
+	ul {
+		margin-left: 0; /* Отступ слева в браузере IE и Opera */
+		padding-left: 0; /* Отступ слева в браузере Firefox, Safari, Chrome */
+	}
+	li>p{
+		padding: 5px 5px 5px 25px;
+		
+		/*float: left;*/
+		margin-top: 5px;
+		margin-left: 10px;
+		margin-bottom: auto;
+		overflow-wrap: break-word;
+		overflow: auto;
+	}
+	li> img{
+		float: left;
+	}
+	li> span{
+		float: right;
+	}
+
 #scheeme-help-layer{
 	background-color: #999;
 	opacity: 0.5;
@@ -929,23 +1141,32 @@ display: inline;
 	top: 0;
 	display: none;
 }
-#scheeme-help-basic-exit{
+.exit-small__div{
 	position:absolute;
-	top: 12px;
-	right: 6px;
+	top: 0;
+	right: 0;
 	width: 20px;
 	height: 20px;
 	margin: 0;
 	
 }
-#scheeme-basic-exit{
+	.scheeme{
+		top: 12px;
+		right: 6px;
+		display: none;
+	}
+.exit-btn-small{
 	height: 20px;
 	background-image: url(images/exit_small.png);
 	background-position: 0px 0px;
 	width: 20px;
 	border: none;
-	background-color: #EEE;
+	background-color: transparent;
 }
+.exit-btn-small:hover{
+	background-position: 0px 20px;
+		
+}	
 #credits{
 	
 	margin-right: 10px;
@@ -992,7 +1213,7 @@ label:not(.checkBoxLabel):before{
 	
 }
 label{
-	display: inline-block;
+	/*display: inline-block;*/
 	cursor: pointer;
 	position: relative;
 	padding-left: 25px;
@@ -1017,13 +1238,14 @@ input[type=checkbox]:checked + label{
 	font-weight: bold;
 }
 input[type=radio]:checked + label:before {  
-    content: "\2022";  
+    content: "\2022";
+	/*font-weight:bold;*/
     
 } 
 input[type=checkbox]:checked + label:before {  
     content: "\2713";  
     text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);  
-    font-size: 10pt;  
+    font-size: 12pt;  
     
 } 
 
@@ -1035,7 +1257,7 @@ input[type=checkbox]:checked + label:before {
 	opacity: 0.8;
 	height: 100%;
 	background-color: #666;
-	position: absolute;
+	position: fixed;
 	top: 0px;
 	display: none;
 	
@@ -1060,10 +1282,14 @@ input[type=checkbox]:checked + label:before {
 
 /*SUBMIT BLOCK ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-
+.submit-wrapper{
+	padding: 30px 20px;
+	overflow: auto;
+}
 #submit-block {
 	padding-right:1px;
 	padding-left:-1px;
+	padding-bottom: 20px;
 	/*background: #D6E68A;
 	border-bottom: 1px solid #121310; /* Параметры линии внизу */
 	/*border-left: 1px solid #121310; /* Линия слева от текста */
@@ -1084,9 +1310,10 @@ input[type=checkbox]:checked + label:before {
 #summary{
 	height: 100%;
 	position: relative;
-	width: 100%;
-	border-radius: 5px;
-	border: 1px solid #999;
+	width: 90%;
+	margin: auto;
+	/*border-radius: 5px;
+	border: 1px solid #999;*/
 	display: none;
 	overflow: auto;
 	
@@ -1117,7 +1344,7 @@ input[type=checkbox]:checked + label:before {
 
 .summary-element-value{
 	/*border-left: 1px solid black;*/
-	width: 75%;
+	width: 76%;
 	/*border: 1px solid black;*/
 
 }
@@ -1136,6 +1363,10 @@ input[type=checkbox]:checked + label:before {
 	/*background-color: #D1EEEE; */
 	
 }
+.summary-element-value-p{
+	overflow: auto;
+	position: relative;
+}
 .summary-element-valuename{
 	float: left;
 	width: 200px;
@@ -1143,9 +1374,20 @@ input[type=checkbox]:checked + label:before {
 }
 .summary-element-valuevalue{
 	font-weight: bold;
+	float: left;
+	width: calc(100% - 200px);
+	position: relative;
+	overflow-wrap: break-word;
+}
+.summary-element-valuevalue>input[type=text]{
+	width: 50%;
 }
 .odd{
-	background-color: #BFEFFF;
+	background-color: #FFBB66;
+}
+.summary-unfilled{
+	color: red;
+	font-weight: bold;
 }
 
 /*SUBMIT BLOCK ------------------------------------------------------------------------*/
@@ -1159,7 +1401,7 @@ input[type=checkbox]:checked + label:before {
 	margin-left: 30%;
 	margin-right: 30%;
 	display: none;
-	background-color: #BAEAFA; 
+	/*background-color: #BAEAFA;*/ 
 	padding-left: 2%;
 }
 #warning-block-button{
@@ -1179,7 +1421,7 @@ input[type=checkbox]:checked + label:before {
 	border: none;
 	font-weight: bold;
 	color: #000;
-	border-radius: 5px;
+	border-radius: 2px;
 	box-shadow: 0px 0px 1px #333;
 	cursor: pointer;
 	
@@ -1215,13 +1457,251 @@ input[type=checkbox]:checked + label:before {
 	margin: 0;
 
 }
-#warning-exit-btn{
+.warning-exit-btn{
 	height: 16px;
 	width: 16px;
 	cursor: pointer;
 	background-image:url(images/exit_white.png);
 	background-position: 0px 0px;
+	background-color: transparent;
 }
-#warning-exit-btn:hover{
+.warning-exit-btn:hover{
 	background-position: 0px 16px;
+}
+/*блок синхронизации*/
+.sync{
+	
+	/*position: absolute;*/
+	z-index: 100;
+	position: relative;
+	width: 99.8%;
+	height: 99.8%;
+	overflow-y: hidden;
+	/*top: 137px;*/
+	
+	/**/
+	
+	
+	
+}
+.sync-wrap{
+	padding-bottom: 5%;
+	position: absolute;
+	z-index: 100;
+	top: 137px;
+	width: 60.5%;
+	margin: auto;
+	display: none;
+	left: 11%;
+	background: transparent;
+	
+}
+.help-annotation{
+	margin: 0 2% 10px;
+	text-align: center;
+	color: #AAA;
+}
+	h5{
+		color: #666;
+	}
+	.underlined{
+		border-bottom: 1px solid #999;
+	}
+.sync-exit{
+	top: 26px;
+	right: 6px;
+}
+.scroll-to-top{
+	position: fixed;
+	left: 80%;
+	width: 60px;
+	height: 60px;
+	bottom: 0;
+	display: none;
+	z-index: 500;
+}
+
+
+
+/*GALLERY CSS*/
+.wrapper{
+	overflow: auto;
+	position: absolute;
+	top: 136px;
+	left: 15%;
+	width: 800px;
+	height: 600px;
+	display: none;
+}
+.gallery{
+	width: 99%;
+	height:500px;
+	position: relative;
+	margin-top: 30px;
+}
+.nav-list{
+	position: absolute;
+	top: 40px;
+	right: 20px;
+	/*height: 20px;*/
+	overflow: auto;
+	width: auto;
+	z-index: 10;
+}
+.nav-selection{
+	margin-top: 0;
+	width: 50px;
+	height: 30px;
+}
+.nav-change-button{
+	height: 100%;
+	width: 20%;
+	background: transparent;
+	cursor: pointer;
+	z-index: 5;
+	position: absolute;
+	top: 0;
+	/*background-image: url(images/arrow.png);
+	background-repeat: no-repeat;*/
+	
+}
+#nav-prev{
+	left: 0;
+	background-position: left center;/*0px 80px;*/
+	
+	
+}
+.nav-change-button:hover{
+	background:url(images/arrow-gallery.png) no-repeat;
+	opacity: 0.2;
+}
+#nav-next{
+	right: 0;
+	background-position: left center;
+	-moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
+}
+
+	
+	
+.help-content{
+	width: 45%;
+	margin: 0 2.5%;
+	top: 50%;
+	overflow: auto;
+	float: left;
+	display: inline-block;
+	
+}
+.help-img-block{
+	margin: auto;
+	position: relative;
+	/*float: left;*/
+	padding-left: 2%;
+	
+}
+.help-text{
+	padding: 2%;
+	position: relative;
+	float: left;
+	z-index: 6;
+}
+.help-img{
+	margin: auto;
+	border: 1px solid #999;
+}
+.slide{
+	/*display: none;*/
+	
+	
+}
+.help-slide{
+	width: 1600px;
+	margin: auto;
+	top: 50%;
+	margin: auto;
+	overflow: auto;
+	
+}
+#gallery-exit, .help-gallery{
+	z-index: 10;
+	cursor: pointer;
+}
+
+.overflow-wrap{
+	overflow: hidden;
+}
+
+
+/*PRINT BLOCK CSS*/
+.print-wrap{
+	top: 0;
+	width: 100%;
+	position: absolute;
+	display: none;
+}
+#print-container{
+	margin-bottom: 20px;
+}
+.print-element{
+	position: relative;
+	width: auto;
+	margin:0;
+	
+}
+.print-element-wrap{
+	
+	width: 90%;
+	margin: auto;
+	position: relative;
+	border-bottom: 1px solid #999;
+}
+.print-text-value{
+	
+	margin-left: 20px;
+	margin-top: 0px;
+	margin-bottom: 1px;
+	
+	
+}
+.print-text{
+	
+	margin: 0 0 0 0 ;
+}
+
+
+/*#############################################################ADDITIONAL INFO#############################################*/
+.additional-info-block{
+	width: 80%;
+	margin: 5px auto 10px 10%;
+	display: none;
+	
+}
+.additional-info-text{
+	width: 90%;
+	padding: 10px 10px;
+	margin-left: 5%;
+	
+}
+#add-info-toggle{
+	/*width: 90%;*/
+	margin: auto;
+	font-size: 9pt;
+	margin-bottom: 5px;
+	margin-left: 5%;
+	cursor: pointer;
+	text-decoration: underline;
+	display: inline-block;
+	
+}
+#add-info-toggle:hover{
+	
+	color: #FF5F33;
+}
+#additional-info-block{
+	display: none;
 }

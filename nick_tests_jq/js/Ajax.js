@@ -1,4 +1,4 @@
-//сохраняет структуру сценария в 1С
+﻿//сохраняет структуру сценария в 1С
 function saveStructure() {
    
 	
@@ -12,7 +12,8 @@ function saveStructure() {
 			$('.waiting-layer').hide();
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "Request failed: " + textStatus );
+		model.getInstance().api.onRequestFail("При сохранении структуры произошла ошибка", jqXHR);
+		//model.getInstance().api.showError( "Request failed: " + textStatus );
 		$('.waiting-layer').hide();
 		});
             
@@ -29,39 +30,45 @@ function loadStructure(type) {
 				return;
 				}
 			//очищаем контейнеры
-			
 			first = importFromJSON( $( "#response" ).text(), "#imported", type);
-			showBranch(first,false);
-			redraw();
-			if (!type){
-				restoreData();
+			if (first !== undefined){
+				showBranch(first,false);
+				redraw();
+				if (!type){
+					restoreData();
+				}
+				createNewTempElement();
 			}
-			createNewTempElement();
+			
 			$('#btnLoadStructureClient').slideUp('Slow');
 			$('.waiting-layer').hide();
 			
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "При попытке загрузить данные анкеты произошла ошибка: " + textStatus);
+		model.getInstance().api.onRequestFail("При попытке загрузить данные анкеты произошла ошибка", jqXHR);
+		//model.getInstance().api.showError( : статус: "+jqXHR.status + " " + jqXHR.statusText);
 		});
             
 }
 //отправляет реквест с заданным экшеном и параметрами. возвращает объект request, 
 //для которого нужно определить .done и .fail после вызова функции
-function sendRequest(action, params){
+function sendRequest(action, params, async){
+	async = (async === undefined? false : async);
 	var wsUrl = 'ws/ws/callcenterexchange';
     var soapRequest = combineSoapRequest(action, params) ;
    // showError(soapRequest);
-   
-    $('.waiting-layer').show();
+	if (!async){
+		$('.waiting-layer').show();
+	}
     var request = $.ajax({
                     type: "POST",
                     url: wsUrl,
-					username: 'test',//auth-data for 1c(wtf???/)
-					password: 'qweqwe',
-                    contentType: "text/xml",
-                    dataType: "html",
-                    data: soapRequest
+					contentType: "text/xml",
+                    dataType: "text",
+                    data: soapRequest,
+					username: 'test',
+					password: 'qweqwe'
+		
                 });
 	
 	return  request;

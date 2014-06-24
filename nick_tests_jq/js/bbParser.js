@@ -50,6 +50,8 @@ var bbCodeParserSingleton = (function(){
 			case "color":stringToAdd = '[color][/color]';break;
 			default:
 			}
+			var activeElement = element.find(':focus');
+		//	console.log( activeElement);
 			var start = element[0].selectionStart;
 			var end = element[0].selectionEnd;
 			var textAreaValue = element.val();

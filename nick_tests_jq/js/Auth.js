@@ -38,7 +38,7 @@ function getCookie(name) {
 }
 //очищает куку по имени
 function removeCookie(name){
-	setCookie(name, "deleted", {expires:-24*60*60,path:'/'});
+	setCookie(name, "deleted", {expires:-24*60*60,path:'/Callcenter'});
 }
 //проверяет наличие сессии в куках
 function checkSession(){
@@ -51,16 +51,16 @@ function checkSession(){
 		//start new session ( send request login, pwd )
 	}
 	else{
-		confimSession(cookieSESSID);
+		confirmSession(cookieSESSID);
 		//send request with sessid
 	}
 }
 //при нажатии кнопки логин
 function login(){
 	$('.waiting-layer').show();
-	$('error').slideUp('fast');
+	$('.error').slideUp('fast');
+	$('.error').empty();
 	
-	$('#error').empty();
 	login = $("#login").val();
 	pwd	  = $("#pwd").val();
 	var login_pattern = /^[a-zA-Z0-9]{3,30}$/;
@@ -72,8 +72,8 @@ function login(){
 	}
 	else{
 		$('.waiting-layer').hide();
-		$('#error').append('<h3>Неправильная пара логин пароль!</h3>');
-		$('#error').slideDown('fast');
+		$('.error').append('<h3>Неправильная пара логин пароль!</h3>');
+		$('.error').slideDown('fast');
 		//return false;
 	}
 	
@@ -88,13 +88,13 @@ function auth(login, pwd){
 		//alert(SESSID);
 		if ( !(SESSID == "") ){
 			//all ok
-			setCookie('PHPSESSID', SESSID,{expires:60*60*60, path:'/'});
+			setCookie('PHPSESSID', SESSID,{expires:60*60*60, path:'/Callcenter'});
 			redirect("index.html");
 		}
 		else{
 			$('.waiting-layer').hide();
-			$('#error').append('<h3>Неправильная пара логин пароль!</h3>');
-			$('#error').slideDown('fast');
+			$('.error').append('<h3>Неправильная пара логин пароль!</h3>');
+			$('.error').slideDown('fast');
 			
 			
 		}
@@ -102,12 +102,15 @@ function auth(login, pwd){
 	});
 	request.fail(function( jqXHR, textStatus ) {
 		$('.waiting-layer').hide();
-		$('#error').append( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
-		$('#error').slideDown('fast');
+		$('.error').append( "При попытке авторизации произошла ошибка. Попробуйте ещё раз. статус: "+jqXHR.status + " " + jqXHR.statusText);
+		$('.error').slideDown('fast');
+		console.log(jqXHR.statusCode());
 		});
 }
 //проверка, что текущая сессия существует на сервере
-function confimSession(sessionID){
+function confirmSession(sessionID){
+	var redirectDone;
+	var adminType = undefined;
 	//params = [{key:'Token',value:sessionID}];
 	request = sendRequest("CheckSession");
 	request.done(function (msg){
@@ -121,27 +124,27 @@ function confimSession(sessionID){
 			}		
 		sessionType =  $.trim($( "#response" ).text());
 		//alert(SESSID);
-		if ( sessionType == "admin" ) {
+		
+		adminType = ( sessionType == "admin" );
+		
 			//all ok
-			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/'});
-			redirect("index.html");
+			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/Callcenter'});
+			$('#container').data('sstype', adminType);
+			redirectDone = redirect(adminType?"index.html":"client.html");
 			//return true;
-		}
-		else{
 		
 		
-			//alert("Неправильная пара логин пароль!");
-			setCookie('PHPSESSID', sessionID,{expires:60*60*60, path:'/'});
-			redirect("client.html");
-			//window.location.replace("auth.html");
-			//return false;
-		}
+		if ( !redirectDone ){
+		model.getInstance().onStart();
 		$('.waiting-layer').hide();
+		}
 		//showBranch(first,false);
 	});
 	request.fail(function( jqXHR, textStatus ) {
-		$('.waiting-layer').hide();
-		alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		//$('.waiting-layer').hide();
+		$('.error').append( "Не удалось проверить сессию.<br> <strong>Обновите страницу.</strong> статус ошибки: "+jqXHR.status + " " + jqXHR.statusText);
+		$('.error').slideDown('fast');
+		//alert( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		});
 	
 }
@@ -154,6 +157,7 @@ function redirect(path){
 		$(window).off('beforeunload');
 		window.location.href = path;
 	}
+	return needRedirect;
 }
 
 function logout(){

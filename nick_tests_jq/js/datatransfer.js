@@ -1,28 +1,36 @@
 //получает значение input'а у div блока
 function getInputValue(element){
 	value = undefined;
-	textAreaSelection 	= $(element).find("textarea");
-	if (! (textAreaSelection.length == 0 ) ){
-		value = {key:$(element).attr('id'), value:textAreaSelection.val()};
-	}
-	else{
-		textBlocksSelection = $(element).find("input[type=text]");
-		if (! (textBlocksSelection.length == 0 ) ){
+	var syncMap = model.getInstance().api.getSyncMap();
+	var $element = $(element);
+	var mapElement = syncMap[$element.attr('id')];
+	key =  ( (mapElement === undefined)?$element.attr('id'):mapElement.value );
+	//textAreaSelection 	= $element.find("textarea");
+	var objElement = model.getInstance().blockActions.getElement($(element).attr('id') );
+	switch (objElement.inputType){
+		case 'text':
+			textBlocksSelection = $(element).find("input[type=text]");
 			value = [];
 			textBlocksSelection.each(function(){
-			value.push({key:$(this).parents('.divacc').attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),''), value:$(this).val()} );
+				var mapElement = syncMap[$element.attr('id')+$(this).attr('placeholder')];
+				var key = (mapElement === undefined)?
+				$element.attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),''):mapElement.value;
+				//key:$(this).parents('.divacc').attr('id')+$(this).attr('placeholder').replace(RegExp(' ', 'g'),'')
+				value.push({key: key, value:$(this).val()} );
 				});
-			}
-		else{
+			
+		break;
+		case 'radio':
 			radioSelection 		= $(element).find("input[type=radio]:checked");
-			value = {key:$(element).attr('id'), value:radioSelection.val()};
-		}
+			value = {key:key, value:radioSelection.val()};
+		break;
+		case 'textarea':
+			textAreaSelection 	= $(element).find("textarea");
+			value = {key:key, value:textAreaSelection.val()};
+		break;
 	}
+	
 	return $.isArray(value)? value : [value];
-	
-	
-	
-	
 }
 
 function createDataList(){
@@ -46,6 +54,14 @@ function fillDataString(key,value){
 
 
 function sendData(){
+//validation
+	validation_errors = model.getInstance().validation.checkFilling();
+	if (validation_errors.length > 0){
+		//model.getInstance().api.showError('Заполнены не все обязательные поля!');
+		showHelp("not-filled");
+		view.getInstance().toggleElementState($("#btnSendData"));
+		return;
+	}	
 	request = sendRequest("RecieveData", [ { key:'EncodedData', value: escapeHTML( createDataList() ) } ] );
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );
@@ -58,14 +74,18 @@ function sendData(){
 					//showError("Анкета отправлена!");
 					showHelp("send", 15*1000);
 					reloadStructure();
+					view.getInstance().toggleElementState($("#btnSendData"));
 				}
 			}
 			$('.waiting-layer').hide();
 				});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "Request failed: " + textStatus);
-		});
+		model.getInstance().api.onRequestFail("При отправке анкеты произошла ошибка, попробуйте ещё раз!", jqXHR);
+		//model.getInstance().api.showError( "Request failed: " + textStatus);
+		view.getInstance().toggleElementState($("#btnSendData"));
 		$('.waiting-layer').hide();
+		});
+		
 }
 
 var escapeHTML = (function () {
@@ -79,7 +99,7 @@ var escapeHTML = (function () {
 
 function fillingStarted() {
     
-    request = sendRequest("ScriptFillingStarted");
+    request = sendRequest("ScriptFillingStarted",undefined,true);
 	request.done(function( msg ) {
 		$( "#response" ).html( msg );
 			reqAttr = $("#response").find("m\\:return").attr('xsi:nil');
@@ -88,12 +108,13 @@ function fillingStarted() {
 				return;
 			}
 			else{
-				setCookie('PHPSESSID', getCookie('PHPSESSID'),{expires:24*60, path:'/'});
+				setCookie('PHPSESSID', getCookie('PHPSESSID'),{expires:24*60, path:'/Callcenter'});
 			}
 		$('.waiting-layer').hide();	
 		});
 	request.fail(function( jqXHR, textStatus ) {
-		showError( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
+		setTimeout(fillingStarted(), 5*1000);
+		//model.getInstance().api.showError( "Не удалось выполнить запрос к серверу по причине: " + textStatus );
 		$('.waiting-layer').hide();
 		});
             

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Авторизация</title>
@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="css/auth_white.css" type="text/css">
 	<script type="text/javascript">
 		$(document).ready(function(){
-				checkSession();
+				//checkSession();
 				//$('#login-button').click(login);
 				$('#login-button').click(login);
 				$('.text-input').keypress( function (e) {
@@ -25,10 +25,12 @@
 	
 </head>
 <body>
+	<a id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
 	<div id="info-block">
 	
-		<h1>Авторизация в системе Гидровелл-Коллцентр</h1>
-		<div id="error">
+		<!-- <h1>Авторизация в системе Гидровелл-Коллцентр</h1> -->
+		
+		<div class="error">
 			
 		</div>
 		<div id="login-form" action = "javascript:login()" onsubmit="return false">
@@ -46,6 +48,6 @@
 	</div>
 	<p id="response" style="visibility:hidden"></p>
 	<div class="waiting-layer"><div id="img-block"></div></div>
-	<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2013 Табус — Технологии автоматизации бизнеса</a>
+	<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2014 Табус — Технологии автоматизации бизнеса</a>
 </body>
 </html>

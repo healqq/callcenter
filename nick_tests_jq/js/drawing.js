@@ -14,6 +14,7 @@ var drawerSingleton = (function(){
 	var blockHeight = 40;
 	var spaceCoff = 0.5;
 	var blockSize = blockWidth *(1 +  spaceCoff);
+	var initialShift = 0.5*blockHeight;
 	
 	//draw element 
 	var drawNext = ( function( element, row, column){
@@ -27,8 +28,11 @@ var drawerSingleton = (function(){
 			"rowComputed": undefined,
 			"branchesSize": undefined,
 			"notFilled": false,
-			"currentElement": false
+			"currentElement": false,
+			"editedElement": false 
 		};
+	/*	options.editedElement = ( model.getInstance().isEdited() ? 
+			($('#temp_divs').data('removedBlockID')  === element) : false );*/
 		var pseudoElement = (element.search(':') !== -1);
 		var nextElements = undefined;
 		var activeID = undefined;
@@ -46,7 +50,7 @@ var drawerSingleton = (function(){
 				
 		}
 		else{
-			nextElements = $('#'+element).data('branches');
+			nextElements = model.getInstance().blockActions.getElement( element).branches;//$('#'+element).data('branches');
 			if ( (nextElements !== undefined) && (nextElements.length > 1) ){
 				options.branchesSize = nextElements.length;
 				//это развилка, бахаем круг
@@ -96,7 +100,7 @@ var drawerSingleton = (function(){
 	var canvasElement 	= $(canvas);
 	var oldCanvas = undefined;
 		var resizeWidth =  ( (parseInt( canvasElement.css('width') ) - rows * blockSize ) < blockSize ) ;
-		var resizeHeight = ( (parseInt( canvasElement.css('height') ) - columns * blockSize ) < blockSize ) ; 
+		var resizeHeight = ( (parseInt( canvasElement.css('height') ) - columns * blockSize - initialShift ) < blockSize ) ; 
 		var widthBefore, widthAfter, heightBefore, heightAfter;
 		if  ( resizeWidth || resizeHeight ){
 			//resizing
@@ -134,12 +138,12 @@ var drawerSingleton = (function(){
 		var grd = ctx.createRadialGradient(
 					options.row* (1+options.spaceCoff) * options.blockWidth /*inner*/
 					,options.column*(1+options.spaceCoff) * options.blockWidth,
-					5,
+					10,
 					options.row*(1+options.spaceCoff) * options.blockWidth,	/*outer*/
 					options.column*(1+options.spaceCoff) * options.blockWidth,
 					50);
-				grd.addColorStop(0,"#63B8FF");	/*inner FFD700 blue: #4F94CD, #1874CD green: #00DF7A, #32CD32*/
-				grd.addColorStop(1,'#4F94CD');
+				grd.addColorStop(0,"#7EC0EE");	/*inner FFD700 blue: #4F94CD, #1874CD green: #00DF7A, #32CD32 blue2:#7EC0EE, #6CA6CD*/
+				grd.addColorStop(1,'#6CA6CD');
 		
 		switch (type){
 			case "circle":
@@ -150,7 +154,7 @@ var drawerSingleton = (function(){
 					ctx.beginPath();
 
 					ctx.arc(  ( 0.5 + (options.row) * (1+options.spaceCoff) ) * options.blockWidth,
-						(0.5 + options.column*(1+options.spaceCoff) )*options.blockHeight, 
+						(0.5 + options.column*(1+options.spaceCoff) )*options.blockHeight + initialShift, 
 						options.spaceCoff * options.blockWidth,0,
 						2*Math.PI);
 					ctx.fill();
@@ -159,7 +163,7 @@ var drawerSingleton = (function(){
 				ctx.beginPath();
 				ctx.lineWidth = 2;
 				ctx.arc(  ( 0.5 + (options.row) * (1+options.spaceCoff) ) * options.blockWidth,
-					(0.5 + options.column*(1+options.spaceCoff) )*options.blockHeight, 
+					(0.5 + options.column*(1+options.spaceCoff) )*options.blockHeight + initialShift, 
 					options.spaceCoff * options.blockWidth,0,
 					2*Math.PI);
 				ctx.stroke();
@@ -172,7 +176,7 @@ var drawerSingleton = (function(){
 			//	var yShift = 0.6;
 				ctx.fillText(''+options.branchesSize,
 					(0.5 + (options.row)  * (1+options.spaceCoff)) * options.blockWidth,
-					(0.5  +  options.column*(1+options.spaceCoff) )*options.blockHeight);
+					(0.5  +  options.column*(1+options.spaceCoff) )*options.blockHeight + initialShift);
 			break;
 			case "square":
 				//ctx.fillStyle = "blue";
@@ -191,13 +195,13 @@ var drawerSingleton = (function(){
 				if (options.currentElement){
 					ctx.fillStyle = grd;
 					ctx.fillRect((options.row)*(1+options.spaceCoff)*options.blockWidth,
-						options.column*(1+options.spaceCoff)*options.blockHeight,
+						options.column*(1+options.spaceCoff)*options.blockHeight + initialShift,
 						options.blockWidth,
 						options.blockHeight);	
 				}
 				ctx.lineWidth = 2;
 				ctx.strokeRect((options.row)*(1+options.spaceCoff)*options.blockWidth,
-					options.column*(1+options.spaceCoff)*options.blockHeight,
+					options.column*(1+options.spaceCoff)*options.blockHeight + initialShift,
 					options.blockWidth,
 					options.blockHeight);
 			break;
@@ -207,9 +211,9 @@ var drawerSingleton = (function(){
 				ctx.beginPath();
 				
 				var startX  = (options.row*(1+options.spaceCoff) + options.spaceCoff )*options.blockWidth + 0.5;
-				var startY  = (1 + options.column*(1+options.spaceCoff) )*options.blockHeight;
+				var startY  = (1 + options.column*(1+options.spaceCoff) )*options.blockHeight + initialShift;
 				var finishX = ( ( options.rowComputed )*(1+options.spaceCoff) + options.spaceCoff )*options.blockWidth + 0.5;
-				var finishY = ((options.column+1)*(1+options.spaceCoff) )*options.blockHeight;
+				var finishY = ((options.column+1)*(1+options.spaceCoff) )*options.blockHeight + initialShift;
 				ctx.moveTo( startX  ,startY );
 				if (options.row == options.rowComputed){
 					ctx.lineTo( finishX, finishY);
@@ -235,8 +239,8 @@ var drawerSingleton = (function(){
 	});
 	//ищет блок по координатам 
 	var findBlock = ( function( pageX, pageY){
-		var mouseX 	= pageX - canvas.offsetLeft;
-		var mouseY 	= pageY - canvas.offsetTop;
+		var mouseX 	= pageX - canvas.offsetLeft + $('#draw-block')[0].scrollLeft;
+		var mouseY 	= pageY - canvas.offsetTop - initialShift;
 		var retValue = {rows:undefined, columns: undefined, found: true};
 		var rows 	= (mouseX  ) /( blockWidth*(1+spaceCoff) );
 		var columns = (mouseY  ) /( blockHeight*(1+spaceCoff) );
@@ -327,10 +331,13 @@ var drawerSingleton = (function(){
 		var nameText; //= '<strong>заголовок:</strong> ' + header;
 		//обработка красных блоков
 		if ( (id !== undefined) && (id.search(':') !== -1 ) ){
-						idText = "У элемента <strong>" + id.substr(0,id.search(':'))  + 
-						"</strong> не заполнена ветвь номер <strong>" +
-						( parseInt(id.substr(id.search(':')+1 ) ) + 1) +'</strong>.' ;
-						nameText = undefined;
+			var parentID = id.substr(0,id.search(':'));
+			var parentBlock = $('#'+ parentID);
+			var parentHeader = $('#'+parentID).find('h3').children('span:first').text();
+			idText = "У элемента <strong>"  + parentHeader + " [id: " + parentID  + "]" +
+				"</strong> не заполнена ветвь номер <strong>" + 
+				( parseInt(id.substr(id.search(':')+1 ) ) + 1) +'</strong>.' ;
+			nameText = undefined;
 		}
 		else{
 			header = $('#'+id).find('h3').children('span:first').text(); 
@@ -366,7 +373,9 @@ var drawerSingleton = (function(){
 		//layer =( layer == undefined? 1, layer);
 			element = $("#container").children().first().attr('id');
 			//ctx.scale(0.25, 0.25);
-			drawNext(element, 1, 1);
+			if (element !== undefined){
+				drawNext(element, 1, 0);
+			}
 			//ctx.scale(0.5, 0.5);
 			
 			//do stuff
@@ -378,7 +387,7 @@ var drawerSingleton = (function(){
 				itemsArray = []; 
 				ctx = canvas.getContext('2d');
 				maxRow = 0;
-				maxColumn = 1;
+				maxColumn = 0;
 				canvas.height = 240;
 				canvas.width = 240;
 				canvas.addEventListener("click",mouseclick);

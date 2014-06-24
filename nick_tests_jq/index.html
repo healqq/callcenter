@@ -1,10 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Гидровелл-коллцентр администратор</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="css/admin_style_white.css" type="text/css">
+	<script src="js/jquery.mask.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/admin_style_orange.css" type="text/css">
 	<script src="js/ajax.js" type="text/javascript"></script>
 	<script src="js/Auth.js" type="text/javascript"></script>
 	<script src="js/datatransfer.js" type="text/javascript"></script>
@@ -16,126 +18,223 @@
 	<script src="js/view.js" type="text/javascript"></script>
  	<script type="text/javascript">
 	$(document).ready(function(){
-		model.getInstance().onStart();
+		checkSession();
 	});
 	</script>
 
 </head>
 
-<body>
+<body class="admin-body">
 
 	<div class = "page_header">
+		<a tabindex='-1' id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
+		<div class="error"><p class="error-text"></p><div class="exit-small__div"><input  class="warning-exit-btn" type="button" id="close-errors" value = "&#160;"> </div></div>
 	</div>
 
 	<div class = "tables">
-		<div class = "tableLeft">
-			<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить скрипт" type="button" class = "control-button"></p>
-			<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить cкрипт" type="button" class = "control-button"></p>
+		<div class = "tableLeft admin">
+		<div class ="controls-block">
+			<p class = "addbuttonP"><input id="btnSaveStructure" value="Сохранить" type="button" class = "control-button"></p>
+			<p class = "addbuttonP"><input id="btnLoadStructure" value="Загрузить" type="button" class = "control-button"></p>
+			<p class = "addbuttonP"><input id="btnSyncSettings" value="Настройки" type="button" class = "control-button"></p>
+			<p class = "addbuttonP" id="btnPrint"><input id="btnPrintStructure" value="Печать" type="button" class = "control-button"></p>
+			<p class = "addbuttonP" id="btnHelp"><input id="btnShowHelp" value="Помощь" type="button" class = "control-button"></p>
 			<p id="autosave-p">
 			<input id="autosave" value="" type="checkbox">
 			<label for="autosave" class="checkBoxLabel">автосохранение</label>
 			<!-- <p class = "addbuttonP"><input id="sendXML" value="SendXML" type="button" class = "addbutton"> </p> -->
 			</p>
+		</div>
 			<p id="response" style="display:none"></p>
 			<br>
 			<div id= "help" class = "help">
-				<h3>Подсказка</h3>
+				<h3 class="title">Подсказка</h3>
 				<p></p>
 			</div>
 		</div>
 
-		<div class = "tableRight">
-			<div class="error"></div>
+		<div class = "tableRight admin-right">
+			
 			
 				
 				
 
-			<div id="temp_divs" class="temp-div" style="margin-top:10px" >
+			<div id="temp_divs" class="temp-div">
 				
 
 			</div>
 
 			<div id="imported" class= "accordion" style = "display:none">
 			</div>
-			</br>
-
-
-
 			
-			<h2 id="container-title">Предварительный просмотр</h2>
-			<div class="accordion" id = "container" ></div>
-			</br>
 
+
+
+			<div class="sample-view">
+				<h2 id="container-title" class="title out">Предварительный просмотр</h2>
+				<div class="accordion" id = "container" ></div>
+				</br>
+			</div>
 
 		</div>
 		<div id="controls-block">
-			<p id="scheeme-help-p"><input type="button" id="scheeme-help-btn" value=""></p>
-			<p id="toggle-state"><input type="button" id="toggle-state-btn" value=""></p>
+			<p id="scheeme-help-p"><input type="button" id="scheeme-help-btn" title="Помощь по схеме" value="&#160;"></p>
+			<p id="toggle-state"><input type="button" id="toggle-state-btn" value="&#160;" title="развернуть схему"></p>
 		</div>
 		
 		<div class = "tableInfo">
-			<h2 id="scheeme-title">Схема скрипта</h2>
-			<div id="block-info">
-				<p id="block-info-id"></p>
-				<p id="block-info-name"></p>
-			</div>
+			<h2 id="scheeme-title" class="title">Схема скрипта</h2>
+			
 			<div id="draw-block">
 				<!-- <p class = "addbuttonP" id="drawP"><input type = button class = "control-button" id="draw" value="draw"></p> -->
 				<canvas id="scheeme"></canvas>
 				<!-- <p id="test-output"></p> -->
 			</div>
+			<div id="block-info">
+				<p id="block-info-id"></p>
+				<p id="block-info-name"></p>
+			</div>
 			
 			
 		</div>
 	</div>
-	<p class = "exitP"><input id="logout" value="" type="button" class = "exit-button"> </p>
-	<div id ="scheeme-help" class = "focused">
+	<p class = "exitP"><input id="logout" value="&#160;" type="button" class = "exit-button"> </p>
+	<!-- <div id ="scheeme-help" class = "focused">
 		<h4>Информация</h4>
 		<p id ="scheeme-id"></p>
 		<input type="button" id="goto-elem" value="Перейти">
 		<p id="scheeme-help-exit" >
 			<input type="button" id="scheeme-exit" value="">
 		</p>
-	</div>
+	</div> -->
 	<div id= "scheeme-help-layer">
 		
 	</div>
 	<div id = "scheeme-help-basic" class = "focused">
-			<h3>Обозначения на схеме</h3>
+			<h3 class="title">Обозначения на схеме</h3>
 			<ul>
 			<li>
-				<img src = "css/images/round-black.png" alt="черный круг"><span>Круги в схеме означают элементы - ветвления. Цифра в
-				центре круга - количество веток.</span><br>
+				<img src = "css/images/round-black.png" alt="черный круг"><p><span>Круги в схеме означают элементы - ветвления. Цифра в
+				центре круга - количество веток.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/square-black.png" alt="черный квадрат"><span>Квадраты - все остальные элементы.</span><br>
+				<img src = "css/images/square-black.png" alt="черный квадрат"><p><span>Квадраты - все остальные элементы.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/round-red.png" alt="красный круг"><span>Красный круг означает, что не все ветви заполнены.</span><br>
+				<img src = "css/images/round-red.png" alt="красный круг"><p><span>Красный круг означает, что не все ветви заполнены.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/square-red.png" alt="красный квадрат"><span>Дозаполнить ветви можно, нажав на красный квадрат,
-				соответсвующий нужной ветви.</span><br>
+				<img src = "css/images/square-red.png" alt="красный квадрат"><p><span>Дозаполнить ветви можно, нажав на красный квадрат,
+				соответсвующий нужной ветви.</span></p><br>
 			</li>
 			<li>
-				<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><span>Закрашенный синим элемент отображает текущее местоположение.</span>
-				<span> Для перехода на другой элемент нужно нажать на него.</span>
+				<img src = "css/images/square-blue.png" alt="Закрашенный квадрат"><p><span>Закрашенный синим элемент отображает текущее местоположение.</span></p>
+				<p><span> Для перехода на другой элемент нужно нажать на него.</span></p>
 			</li>
 			</ul>
-			<p id="scheeme-help-basic-exit" >
-			<input type="button" id="scheeme-basic-exit" value="">
+			<div class="exit-small__div scheeme"  >
+			<input type="button" class="exit-btn-small" id="scheeme-help-exit" value="&#160;">
 			
-		</p>
+			</div>
 			
 		</div>
 	<div class = "page_footer">
 	<!-- <p id='test'></p> -->
-	<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2013 Табус — Технологии автоматизации бизнеса</a>
+	<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2014 Табус — Технологии автоматизации бизнеса</a>
 	</div>
+	<div id = "warning-block">
+	
+	<p id ="warning-paragraph"></p>
+	<p id ='warning-block-button'>
+		<input type="button" class="warning-button" id="revert" value="Отменить"></input>
+	</p>
+	<p id="warning-exit"><input type="button" class='warning-exit-btn' id="warning-exit-btn" value="&#160;"</p>
+</div>
 	<!-- <input type="button" id="import">build from json</input> -->
 	<div class="waiting-layer">
 		<div id="img-block">
 		</div>
+	</div>
+	<div id ="sync-block-wrap" class="sync-wrap">
+		<div id="sync-block" class="sample-view sync">
+			<div id="sync-container" class="focused"><h3  class = 'title'>Настройка выгрузки</h3>
+				<div class ="sync-help help-annotation underlined">
+					<h5>На этой форме можно задать произвольные имена для полей анкеты, которые будут использованы 
+						при выгрузке.</h5>
+				</div>
+				<div class="top-button">
+					<p class = "addbuttonP add-block hidden">
+						<input class="btnSaveSyncMap control-button"  type="button" value="Сохранить"  >
+					</p>
+				</div>
+				<p class = "addbuttonP add-block hidden">
+					<input class="btnSaveSyncMap control-button"  type="button" value="Сохранить"  >
+				</p>
+			</div>
+			<div class="exit-small__div sync-exit"  >
+				<input type="button" class="exit-btn-small" id="sync-exit" value="&#160;">
+			
+			</div>
+			
+	 
+		</div>
+	</div>
+	
+	<div id ="print-block-wrap" class="print-wrap">
+		<div id="print-block" class="sample-view sync">
+			<div id="print-container" class="focused"><h3  class = 'title'>Печать структуры скрипта</h3>
+				<div class ="print-help help-annotation underlined">
+					<h5>#test text#</h5>
+				</div>
+			<!-- 	<p class = "addbuttonP add-block hidden">
+					<input id="btnSaveSyncMap"  type="button" value="Сохранить"  class = "control-button">
+				</p> -->
+			</div>
+			<div class="exit-small__div print-exit"  >
+				<input type="button" class="exit-btn-small" id="print-exit" value="&#160;">
+			
+			</div>
+			
+	 
+		</div>
+	</div>
+	
+	<div class="wrapper sample-view">
+		<div class="nav-list">
+		</div>
+		<div class="exit-small__div help-gallery"  >
+				<input type="button" class="exit-btn-small" id="gallery-exit" value="&#160;">
+		</div>
+		<div class="gallery">
+			
+			<h3 class="title" id="help-title"></h3>
+			<div class="overflow-wrap">
+				<div class="help-slide">
+					<div class="help-content">
+						<div class="help-img-block">
+							<img class="help-img"></img>
+						</div>
+						<p class="help-text"></p>
+					</div>
+					<div class="help-content">
+						<div class="help-img-block slide">
+							<img class="help-img slide"></img>
+						</div>
+						<p class="help-text slide"></p>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		<div class="nav-change-button" id="nav-next">
+		</div>
+		<div class="nav-change-button" id="nav-prev">
+		</div>
+		
+	
+	</div>
+	<div class="scroll-to-top">
+		<p class = "addbuttonP"><input id="btn-scroll-top" value="Наверх" type="button" class = "control-button"></p>
 	</div>
 </body>
 
