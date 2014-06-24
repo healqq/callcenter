@@ -149,6 +149,12 @@ function onHeaderClick(evt, elem, state){
 		};
 		$.when(myEvent() ).done(function(){
 			$(that).siblings().slideToggle({duration:400});
+			//setting additional info
+			
+			model.getInstance().refreshAdditionalDescription(div_block, !$(that).hasClass('active_header'));
+			
+			//clearing additional info
+			
 		});
 		
 		
@@ -301,6 +307,8 @@ function exportToJSON(idNames){
 	objectJSON.sync   = model.getInstance().api.getSyncMap();
 	return JSON.stringify(objectJSON);
 }
+
+//not used
 function createObjectFromDiv(element, noConvert){
 	noConvert = ( (noConvert == undefined)? true: noConvert);
 	var pSelection;
@@ -372,35 +380,48 @@ function importFromJSON(stringJSON, container, isEdited)
 	//очищаем контейнеры
 	$("#container").empty();
 	$('#imported').empty();
-	firstElement = false;
-	for (var i = 0; i < objectJSON.blocks.length; i++){
-		scriptStructure[objectJSON.blocks[i].id] = objectJSON.blocks[i];
-		if (objectJSON.blocks[i].id == objectJSON.first){
-			firstElement = true;
-		}
-		objectJSON.blocks[i].description = bbCodeParserSingleton.getInstance().bbToHTML(objectJSON.blocks[i].description);
-		if (objectJSON.blocks[i].fieldsList !== undefined){
-			if (objectJSON.blocks[i].fieldsList[0].value === undefined) {
-				var tempArray = objectJSON.blocks[i].fieldsList;
-				objectJSON.blocks[i].fieldsList = [];
-				for (var j = 0; j < tempArray.length; j++){
-					objectJSON.blocks[i].fieldsList.push({value:tempArray[j],
-						required: false
-					});
-				}
-				
+	var isFirstElement = false;
+	var firstElement = undefined;
+	//если загружена пустая структура
+	if (objectJSON.blocks.length !== 0 ){
+		for (var i = 0; i < objectJSON.blocks.length; i++){
+			
+			//для стыковки со старой версией структуры
+			if ( objectJSON.blocks[i].additionalDescription === undefined){
+				objectJSON.blocks[i].additionalDescription = '';
 			}
+			scriptStructure[objectJSON.blocks[i].id] = objectJSON.blocks[i];
+			if (objectJSON.blocks[i].id == objectJSON.first){
+				isFirstElement = true;
+			}
+			objectJSON.blocks[i].description = bbCodeParserSingleton.getInstance().bbToHTML(objectJSON.blocks[i].description);
+			if (objectJSON.blocks[i].fieldsList !== undefined){
+				if (objectJSON.blocks[i].fieldsList[0].value === undefined) {
+					var tempArray = objectJSON.blocks[i].fieldsList;
+					objectJSON.blocks[i].fieldsList = [];
+					for (var j = 0; j < tempArray.length; j++){
+						objectJSON.blocks[i].fieldsList.push({value:tempArray[j],
+							required: false
+						});
+					}
+					
+				}
+			}
+			view.getInstance().buttonsAnimation(createNewDivElement(
+			"show", objectJSON.blocks[i], isEdited, isFirstElement).appendTo(container));
+			isFirstElement = false;
+			
 		}
-		view.getInstance().buttonsAnimation(createNewDivElement(
-		"show", objectJSON.blocks[i], isEdited, firstElement).appendTo(container));
-		firstElement = false;
+		if (objectJSON.sync !== undefined){
+			model.getInstance().api.setSyncMap( objectJSON.sync);
+		}
+		model.getInstance().blockActions.setStructure( scriptStructure, objectJSON.first);
+		firstElement = objectJSON.first;
+	}
+	else{
 		
 	}
-	if (objectJSON.sync !== undefined){
-		model.getInstance().api.setSyncMap( objectJSON.sync);
-	}
-	model.getInstance().blockActions.setStructure( scriptStructure, objectJSON.first);
-	return objectJSON.first;
+	return firstElement;
 	//var divArray = 
 	
 }
@@ -424,12 +445,13 @@ switch (type) {
 		case "radio":					objectSpecs = {class:'radio-block',content:content,name:name};break;
 		case "text area":				objectSpecs = {class:"textarea",content:content,id:name};break;
 		case "description":				objectSpecs = {class:"description",content:content};break;
+	//	case "description":				objectSpecs = {class:"additional-description",content:content};break;
 		case "header":					objectSpecs = {class:"header",content:content};break;
 		case "radioOptionP": 			objectSpecs = {class:"radioОption"};break;
 		case "radioInputTypes":			objectSpecs = {class:undefined,content:["Многострочное поле","Выбор из нескольких элементов","Однострочные поля"],name:"inputType"};break;
 		case "radio":					objectSpecs = {class:undefined,content:content,name:name};break;
 		case "temp-title":				objectSpecs = {class:"title",content:content,id:'temp-title'};break;
-		case "bb-block":				objectSpecs = {class:undefined,content:content,id:'bb-block'};break;
+		case "bb-block":				objectSpecs = {class:'bb-block',content:content};break;
 		case "bb-button":				objectSpecs = {class:'line-button',content:content,id:name};break;
 		case 'blockname-block':			objectSpecs = {class:undefined,content:undefined,id:'blockname-block'};break;
 		case 'elementNameAutofill':		objectSpecs = {class:'checkBox',content:'Автозаполнение', id:'elementNameAutofill'};break;
@@ -441,6 +463,7 @@ switch (type) {
 		case 'add-block-button':		objectSpecs = {class:'addbuttonP add-block',content: undefined, id: undefined};break;
 		case 'add-block-position__div':	objectSpecs = {class:'add-block-position__div', content: undefined, id: undefined};break;
 		case 'add-block-position__radio': objectSpecs = {class:'position-type',content:["В конец","В начало","После элемента"],name:"positionType"};break;
+		case 'additional-info-toggle': 	objectSpecs ={class: 'link-button', content:'Дополнительная информация', id:'add-info-toggle'};break;
 		//show
 		case "accordiontextarea":		objectSpecs = {class:"accordiontextarea",content:content,id:name};break;
 		case "textfield":				objectSpecs = {class:"accordiontext",content:content,id:name};break;	
@@ -714,8 +737,12 @@ function createNewDivElement(type, contents, isEdited, first){
 			var newItemReqP     = fabric("p",				getObjectSpecs("reqP") );
 			var newItemReqChbox		= fabric('checkbox', getObjectSpecs('elementRequired',undefined, 'req-chbox_all'));
 			var newItemReqLabel		= fabric('label', getObjectSpecs('elementRequiredLabelAll',undefined, 'req-chbox_all'));
-			newBBControls 		= addBBControls();
+			var newBBControlsMain 		= addBBControls(0);
+			var newBBControlsAdd 		= addBBControls(1);
+			var additionalInfoBlock = fabric("div", 			getObjectSpecs("div",undefined,'additional-info-block') );
+			var showAdditionalInfoBlock = fabric("p", getObjectSpecs('additional-info-toggle'));
 			newParagraph    	= fabric("text area edit", 	getObjectSpecs("text area", contents.description, 'desc-block') );
+			newAdditionalInfoParagraph = fabric("text area edit", 		getObjectSpecs("text area", contents.additionalDescription, 'add-desc-block') );
 			newInputDiv 		= fabric("div",				getObjectSpecs("div", undefined ,"radioInputTypesDiv") );
 			newInput    		= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
 			newIsSwitchP		= fabric("p",				getObjectSpecs("branchP") );
@@ -749,10 +776,19 @@ function createNewDivElement(type, contents, isEdited, first){
 			//newElement.data("branches", contents.branches);
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
-			newBBControls.appendTo(newElement);
+			
+			newBBControlsMain.appendTo(newElement);
 			//newHeader.children(':input').val(contents.header);
 			newParagraph.appendTo( newElement );
 			newParagraph.keyup(resizeTextArea);
+			
+			showAdditionalInfoBlock.appendTo( newElement );
+			showAdditionalInfoBlock.click ( view.getInstance().toggleAdditionalInfoBlock );
+			additionalInfoBlock.appendTo( newElement );
+			newBBControlsAdd.appendTo(additionalInfoBlock);
+			newAdditionalInfoParagraph.appendTo( additionalInfoBlock );
+			newAdditionalInfoParagraph.keyup(resizeTextArea);
+			
 			//newParagraph.val(contents.description);
 			newIsSwitchP.appendTo( newElement );
 			newIsSwitch.appendTo( newIsSwitchP );
@@ -832,6 +868,8 @@ function createNewDivElement(type, contents, isEdited, first){
 				//moveDeleteButtons();
 			}
 			
+			
+			
 	break;
 	//создаем новый temp_div
 	default:
@@ -849,8 +887,13 @@ function createNewDivElement(type, contents, isEdited, first){
 			newElementCheckbox	= fabric("checkbox", 			getObjectSpecs("elementNameAutofill") );
 			newElementCheckboxLabel = fabric('label', 		getObjectSpecs("elementNameAutofillLabel") );
 			newHeader 			= fabric("textinline", 		getObjectSpecs("temp-div-header", contents.header) );
-			newBBControls 		= addBBControls();
+			var newBBControlsMain 		= addBBControls(0);
+			var newBBControlsAdd 		= addBBControls(1);
+			var additionalInfoBlock = fabric("div", 			getObjectSpecs("div",undefined,'additional-info-block') );
+			var showAdditionalInfoBlock = fabric("p", getObjectSpecs('additional-info-toggle'));
+			
 			newParagraph    	= fabric("text area", 		getObjectSpecs("text area", contents.description, 'desc-block') );
+			newAdditionalInfoParagraph = fabric("text area", 		getObjectSpecs("text area", contents.additionalDescription, 'add-desc-block') );
 			newInput    		= fabric("radio"	, 		getObjectSpecs("radioInputTypes") );
 			newInputDiv 		= fabric("div",				getObjectSpecs("div",undefined ,"radioInputTypesDiv") );
 			newIsSwitchP		= fabric("p",				getObjectSpecs("branchP") );
@@ -881,9 +924,18 @@ function createNewDivElement(type, contents, isEdited, first){
 			
 			newHeader.appendTo (newHeaderParagraph);
 			newHeaderParagraph.appendTo( newElement );
-			newBBControls.appendTo(newElement);
+			newBBControlsMain.appendTo(newElement);
 			newParagraph.appendTo( newElement );
+			
+			showAdditionalInfoBlock.appendTo( newElement );
+			showAdditionalInfoBlock.click ( view.getInstance().toggleAdditionalInfoBlock );
+			//additional info block
+			additionalInfoBlock.appendTo( newElement );
+			newBBControlsAdd.appendTo(additionalInfoBlock);
+			newAdditionalInfoParagraph.appendTo( additionalInfoBlock );
+			newAdditionalInfoParagraph.keyup(resizeTextArea);
 			newParagraph.keyup(resizeTextArea);
+			
 			//resizeTextArea
 			newIsSwitchP.appendTo( newElement );
 			newIsSwitch.appendTo( newIsSwitchP );
@@ -933,6 +985,7 @@ function createNewTempElement(contents, edit){
 			id: undefined,
 			header:"Введите заголовок блока",
 			description:"И его описание",
+			additionalDescription: "Дополнительная информация",
 			radio: undefined,
 			radioName: undefined,
 			input: "Im just some text",
@@ -953,6 +1006,8 @@ function createNewTempElement(contents, edit){
 	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().api.saveSettings);
 	controller.getInstance().addEvent($('#elementNameAutofill')[0], 'change', model.getInstance().autofillIDClick);
 	$('#desc-block').keyup();
+	$('#add-desc-block').keyup();
+	
 	//newElement.hide();
 	
 	//сдвигаем кнопки в списке
@@ -1140,7 +1195,8 @@ function addElement(){
 	var contents ={
 		id: name,
 		header:thisDiv.children('p').children(':input[type=text]').val(),
-		description:bbCodeParserSingleton.getInstance().bbToHTML(thisDiv.children('textarea').val()),
+		description:bbCodeParserSingleton.getInstance().bbToHTML($('#desc-block').val()),
+		additionalDescription: bbCodeParserSingleton.getInstance().bbToHTML($('#add-desc-block').val()),
 		radio: radio,
 		radioName: "radio"+name,
 		input: input,
@@ -1344,6 +1400,9 @@ function onEditClick(){
 	//для эдита такую возможность уберем
 	$('.add-block-position__div').hide();
 	model.getInstance().setRadioValue( $('.add-block-position__div'), undefined);
+	if (objectDiv.additionalDescription !== ''){
+		view.getInstance().toggleAdditionalInfoBlock();
+	}
 	view.getInstance().scrollToTop();
 	
 	
@@ -1797,6 +1856,9 @@ function showHelp(elemType, timeout){
 											Здесь можно указать всю информацию, которую необходимо знать \
 											оператору. Постарайтесь не перегружать оператора лишней информацией.');
 	break;
+	case 'additionalDescription': paragraphSelection.html('В этом поле вы можете указать дополнительную информацию по блоку. Она будет \
+															отображена справа от формы заполнения.');
+	break;
 	case 'input' : paragraphSelection.html('Если требуется сделать несколько ветвей диалога - установите галочку "Ветвление", \
 											в противном случае выберите тип вводимой информации');
 	break;
@@ -1842,6 +1904,9 @@ function addHelpTriggers(){
 	newParagraph.focus(function(){
 		//$(this).stop(true,true);
 		showHelp('description');
+	});
+	newAdditionalInfoParagraph.focus( function(){
+		showHelp('additionalDescription');
 	});
 	newHeader.blur(function(){
 		//$(this).stop(true,true);
@@ -2192,20 +2257,21 @@ function redraw(){
 	
 	}
 }
-function addBBControls(){
+function addBBControls( num ){
 	
-	bbBlock 	= fabric('div', getObjectSpecs('bb-block') );
-	bbBold  	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Жирный','bb-bold'));
-	bbItalic 	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Курсив','bb-italic'));
-	bbUnderline	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Подчеркнутый','bb-underline'));
-	bbColor		= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'color','bb-color'));
+	var bbBlock 	= fabric('div', getObjectSpecs('bb-block') );
+	var bbBold  	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Жирный','bb-bold' + num));
+	var bbItalic 	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Курсив','bb-italic'+ num));
+	var bbUnderline	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Подчеркнутый','bb-underline'+ num));
+	var bbColor		= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'color','bb-color'+ num));
 	
+	var textareaElement = ( (num === 0) ? '#desc-block': '#add-desc-block');
 	bbBold.appendTo(bbBlock);
-	bbBold.click(function(){bbCodeParserSingleton.getInstance().addTag($('#desc-block'),'b')});
+	bbBold.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'b')});
 	bbItalic.appendTo(bbBlock);
-	bbItalic.click(function(){bbCodeParserSingleton.getInstance().addTag($('#desc-block'),'i')});
+	bbItalic.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'i')});
 	bbUnderline.appendTo(bbBlock);
-	bbUnderline.click(function(){bbCodeParserSingleton.getInstance().addTag($('#desc-block'),'u')});
+	bbUnderline.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'u')});
 	//bbColor.appendTo(bbBlock);
 	//bbColor.click(function(){bbCodeParserSingleton.getInstance().addTag($('.textarea'),'color')});
 //	bbNewLine.appendTo(bbBlock);

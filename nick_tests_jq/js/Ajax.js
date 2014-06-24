@@ -30,14 +30,16 @@ function loadStructure(type) {
 				return;
 				}
 			//очищаем контейнеры
-			
 			first = importFromJSON( $( "#response" ).text(), "#imported", type);
-			showBranch(first,false);
-			redraw();
-			if (!type){
-				restoreData();
+			if (first !== undefined){
+				showBranch(first,false);
+				redraw();
+				if (!type){
+					restoreData();
+				}
+				createNewTempElement();
 			}
-			createNewTempElement();
+			
 			$('#btnLoadStructureClient').slideUp('Slow');
 			$('.waiting-layer').hide();
 			

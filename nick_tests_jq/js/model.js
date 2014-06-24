@@ -85,6 +85,25 @@ var model = (function(){
 		//public
 		return{
 			
+			refreshAdditionalDescription: function(element, hide){
+				var $block = $('.additional-info-block');
+				var $text = $('.additional-info-text');
+				var elementID = $(element).attr('id');
+				var structElement = instance.blockActions.getElement( elementID, false );
+				//console.log( structElement );
+				var additionalDesc = structElement.additionalDescription;
+				//if ( additionalDesc !== '' ){
+				if ( (hide) || (additionalDesc === '') ){
+					$block.fadeOut('fast');
+					instance.setHTML($text);
+				}
+				else{
+					instance.setHTML($text, bbCodeParserSingleton.getInstance().bbToHTML(additionalDesc) );
+					$block.fadeIn('fast');
+				}
+				
+				
+			},
 			initIdCounter: function(value){
 				fieldsListId = value;
 			},
@@ -639,6 +658,7 @@ var model = (function(){
 					var prepared = ( (convertBB === undefined)? true: !convertBB);
 					if ( (!prepared) && (retValue !== undefined) ){
 						retValue.description = bbCodeParserSingleton.getInstance().htmlToBB(retValue.description);
+						retValue.additionalDescription = bbCodeParserSingleton.getInstance().htmlToBB(retValue.additionalDescription);
 					}
 					return retValue;
 				},

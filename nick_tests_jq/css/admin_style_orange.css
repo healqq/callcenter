@@ -417,7 +417,7 @@
 			margin: 6px 6px;
 		}
 /*BB BUTTONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-		#bb-block{
+		.bb-block{
 			width: 90%;
 			margin: 0 5%;
 			padding-left: 0.2%;
@@ -442,23 +442,23 @@
 			border-radius: 3px;
 		}
 		
-		#bb-bold{
+		[id^=bb-bold]{
 		
 			background-image: url(images/bb-buttons.png);
 			background-position: 0px 0px;
 			
 			
 		}
-		#bb-bold:hover,#bb-italic:hover,#bb-underline:hover{
+		[id^=bb-bold]:hover,[id^=bb-italic]:hover,[id^=bb-underline]:hover{
 			background-position-x: 20px;
 		}
-		#bb-italic{
+		[id^=bb-italic]{
 		
 			background-position: 0px 40px;
 			
 		}
 
-		#bb-underline{
+		[id^=bb-underline]{
 			
 			background-position: 0px 20px;
 		}
@@ -754,7 +754,7 @@
 			margin-left: 5px;
 		
 }
-		.edit-block, #scheeme-help > h4, #scheeme-help-basic>h3, #temp-title, #container-title, #scheeme-title, #help>h3, #bb-block{
+		.edit-block, #scheeme-help > h4, #scheeme-help-basic>h3, #temp-title, #container-title, #scheeme-title, #help>h3, .bb-block{
 			background-color: #EEE;
 			margin-top: 2px;
 }
@@ -1671,4 +1671,37 @@ input[type=checkbox]:checked + label:before {
 .print-text{
 	
 	margin: 0 0 0 0 ;
+}
+
+
+/*#############################################################ADDITIONAL INFO#############################################*/
+.additional-info-block{
+	width: 80%;
+	margin: 5px auto 10px 10%;
+	display: none;
+	
+}
+.additional-info-text{
+	width: 90%;
+	padding: 10px 10px;
+	margin-left: 5%;
+	
+}
+#add-info-toggle{
+	/*width: 90%;*/
+	margin: auto;
+	font-size: 9pt;
+	margin-bottom: 5px;
+	margin-left: 5%;
+	cursor: pointer;
+	text-decoration: underline;
+	display: inline-block;
+	
+}
+#add-info-toggle:hover{
+	
+	color: #FF5F33;
+}
+#additional-info-block{
+	display: none;
 }

@@ -245,7 +245,16 @@ var  view = (function(){
 				newBlock.css('padding-right', 50* level + 'px');
 				newBlock.appendTo(newBlockWrap);
 				
+			},
+			toggleAdditionalInfoBlock:function(){
+				$('#additional-info-block').slideToggle({duration:'slow', complete: function(){
+						$('#add-desc-block').keyup();
+					}
+				});
+				
 			}
+			
+			
 			
 			
 		
