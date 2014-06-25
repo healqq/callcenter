@@ -11,7 +11,7 @@ body{
 	margin: 0;
 	background-color: #FAFAFA;
 	position: relative;
-	padding-top: 2%;
+	
 	
 }
 #logo{
@@ -157,12 +157,20 @@ body{
 			
 }
 
+.footer{
+	margin-top: -48px;
+	posiiton: relative;
+	height: 32px;
+}
+.main{
+	height: 100%;
+	
+}
 #credits{
 	
 	margin-right: 10px;
 	font-size: 9pt;
-	bottom: 3px;
-	right: 0;
+	float: right;
 	/*margin-top: 5px;*/
-	position: absolute;
+	position: relative;
 }

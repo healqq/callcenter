@@ -25,29 +25,34 @@
 	
 </head>
 <body>
+	<div class='main'>
 	<a id ="logo" href = "http://www.tabus.ru" ><img src="css/images/Tabus_web.png"></a> 
-	<div id="info-block">
 	
-		<!-- <h1>Авторизация в системе Гидровелл-Коллцентр</h1> -->
+		<div id="info-block">
 		
-		<div class="error">
+			<!-- <h1>Авторизация в системе Гидровелл-Коллцентр</h1> -->
 			
-		</div>
-		<div id="login-form" action = "javascript:login()" onsubmit="return false">
-			<form >
-				<p class = "labels-p"><label class ="labels" for="login"> Имя пользователя:</label></p>
-				<p id = "login-p"> <input class = "text-input" type="text" id="login" placeholder = "Имя пользователя"></p>
-				<p class = "labels-p"><label class ="labels" for="pwd"> Пароль: </label></p>
-				<p id = "password-p"> <input class = "text-input" type="password" id="pwd" placeholder = "Пароль"></p>
-				<p id="btn-p"><input type="submit" value="Вход" id="login-button" ></p>
-			</form>
-		
-		
-		
+			<div class="error">
+				
+			</div>
+			<div id="login-form" action = "javascript:login()" onsubmit="return false">
+				<form >
+					<p class = "labels-p"><label class ="labels" for="login"> Имя пользователя:</label></p>
+					<p id = "login-p"> <input class = "text-input" type="text" id="login" placeholder = "Имя пользователя"></p>
+					<p class = "labels-p"><label class ="labels" for="pwd"> Пароль: </label></p>
+					<p id = "password-p"> <input class = "text-input" type="password" id="pwd" placeholder = "Пароль"></p>
+					<p id="btn-p"><input type="submit" value="Вход" id="login-button" ></p>
+				</form>
+			
+			
+			
+			</div>
 		</div>
 	</div>
 	<p id="response" style="visibility:hidden"></p>
 	<div class="waiting-layer"><div id="img-block"></div></div>
-	<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2014 Табус — Технологии автоматизации бизнеса</a>
+	<div class="footer">
+		<a id = "credits" href="http://www.tabus.ru/" rel="author">© 2014 Табус — Технологии автоматизации бизнеса</a>
+	</div>
 </body>
 </html>

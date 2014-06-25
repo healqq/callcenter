@@ -1694,7 +1694,8 @@ input[type=checkbox]:checked + label:before {
 	margin-bottom: 5px;
 	margin-left: 5%;
 	cursor: pointer;
-	text-decoration: underline;
+	/*text-decoration: underline;*/
+	border-bottom: 1px dotted black;
 	display: inline-block;
 	
 }

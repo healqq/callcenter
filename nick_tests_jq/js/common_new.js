@@ -1741,21 +1741,21 @@ function moveDiv(value, id)
 		that = value;
 	}
 	$(that).slideUp({duration:'slow',complete:function(){
-		that = this;
-		contents = model.getInstance().blockActions.getElement($(that).attr('id'), false);//createObjectFromDiv($(that), true);
-		
-		removeElement($(that));
-		if (contents.id == id ){
-			first = true;
-		}
-		else{
-			first = false;
-		}
-		newDivElement = createNewDivElement("show", contents, $('#container').data("sstype")  , first);
-		newDivElement.appendTo($('#imported'));
-		if (( $('#container').children().length == 0) && (id !== undefined) ){
-			showBranch(id, false);
-		}
+			that = this;
+			contents = model.getInstance().blockActions.getElement($(that).attr('id'), false);//createObjectFromDiv($(that), true);
+			
+			removeElement($(that));
+			if (contents.id == id ){
+				first = true;
+			}
+			else{
+				first = false;
+			}
+			newDivElement = createNewDivElement("show", contents, $('#container').data("sstype")  , first);
+			newDivElement.appendTo($('#imported'));
+			if (( $('#container').children().length == 0) && (id !== undefined) ){
+				showBranch(id, false);
+			}
 		
 		}
 	});
@@ -2042,13 +2042,14 @@ function hideSubmitBlock(){
 function reloadStructure(){
 	clearData();
 	$('#container:first').data('started', false);
-	divBlock = $('#container').children('div');
-	id = model.getInstance().blockActions.getStructure().first;//divBlock.first().attr('id');
+	var divBlock = $('#container').children('div');
+	var id = model.getInstance().blockActions.getStructure().first;//divBlock.first().attr('id');
 	//nextElements = divBlock.siblings();
 	divBlock.each( function(index, value){
 		moveDiv(value, id)
 	});
 	view.getInstance().hideWarning();
+	model.getInstance().refreshAdditionalDescription($('#'+id));
 	
 }
 function TriggersOnFirstElement(){

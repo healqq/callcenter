@@ -34,6 +34,7 @@ function loadStructure(type) {
 			if (first !== undefined){
 				showBranch(first,false);
 				redraw();
+				model.getInstance().refreshAdditionalDescription($('#'+first));
 				if (!type){
 					restoreData();
 				}
