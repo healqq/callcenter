@@ -18,7 +18,7 @@ var  view = (function(){
 			buttonsAnimation: function(element){
 				element = ( (element == undefined) ? document: element);
 				var control = controller.getInstance();
-				$(element).find('.control-button, .editbuttonAccordion, #goto-elem, #revert').each(function(){
+				$(element).find('.control-button, .editbuttonAccordion, #goto-elem').each(function(){
 					control.addEvent($(this),'mousedown', function(){$(this).addClass('click')});
 					control.addEvent($(this),'mouseup', function(){$(this).removeClass('click')});
 					
@@ -26,7 +26,7 @@ var  view = (function(){
 				});
 				
 				control.addEvent($(document), 'mouseup', function(){
-					$('.control-button,.editbuttonAccordion, #goto-elem ,#revert' ).each(function(){
+					$('.control-button,.editbuttonAccordion, #goto-elem ' ).each(function(){
 						$(this).removeClass('click');
 					});
 					

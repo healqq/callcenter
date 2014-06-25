@@ -526,7 +526,7 @@ var model = (function(){
 						
 						
 						redraw();
-						view.getInstance().showWarning('Элемент ' + elementID + ' был удален. Нажмите, чтобы отменить удаление.', instance.blockActions.restoreStructure);
+						view.getInstance().showWarning('Элемент ' + elementID + ' был удален. Если это была ошибка - действие можно отменить.', instance.blockActions.restoreStructure);
 					}
 					
 					
