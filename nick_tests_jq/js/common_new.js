@@ -90,6 +90,8 @@ function fabric ( type,  options) {
 			elementContent = '<input type="button" value='+options.content+'></input>';break;
 		case "buttoninlinetooltip":
 			elementContent = '<input type="button" title='+options.content+'></input>';break;
+		case "hidden":
+			elementContent = '<input type="hidden">';break;
 		 default:
 			return undefined;
 			break;
@@ -453,6 +455,7 @@ switch (type) {
 		case "temp-title":				objectSpecs = {class:"title",content:content,id:'temp-title'};break;
 		case "bb-block":				objectSpecs = {class:'bb-block',content:content};break;
 		case "bb-button":				objectSpecs = {class:'line-button',content:content,id:name};break;
+		case "colorpicker":				objectSpecs = {class:'colorpicker',content:content,id:name};break;
 		case 'blockname-block':			objectSpecs = {class:undefined,content:undefined,id:'blockname-block'};break;
 		case 'elementNameAutofill':		objectSpecs = {class:'checkBox',content:'Автозаполнение', id:'elementNameAutofill'};break;
 		case 'elementNameAutofillLabel':objectSpecs = {class:'checkBoxLabel ',content:'Автозаполнение', id:'elementNameAutofill'};break;
@@ -2264,7 +2267,8 @@ function addBBControls( num ){
 	var bbBold  	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Жирный','bb-bold' + num));
 	var bbItalic 	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Курсив','bb-italic'+ num));
 	var bbUnderline	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Подчеркнутый','bb-underline'+ num));
-	var bbColor		= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'color','bb-color'+ num));
+	var bbColor		= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Цвет','bb-color'+ num));
+	var bbColorPick	= fabric('hidden', getObjectSpecs('colorpicker','Выбор цвета','colorpicker'+ num));
 	
 	var textareaElement = ( (num === 0) ? '#desc-block': '#add-desc-block');
 	bbBold.appendTo(bbBlock);
@@ -2273,8 +2277,13 @@ function addBBControls( num ){
 	bbItalic.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'i')});
 	bbUnderline.appendTo(bbBlock);
 	bbUnderline.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'u')});
-	//bbColor.appendTo(bbBlock);
-	//bbColor.click(function(){bbCodeParserSingleton.getInstance().addTag($('.textarea'),'color')});
+	bbColorPick.appendTo(bbBlock);
+	var settings = {defaultValue: '#000000'};
+	bbColor.appendTo(bbBlock);
+	bbColor.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'color', num)});
+	
+	//var settings = {inline: };
+	bbColorPick.minicolors(settings);
 //	bbNewLine.appendTo(bbBlock);
 //	bbNewLine.click(function(){bbCodeParserSingleton.getInstance().addTag($('.textarea'),'br')});
 	return bbBlock;

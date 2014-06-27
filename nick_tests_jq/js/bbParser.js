@@ -40,14 +40,17 @@ var bbCodeParserSingleton = (function(){
 			}
 			return str;
 		},
-		addTag: function(element, tagName){
+		addTag: function(element, tagName, num){
+			//console.log(element);
 			var stringToAdd = '';
 			switch (tagName){
 			case "b": stringToAdd ='[b][/b]';break;
 			case "i": stringToAdd ='[i][/i]';break;
 			case "u": stringToAdd ='[u][/u]';break;
 			case "br": stringToAdd = '[br]';break;
-			case "color":stringToAdd = '[color][/color]';break;
+			case "color":
+				var colorValue = $('#colorpicker'+num).val();
+				stringToAdd = '[color='+ colorValue +'][/color]';break;
 			default:
 			}
 			var activeElement = element.find(':focus');
