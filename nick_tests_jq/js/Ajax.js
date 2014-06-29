@@ -31,6 +31,7 @@ function loadStructure(type) {
 				}
 			//очищаем контейнеры
 			first = importFromJSON( $( "#response" ).text(), "#imported", type);
+						
 			if (first !== undefined){
 				showBranch(first,false);
 				redraw();
@@ -38,7 +39,9 @@ function loadStructure(type) {
 				if (!type){
 					restoreData();
 				}
-				createNewTempElement();
+				if ( type ){
+					createNewTempElement();
+				}
 			}
 			
 			$('#btnLoadStructureClient').slideUp('Slow');

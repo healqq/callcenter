@@ -519,7 +519,8 @@
 		.radioOptionInput, .fieldsListInput {
 			position:relative;
 			
-			height: 20px;
+		/*	height: 20px; */
+			margin-bottom: 5px;
 			margin-left: 0px;
 			background-color: white;
 			padding-left: 0.2%; /* Расстояние между линией и текстом */	
@@ -546,9 +547,13 @@
 }
 		#branch-block, .radio-block, #autosave-p{
 			margin-left: 5%;
-			height: 20px;
+		/*	height: 20px;*/
+			
 			display: block;
 			position: relative;
+		}
+		.radio-block{
+			margin-bottom: 5px !important;
 		}
 		.Mask{
 			margin-left: 10px;
