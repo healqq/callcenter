@@ -2268,7 +2268,8 @@ function addBBControls( num ){
 	var bbItalic 	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Курсив','bb-italic'+ num));
 	var bbUnderline	= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Подчеркнутый','bb-underline'+ num));
 	var bbColor		= fabric('buttoninlinetooltip', getObjectSpecs('bb-button', 'Цвет','bb-color'+ num));
-	var bbColorPick	= fabric('hidden', getObjectSpecs('colorpicker','Выбор цвета','colorpicker'+ num));
+//	var bbColorPick	= fabric('text', getObjectSpecs('colorpicker','Выбор цвета','colorpicker'+ num));
+//	var bbColorValue = fabric('hidden', getObjectSpecs('colorpicker','','colorpicker' + num ));
 	
 	var textareaElement = ( (num === 0) ? '#desc-block': '#add-desc-block');
 	bbBold.appendTo(bbBlock);
@@ -2277,13 +2278,21 @@ function addBBControls( num ){
 	bbItalic.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'i')});
 	bbUnderline.appendTo(bbBlock);
 	bbUnderline.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'u')});
-	bbColorPick.appendTo(bbBlock);
-	var settings = {defaultValue: '#000000'};
+//	bbColorValue.appendTo( bbBlock);
+//	var settings = {defaultValue: '#000000'};
 	bbColor.appendTo(bbBlock);
 	bbColor.click(function(){bbCodeParserSingleton.getInstance().addTag($(textareaElement),'color', num)});
-	
+	//colorpicker init
+	var colorpickerScheeme = $('select[name="colorpicker-template"]');
+	var bbColorPick = colorpickerScheeme.clone();
+	bbColorPick.attr('name', 'colorpicker' + num );
+	bbColorPick.attr('id', 'bb-color'+ num );
+	bbColorPick.appendTo(bbBlock);
 	//var settings = {inline: };
-	bbColorPick.minicolors(settings);
+	bbColorPick.simplecolorpicker({picker: true}).simplecolorpicker('selectColor', '#000000');
+	//console.log( bbColorPick.val() );
+	
+	//bbColorPick.simplecolorpicker('selectcolor',  '#000000');
 //	bbNewLine.appendTo(bbBlock);
 //	bbNewLine.click(function(){bbCodeParserSingleton.getInstance().addTag($('.textarea'),'br')});
 	return bbBlock;

@@ -49,7 +49,7 @@ var bbCodeParserSingleton = (function(){
 			case "u": stringToAdd ='[u][/u]';break;
 			case "br": stringToAdd = '[br]';break;
 			case "color":
-				var colorValue = $('#colorpicker'+num).val();
+				var colorValue = $('select[name="colorpicker'+num+'"]').val();
 				stringToAdd = '[color='+ colorValue +'][/color]';break;
 			default:
 			}
